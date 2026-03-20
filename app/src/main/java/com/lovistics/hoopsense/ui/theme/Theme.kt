@@ -26,11 +26,18 @@ private val PremiumDarkColorScheme = darkColorScheme(
 @Composable
 fun HoopSenseTheme(content: @Composable () -> Unit) {
     val view = LocalView.current
+
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = DeepSpace.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+
+            // Enable edge-to-edge
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+
+            val insetsController = WindowCompat.getInsetsController(window, view)
+
+            // Control icon color (light/dark icons)
+            insetsController.isAppearanceLightStatusBars = false
         }
     }
 
