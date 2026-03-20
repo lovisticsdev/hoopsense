@@ -1,7 +1,8 @@
 """
 Shared utilities for HoopSense.
 
-Pure functions for: team resolution, record parsing, and atomic file I/O.
+Pure functions for: team resolution, record parsing, win-percentage helpers,
+and atomic file I/O.
 """
 import json
 import logging
@@ -56,9 +57,21 @@ def parse_record(record_str: str) -> Tuple[int, int]:
 
 
 def record_win_pct(record_str: str) -> float:
+    """Parse a W-L string and return win percentage. Returns 0.5 on failure."""
     w, l = parse_record(record_str)
     total = w + l
     return w / total if total > 0 else 0.5
+
+
+def record_total_games(record_str: str) -> int:
+    """Parse a W-L string and return total games played."""
+    w, l = parse_record(record_str)
+    return w + l
+
+
+def clamp(value: float, lo: float, hi: float) -> float:
+    """Clamp a value to [lo, hi]."""
+    return max(lo, min(hi, value))
 
 
 # ── Atomic file I/O ────────────────────────────────────

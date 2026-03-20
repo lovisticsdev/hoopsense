@@ -1,7 +1,8 @@
 """
-Configuration and constants for HoopSense.
+Configuration and constants for HoopSense v4.
 
-Single source of truth for: team registry, model weights, thresholds, and derived lookups.
+Single source of truth for: team registry, division/conference mappings,
+model weights, thresholds, and derived lookups.
 """
 import os
 import math
@@ -77,6 +78,8 @@ NAME_TO_ID: Dict[str, int] = {v["name"].lower(): k for k, v in NBA_TEAMS.items()
 ID_TO_ABBR: Dict[int, str] = {k: v["abbr"] for k, v in NBA_TEAMS.items()}
 ID_TO_NAME: Dict[int, str] = {k: v["name"] for k, v in NBA_TEAMS.items()}
 
+# ── Conference sets ────────────────────────────────────
+
 EASTERN_CONFERENCE = frozenset({
     "ATL", "BOS", "BKN", "CHA", "CHI", "CLE", "DET", "IND",
     "MIA", "MIL", "NYK", "ORL", "PHI", "TOR", "WAS",
@@ -86,11 +89,85 @@ WESTERN_CONFERENCE = frozenset({
     "NOP", "OKC", "PHX", "POR", "SAC", "SAS", "UTA",
 })
 
-# ── Power-score composition weights ───────────────────
+# ── Division registry ──────────────────────────────────
 
-SRS_WEIGHT = 0.70
-OFF_FOUR_FACTORS_WEIGHT = 0.15
-DEF_FOUR_FACTORS_WEIGHT = 0.15
+TEAM_DIVISIONS: Dict[str, Dict[str, str]] = {
+    # Atlantic (East)
+    "BOS": {"conference": "EAST", "division": "ATL_DIV"},
+    "BKN": {"conference": "EAST", "division": "ATL_DIV"},
+    "NYK": {"conference": "EAST", "division": "ATL_DIV"},
+    "PHI": {"conference": "EAST", "division": "ATL_DIV"},
+    "TOR": {"conference": "EAST", "division": "ATL_DIV"},
+    # Central (East)
+    "CHI": {"conference": "EAST", "division": "CEN_DIV"},
+    "CLE": {"conference": "EAST", "division": "CEN_DIV"},
+    "DET": {"conference": "EAST", "division": "CEN_DIV"},
+    "IND": {"conference": "EAST", "division": "CEN_DIV"},
+    "MIL": {"conference": "EAST", "division": "CEN_DIV"},
+    # Southeast (East)
+    "ATL": {"conference": "EAST", "division": "SE_DIV"},
+    "CHA": {"conference": "EAST", "division": "SE_DIV"},
+    "MIA": {"conference": "EAST", "division": "SE_DIV"},
+    "ORL": {"conference": "EAST", "division": "SE_DIV"},
+    "WAS": {"conference": "EAST", "division": "SE_DIV"},
+    # Northwest (West)
+    "DEN": {"conference": "WEST", "division": "NW_DIV"},
+    "MIN": {"conference": "WEST", "division": "NW_DIV"},
+    "OKC": {"conference": "WEST", "division": "NW_DIV"},
+    "POR": {"conference": "WEST", "division": "NW_DIV"},
+    "UTA": {"conference": "WEST", "division": "NW_DIV"},
+    # Pacific (West)
+    "GSW": {"conference": "WEST", "division": "PAC_DIV"},
+    "LAC": {"conference": "WEST", "division": "PAC_DIV"},
+    "LAL": {"conference": "WEST", "division": "PAC_DIV"},
+    "PHX": {"conference": "WEST", "division": "PAC_DIV"},
+    "SAC": {"conference": "WEST", "division": "PAC_DIV"},
+    # Southwest (West)
+    "DAL": {"conference": "WEST", "division": "SW_DIV"},
+    "HOU": {"conference": "WEST", "division": "SW_DIV"},
+    "MEM": {"conference": "WEST", "division": "SW_DIV"},
+    "NOP": {"conference": "WEST", "division": "SW_DIV"},
+    "SAS": {"conference": "WEST", "division": "SW_DIV"},
+}
+
+# Map opponent division key → standings data key
+OPPONENT_DIV_TO_KEY: Dict[str, str] = {
+    "ATL_DIV": "vs_atlantic",
+    "CEN_DIV": "vs_central",
+    "SE_DIV":  "vs_southeast",
+    "NW_DIV":  "vs_northwest",
+    "PAC_DIV": "vs_pacific",
+    "SW_DIV":  "vs_southwest",
+}
+
+# Map opponent conference → standings data key
+OPPONENT_CONF_TO_KEY: Dict[str, str] = {
+    "EAST": "vs_east",
+    "WEST": "vs_west",
+}
+
+# B-Ref uses different abbreviations for some teams
+BREF_ABBR_MAP: Dict[str, str] = {
+    "BRK": "BKN",
+    "CHO": "CHA",
+    "PHO": "PHX",
+    "NJN": "BKN",
+    "NOH": "NOP",
+    "NOK": "NOP",
+    "SEA": "OKC",
+    "VAN": "MEM",
+    "WSB": "WAS",
+    "KCK": "SAC",
+    "SDC": "LAC",
+}
+
+
+# ── Power-score composition weights (v4) ──────────────
+
+SRS_WEIGHT = 0.50
+FOUR_FACTORS_WEIGHT = 0.20
+PYTHAGOREAN_WEIGHT = 0.15
+FORM_WEIGHT = 0.15
 
 # Dean Oliver's Four Factors weights (within each component)
 OFF_FACTOR_WEIGHTS = {
@@ -106,18 +183,45 @@ DEF_FACTOR_WEIGHTS = {
     "opp_ftr": -0.15,
 }
 
-# ── Contextual adjustments ────────────────────────────
+# ── Pythagorean regression ─────────────────────────────
+
+PYTH_SCALING = 0.30  # points per win of luck delta
+
+# ── Form trajectory ────────────────────────────────────
+
+FORM_MONTH_WEIGHTS = [0.50, 0.30, 0.20]  # current, previous, two months ago
+FORM_SCALING = 8.0  # converts win% delta to points scale
+POST_ASB_MIN_GAMES = 5  # minimum post-ASB games to use that signal
+LAST10_WEIGHT = 0.60  # blend: 60% last-10, 40% monthly/post-ASB
+
+# ── Contextual adjustments ─────────────────────────────
 
 HOME_ADVANTAGE_BASE = 2.5
 HOME_ADVANTAGE_RANGE = (1.0, 4.0)
 B2B_PENALTY_BASE = -1.5
 B2B_ROAD_EXTRA = -0.5
-HOT_STREAK_BONUS = 0.75
-COLD_STREAK_PENALTY = -0.75
-HOT_STREAK_THRESHOLD = 7
-COLD_STREAK_THRESHOLD = 3
 
-# ── Spread → probability (logistic model) ─────────────
+# Conference matchup
+CONF_MATCHUP_SCALING = 3.0
+CONF_MATCHUP_CAP = 1.0
+
+# Division matchup
+DIV_MATCHUP_SCALING = 2.0
+DIV_MATCHUP_CAP = 0.75
+DIV_MIN_GAMES = 4
+
+# Close-game regression
+CLOSE_GAME_SCALING = 2.0
+CLOSE_GAME_CAP = 1.0
+CLOSE_GAME_MIN_GAMES = 5
+
+# Head-to-head
+H2H_SCALING = 1.5
+H2H_CAP = 0.75
+H2H_MIN_GAMES = 2
+
+
+# ── Spread → probability (logistic model) ──────────────
 # k ≈ 5.5 gives ~73% at +7 spread, calibrated to NBA history.
 
 LOGISTIC_K = 5.5
@@ -128,9 +232,9 @@ def spread_to_prob(spread: float) -> float:
     return 1.0 / (1.0 + math.pow(10, -spread / LOGISTIC_K))
 
 
-# ── Pick selection thresholds ─────────────────────────
+# ── Pick selection thresholds ──────────────────────────
 
-HIGH_CONFIDENCE_PROB = 0.65    # model prob that earns HIGH confidence
-MEDIUM_CONFIDENCE_PROB = 0.58  # model prob that earns MEDIUM confidence
-MIN_PICK_PROB = 0.55           # minimum model probability to make a pick
-MIN_GAMES_FOR_STATS = 10       # don't predict if team has fewer games
+HIGH_CONFIDENCE_PROB = 0.65
+MEDIUM_CONFIDENCE_PROB = 0.58
+MIN_PICK_PROB = 0.55
+MIN_GAMES_FOR_STATS = 10

@@ -14,7 +14,7 @@ for arg in "$@"; do
 done
 
 echo "════════════════════════════════════════════════════"
-echo " HoopSense v3 — $(date '+%Y-%m-%d %H:%M %Z')"
+echo " HoopSense v4 — $(date '+%Y-%m-%d %H:%M %Z')"
 if [ -n "$FORCE_FLAG" ]; then echo " Mode: FORCE REFRESH"; fi
 if [ "$DRY_RUN" = true ];  then echo " Mode: DRY RUN (no push)"; fi
 echo "════════════════════════════════════════════════════"
@@ -44,7 +44,7 @@ else
     if git diff --staged --quiet; then
         echo "[3/3] No changes to commit."
     else
-        git commit -m "Daily update: $(date +'%Y-%m-%d %H:%M') [v3]"
+        git commit -m "Daily update: $(date +'%Y-%m-%d %H:%M') [v4]"
         git push origin main
         echo "[3/3] Pushed updates to GitHub."
     fi

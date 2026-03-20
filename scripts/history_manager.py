@@ -7,8 +7,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 
 from fetch_ingredients import _api_get
-from prediction_engine import predict_game
-from config import DATA_DIR, HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB, MIN_PICK_PROB
+from prediction_engine import predict_game, confidence_from_prob
+from config import DATA_DIR, MIN_PICK_PROB
 from utils import write_json_atomic, read_json_safe
 
 logger = logging.getLogger(__name__)
@@ -56,14 +56,6 @@ def _fetch_games_for_date(date_str: str) -> list:
 def _build_abbr_lookup(teams: dict) -> Dict[str, dict]:
     """Build abbr → team dict for O(1) lookups during backfill."""
     return {t.get("abbr", ""): t for t in teams.values() if t.get("abbr")}
-
-
-def _confidence_label(prob: float) -> str:
-    if prob >= HIGH_CONFIDENCE_PROB:
-        return "HIGH"
-    if prob >= MEDIUM_CONFIDENCE_PROB:
-        return "MEDIUM"
-    return "LOW"
 
 
 # ═══════════════════════════════════════════════════════
@@ -152,7 +144,11 @@ def _tally_stats(history_data: dict) -> Dict[str, float]:
 #  Backfill (generate picks for missing dates)
 # ═══════════════════════════════════════════════════════
 
-def _generate_historical_picks(date_str: str, abbr_lookup: Dict[str, dict]) -> Optional[dict]:
+def _generate_historical_picks(
+    date_str: str,
+    abbr_lookup: Dict[str, dict],
+    h2h_matrix: dict,
+) -> Optional[dict]:
     """
     Generate picks for a past date using the model.
     Uses current team stats to retroactively pick winners.
@@ -172,7 +168,7 @@ def _generate_historical_picks(date_str: str, abbr_lookup: Dict[str, dict]) -> O
             continue
 
         try:
-            prediction = predict_game(home_team, away_team)
+            prediction = predict_game(home_team, away_team, h2h_matrix=h2h_matrix)
         except ValueError as e:
             logger.warning(f"Skipping backfill game {game.get('id')} "
                            f"({away_abbr}@{home_abbr}): {e}")
@@ -192,7 +188,7 @@ def _generate_historical_picks(date_str: str, abbr_lookup: Dict[str, dict]) -> O
             "home_abbr": home_abbr,
             "selection": selection,
             "win_prob": round(prob, 4),
-            "confidence": _confidence_label(prob),
+            "confidence": confidence_from_prob(prob),
             "reasoning": f"Model gave {selection} a "
                          f"{round(prob * 100, 1)}% win probability.",
             "status": "PENDING",
@@ -213,7 +209,7 @@ def _generate_historical_picks(date_str: str, abbr_lookup: Dict[str, dict]) -> O
 #  Main entry point
 # ═══════════════════════════════════════════════════════
 
-def update_and_get_history(teams: dict) -> dict:
+def update_and_get_history(teams: dict, h2h_matrix: dict = None) -> dict:
     """
     1. Load existing history.
     2. Archive today's daily picks (if they exist).
@@ -222,6 +218,7 @@ def update_and_get_history(teams: dict) -> dict:
     5. Compute and save season stats.
     6. Return the history payload for the daily JSON.
     """
+    h2h = h2h_matrix or {}
     history_data: dict = read_json_safe(HISTORY_FILE, default={})
 
     # Archive current daily picks into history
@@ -238,7 +235,7 @@ def update_and_get_history(teams: dict) -> dict:
     for date_str in dates:
         if date_str not in history_data:
             logger.info(f"Backfilling history for {date_str}…")
-            slip = _generate_historical_picks(date_str, abbr_lookup)
+            slip = _generate_historical_picks(date_str, abbr_lookup, h2h)
             if slip:
                 history_data[date_str] = slip
             else:

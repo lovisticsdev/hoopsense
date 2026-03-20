@@ -2,9 +2,11 @@
 Fetch team stats and game schedule.
 
 Sources:
-  - Basketball-Reference: Advanced stats (Four Factors, SRS, ratings)
-                          and Expanded Standings (records, form, margins).
-  - balldontlie.io (BDL): Today's schedule and yesterday's games (B2B detection).
+  - Basketball-Reference: Advanced stats (Four Factors, SRS, Pythagorean, ratings),
+                          Expanded Standings (records, form, margins, conference/division),
+                          and Team vs. Team head-to-head matrix.
+  - balldontlie.io (BDL): Today's schedule, yesterday's games (B2B detection),
+                           and recent game results (last-10 rolling form).
 """
 import os
 import time
@@ -18,9 +20,13 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Tuple, Set, Optional
 
 from config import (
-    NBA_TEAMS, ABBR_TO_ID, CURRENT_SEASON, DATA_DIR, EASTERN_CONFERENCE,
+    NBA_TEAMS, ABBR_TO_ID, CURRENT_SEASON, DATA_DIR,
+    EASTERN_CONFERENCE, BREF_ABBR_MAP,
 )
-from utils import resolve_team_by_name, get_abbr, write_json_atomic, read_json_safe
+from utils import (
+    resolve_team_by_name, get_abbr, write_json_atomic, read_json_safe,
+    parse_record,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -136,12 +142,29 @@ def _safe_float(row, col: str, default: float) -> float:
         return round(default, 4)
 
 
+def _safe_int(row, col: str, default: int) -> int:
+    """Safely extract an int from a DataFrame row."""
+    try:
+        val = row.get(col, default)
+        return int(float(val)) if pd.notna(val) else default
+    except (ValueError, TypeError):
+        return default
+
+
+def _normalize_bref_abbr(abbr: str) -> str:
+    """Convert a B-Ref abbreviation to our internal abbreviation."""
+    return BREF_ABBR_MAP.get(abbr.strip(), abbr.strip())
+
+
 # ═══════════════════════════════════════════════════════
 #  B-Ref parsers
 # ═══════════════════════════════════════════════════════
 
 def parse_advanced_stats(html_content: str) -> Dict[int, dict]:
-    """Parse the Advanced Stats table → per-team Four Factors + ratings + SRS."""
+    """
+    Parse the Advanced Stats table → per-team stats including:
+    SRS, PW, PL, MOV, SOS, NRtg, Four Factors, ORtg, DRtg, Pace, TS%.
+    """
     logger.info("Parsing Advanced Stats from Basketball-Reference…")
     try:
         tables = pd.read_html(io.StringIO(html_content), match="Advanced")
@@ -156,18 +179,30 @@ def parse_advanced_stats(html_content: str) -> Dict[int, dict]:
                 continue
 
             stats_dict[team_id] = {
+                # ── Core metrics (v4: now extracted) ──
+                "wins": _safe_int(row, "W", 0),
+                "losses": _safe_int(row, "L", 0),
+                "pyth_wins": _safe_int(row, "PW", 0),
+                "pyth_losses": _safe_int(row, "PL", 0),
+                "mov": _safe_float(row, "MOV", 0.0),
+                "sos": _safe_float(row, "SOS", 0.0),
+                "srs": _safe_float(row, "SRS", 0.0),
+                "nrtg": _safe_float(row, "NRtg", 0.0),
+                "ts_pct": _safe_float(row, "TS%", 0.544),
+                # ── Ratings ──
+                "off_rating": _safe_float(row, "ORtg", 110.0),
+                "def_rating": _safe_float(row, "DRtg", 110.0),
+                "pace": _safe_float(row, "Pace", 99.0),
+                # ── Offensive Four Factors ──
                 "efg_pct": _safe_float(row, "Off_eFG%", 0.500),
                 "tov_pct": _safe_float(row, "Off_TOV%", 14.0) / 100.0,
                 "orb_pct": _safe_float(row, "Off_ORB%", 25.0) / 100.0,
                 "ft_rate": _safe_float(row, "Off_FT/FGA", 0.250),
+                # ── Defensive Four Factors ──
                 "opp_efg_pct": _safe_float(row, "Def_eFG%", 0.500),
                 "opp_tov_pct": _safe_float(row, "Def_TOV%", 14.0) / 100.0,
                 "drb_pct": 1.0 - (_safe_float(row, "Def_ORB%", 25.0) / 100.0),
                 "opp_ft_rate": _safe_float(row, "Def_FT/FGA", 0.250),
-                "off_rating": _safe_float(row, "ORtg", 110.0),
-                "def_rating": _safe_float(row, "DRtg", 110.0),
-                "pace": _safe_float(row, "Pace", 99.0),
-                "srs": _safe_float(row, "SRS", 0.0),
             }
 
         logger.info(f"Parsed advanced stats for {len(stats_dict)} teams.")
@@ -179,7 +214,10 @@ def parse_advanced_stats(html_content: str) -> Dict[int, dict]:
 
 
 def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
-    """Parse Expanded Standings → records, home/away, conference, margins, form."""
+    """
+    Parse Expanded Standings → records, home/away, conference, division,
+    pre/post All-Star, margins, and monthly form.
+    """
     logger.info("Parsing Expanded Standings…")
     try:
         tables = pd.read_html(io.StringIO(html_content), match="Expanded Standings")
@@ -209,6 +247,7 @@ def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
             if not team_id:
                 continue
 
+            # ── Overall record ──
             overall = str(row.get("Overall", "0-0"))
             parts = overall.split("-")
             wins = int(parts[0]) if len(parts) >= 2 else 0
@@ -217,14 +256,40 @@ def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
             home_rec = str(row.get("Home", "0-0"))
             road_rec = str(row.get("Road", "0-0"))
 
-            conf_e = str(row.get("Conf_E", "0-0"))
-            conf_w = str(row.get("Conf_W", "0-0"))
-            abbr = get_abbr(team_id)
-            conf_rec = conf_e if abbr in EASTERN_CONFERENCE else conf_w
+            # ── Conference records ──
+            vs_east = str(row.get("Conf_E", "0-0"))
+            vs_west = str(row.get("Conf_W", "0-0"))
 
+            # Conference record for the team's own conference
+            abbr = get_abbr(team_id)
+            conf_rec = vs_east if abbr in EASTERN_CONFERENCE else vs_west
+
+            # ── Division records ──
+            # Under "Conference" header: A (Atlantic), C (Central)
+            # Under "Division" header: SE (Southeast), NW (Northwest), P (Pacific), SW (Southwest)
+            vs_atlantic = str(row.get("Conf_A", row.get("Div_A", "0-0")))
+            vs_central = str(row.get("Conf_C", row.get("Div_C", "0-0")))
+            vs_southeast = str(row.get("Div_SE", "0-0"))
+            vs_northwest = str(row.get("Div_NW", "0-0"))
+            vs_pacific = str(row.get("Div_P", "0-0"))
+            vs_southwest = str(row.get("Div_SW", "0-0"))
+
+            # ── All-Star split ──
+            pre_allstar = str(row.get("AS_Pre", "0-0"))
+            post_allstar = str(row.get("AS_Post", "0-0"))
+
+            # ── Margin records ──
             margin_close = str(row.get("Margin_≤3", row.get("Margin_\u22643", "0-0")))
             margin_blow = str(row.get("Margin_≥10", row.get("Margin_\u226510", "0-0")))
 
+            # ── Monthly records ──
+            monthly = {}
+            for month_key in ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"]:
+                col = f"Mo_{month_key}"
+                val = str(row.get(col, "0-0"))
+                monthly[month_key.lower()] = val if val and val != "nan" else "0-0"
+
+            # ── Recent form: most recent month with data ──
             recent_month = "0-0"
             for mo in reversed(["Mo_Apr", "Mo_Mar", "Mo_Feb", "Mo_Jan",
                                 "Mo_Dec", "Mo_Nov", "Mo_Oct"]):
@@ -239,9 +304,25 @@ def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
                 "home": home_rec,
                 "away": road_rec,
                 "conf": conf_rec,
+                # v4: conference breakdown
+                "vs_east": vs_east,
+                "vs_west": vs_west,
+                # v4: division breakdown
+                "vs_atlantic": vs_atlantic,
+                "vs_central": vs_central,
+                "vs_southeast": vs_southeast,
+                "vs_northwest": vs_northwest,
+                "vs_pacific": vs_pacific,
+                "vs_southwest": vs_southwest,
+                # v4: all-star split
+                "pre_allstar": pre_allstar,
+                "post_allstar": post_allstar,
+                # Margins
                 "close_games": margin_close,
                 "blowouts": margin_blow,
+                # Form
                 "recent_record": recent_month,
+                "monthly": monthly,
             }
 
         logger.info(f"Parsed expanded standings for {len(result)} teams.")
@@ -252,30 +333,97 @@ def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
         return {}
 
 
+def parse_h2h_matrix(html_content: str) -> Dict[str, Dict[str, str]]:
+    """
+    Parse Team vs. Team table → dict of {team_abbr: {opp_abbr: "W-L", ...}}.
+
+    This is the 30×30 head-to-head matrix from the standings page.
+    """
+    logger.info("Parsing Team vs. Team matrix…")
+    try:
+        tables = pd.read_html(io.StringIO(html_content), match="Team vs. Team")
+        if not tables:
+            logger.warning("No Team vs. Team table found.")
+            return {}
+
+        df = tables[0]
+
+        # Flatten if multi-index (shouldn't be, but safety)
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [str(c[-1]).strip() for c in df.columns]
+
+        matrix: Dict[str, Dict[str, str]] = {}
+
+        for _, row in df.iterrows():
+            team_raw = str(row.get("Team", ""))
+            team_id = resolve_team_by_name(team_raw)
+            if not team_id:
+                continue
+
+            team_abbr = get_abbr(team_id)
+            team_records: Dict[str, str] = {}
+
+            for col in df.columns:
+                if col in ("Rk", "Team"):
+                    continue
+
+                opp_abbr = _normalize_bref_abbr(col)
+                # Skip self-matchup
+                if opp_abbr == team_abbr:
+                    continue
+
+                val = row.get(col, "")
+                record = str(val).strip() if pd.notna(val) else ""
+                if record and record != "nan" and record != "":
+                    team_records[opp_abbr] = record
+
+            if team_records:
+                matrix[team_abbr] = team_records
+
+        logger.info(f"Parsed H2H matrix for {len(matrix)} teams.")
+        return matrix
+
+    except Exception as e:
+        logger.warning(f"Team vs. Team parse failed (non-fatal): {e}")
+        return {}
+
+
 # ═══════════════════════════════════════════════════════
 #  B-Ref orchestrator
 # ═══════════════════════════════════════════════════════
 
-def fetch_all_bref_data(season_str: str) -> Tuple[Dict[int, dict], Dict[int, dict]]:
-    """Fetch all B-Ref data with exactly 2 HTTP requests."""
+def fetch_all_bref_data(
+    season_str: str,
+) -> Tuple[Dict[int, dict], Dict[int, dict], Dict[str, Dict[str, str]]]:
+    """
+    Fetch all B-Ref data with exactly 2 HTTP requests.
+
+    Returns:
+        (advanced_stats, expanded_standings, h2h_matrix)
+    """
     year = int(season_str.split("-")[0]) + 1
     scraper = _create_scraper()
 
+    # Page 1: Main page → Advanced Stats
     main_url = f"https://www.basketball-reference.com/leagues/NBA_{year}.html"
     logger.info(f"Fetching B-Ref main page: {main_url}")
     main_html = _fetch_bref_page(main_url, scraper)
     bref_stats = parse_advanced_stats(main_html)
 
+    # Page 2: Standings page → Expanded Standings + Team vs. Team
     standings_url = f"https://www.basketball-reference.com/leagues/NBA_{year}_standings.html"
     logger.info(f"Fetching B-Ref standings page: {standings_url}")
+    h2h_matrix: Dict[str, Dict[str, str]] = {}
+    expanded: Dict[int, dict] = {}
+
     try:
         standings_html = _fetch_bref_page(standings_url, scraper)
         expanded = parse_expanded_standings(standings_html)
+        h2h_matrix = parse_h2h_matrix(standings_html)
     except Exception as e:
         logger.warning(f"Standings page fetch failed: {e}")
-        expanded = {}
 
-    return bref_stats, expanded
+    return bref_stats, expanded, h2h_matrix
 
 
 # ═══════════════════════════════════════════════════════
@@ -362,6 +510,93 @@ def fetch_schedule_and_fatigue(season: int) -> Tuple[List[Dict], Set[int]]:
 
 
 # ═══════════════════════════════════════════════════════
+#  BDL API — last-10 rolling form (v4)
+# ═══════════════════════════════════════════════════════
+
+def _bdl_team_id_lookup() -> Dict[str, int]:
+    """
+    BDL uses its own team IDs (1-30). Map our abbreviations → BDL IDs.
+    We fetch the team list once and cache in memory.
+    """
+    result = _api_get("/nba/v1/teams", {"per_page": 30})
+    lookup = {}
+    for team in result.get("data", []):
+        abbr = team.get("abbreviation", "")
+        bdl_id = team.get("id", 0)
+        if abbr and bdl_id:
+            lookup[abbr] = bdl_id
+    return lookup
+
+
+def fetch_last10_form(team_abbrs: List[str], season: int) -> Dict[str, Dict]:
+    """
+    Fetch the last 10 completed games for each team in the slate.
+
+    Returns: {abbr: {"last10_wins": int, "last10_losses": int, "last10_games": int}}
+    """
+    logger.info(f"Fetching last-10 form for {len(team_abbrs)} teams…")
+
+    bdl_lookup = _bdl_team_id_lookup()
+    if not bdl_lookup:
+        logger.warning("Could not fetch BDL team IDs — skipping last-10 form.")
+        return {}
+
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    yesterday_str = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
+    form_data: Dict[str, Dict] = {}
+
+    for abbr in team_abbrs:
+        bdl_id = bdl_lookup.get(abbr)
+        if not bdl_id:
+            logger.debug(f"No BDL ID for {abbr}, skipping last-10.")
+            continue
+
+        result = _api_get("/nba/v1/games", {
+            "team_ids[]": bdl_id,
+            "seasons[]": season,
+            "per_page": 15,
+            "end_date": yesterday_str,
+        })
+
+        games = result.get("data", [])
+        # Filter to only Final games, take last 10
+        final_games = [g for g in games if g.get("status") == "Final"]
+        recent = final_games[:10]
+
+        wins = 0
+        losses = 0
+        for game in recent:
+            home_team = game.get("home_team", {})
+            home_score = game.get("home_team_score", 0)
+            away_score = game.get("visitor_team_score", 0)
+
+            if home_score == 0 and away_score == 0:
+                continue
+
+            is_home = home_team.get("abbreviation", "") == abbr
+            if is_home:
+                if home_score > away_score:
+                    wins += 1
+                else:
+                    losses += 1
+            else:
+                if away_score > home_score:
+                    wins += 1
+                else:
+                    losses += 1
+
+        form_data[abbr] = {
+            "last10_wins": wins,
+            "last10_losses": losses,
+            "last10_games": wins + losses,
+        }
+        logger.debug(f"  {abbr}: last-10 = {wins}-{losses}")
+
+    logger.info(f"Fetched last-10 form for {len(form_data)} teams.")
+    return form_data
+
+
+# ═══════════════════════════════════════════════════════
 #  Main orchestrator
 # ═══════════════════════════════════════════════════════
 
@@ -376,7 +611,7 @@ def fetch_all_ingredients(season: str = CURRENT_SEASON, force_refresh: bool = Fa
             logger.info("Using cached data from today.")
             return cached
 
-    bref_stats, bref_standings = fetch_all_bref_data(season)
+    bref_stats, bref_standings, h2h_matrix = fetch_all_bref_data(season)
 
     if not bref_stats or len(bref_stats) < 30:
         raise RuntimeError(
@@ -390,14 +625,29 @@ def fetch_all_ingredients(season: str = CURRENT_SEASON, force_refresh: bool = Fa
 
     todays_games, yesterdays_teams = fetch_schedule_and_fatigue(season_year)
 
+    # Collect unique team abbreviations in today's slate for last-10 fetch
+    slate_abbrs = set()
+    for game in todays_games:
+        home_id = game["home_team_id"]
+        away_id = game["away_team_id"]
+        home_info = NBA_TEAMS.get(home_id, {})
+        away_info = NBA_TEAMS.get(away_id, {})
+        if home_info.get("abbr"):
+            slate_abbrs.add(home_info["abbr"])
+        if away_info.get("abbr"):
+            slate_abbrs.add(away_info["abbr"])
+
+    last10_data = fetch_last10_form(list(slate_abbrs), season_year)
+
     teams: Dict[str, dict] = {}
     for team_id, team_info in NBA_TEAMS.items():
         raw_stats = bref_stats.get(team_id)
         exp = bref_standings.get(team_id, {})
+        abbr = team_info["abbr"]
 
         teams[str(team_id)] = {
             "id": team_id,
-            "abbr": team_info["abbr"],
+            "abbr": abbr,
             "name": team_info["name"],
             "stats": raw_stats,
             "b2b": team_id in yesterdays_teams,
@@ -413,6 +663,24 @@ def fetch_all_ingredients(season: str = CURRENT_SEASON, force_refresh: bool = Fa
                 "recent_record": exp.get("recent_record", "0-0"),
                 "close_games": exp.get("close_games", "0-0"),
                 "blowouts": exp.get("blowouts", "0-0"),
+                "monthly": exp.get("monthly", {}),
+                "pre_allstar": exp.get("pre_allstar", "0-0"),
+                "post_allstar": exp.get("post_allstar", "0-0"),
+                # v4: last-10 rolling form
+                "last10_wins": last10_data.get(abbr, {}).get("last10_wins", 0),
+                "last10_losses": last10_data.get(abbr, {}).get("last10_losses", 0),
+                "last10_games": last10_data.get(abbr, {}).get("last10_games", 0),
+            },
+            # v4: conference/division records for matchup adjustments
+            "standings": {
+                "vs_east": exp.get("vs_east", "0-0"),
+                "vs_west": exp.get("vs_west", "0-0"),
+                "vs_atlantic": exp.get("vs_atlantic", "0-0"),
+                "vs_central": exp.get("vs_central", "0-0"),
+                "vs_southeast": exp.get("vs_southeast", "0-0"),
+                "vs_northwest": exp.get("vs_northwest", "0-0"),
+                "vs_pacific": exp.get("vs_pacific", "0-0"),
+                "vs_southwest": exp.get("vs_southwest", "0-0"),
             },
         }
 
@@ -420,6 +688,7 @@ def fetch_all_ingredients(season: str = CURRENT_SEASON, force_refresh: bool = Fa
         "cache_date": today_str,
         "teams": teams,
         "games": todays_games,
+        "h2h_matrix": h2h_matrix,
     }
 
     try:

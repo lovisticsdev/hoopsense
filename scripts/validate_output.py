@@ -26,7 +26,9 @@ def validate() -> bool:
     elif not isinstance(data["games"], list):
         errors.append("games is not a list")
 
-    if data.get("metadata", {}).get("status") == "ACTIVE":
+    meta = data.get("metadata", {})
+
+    if meta.get("status") == "ACTIVE":
         if not data.get("games"):
             errors.append("status is ACTIVE but no games found")
 
@@ -40,10 +42,12 @@ def validate() -> bool:
         print("VALIDATION ERRORS:", "; ".join(errors))
         return False
 
-    meta = data.get("metadata", {})
     games_count = len(data.get("games", []))
-    print(f"OK: {games_count} games, {meta.get('picks_found', 0)} picks, "
-          f"status={meta.get('status', 'UNKNOWN')}, model=v{meta.get('model_version', '?')}")
+    version = meta.get("model_version", "?")
+    picks_found = meta.get("picks_found", 0)
+    status = meta.get("status", "UNKNOWN")
+    print(f"OK: {games_count} games, {picks_found} picks, "
+          f"status={status}, model=v{version}")
     return True
 
 
