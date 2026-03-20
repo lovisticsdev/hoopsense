@@ -1,0 +1,1039 @@
+{
+  "cache_date": "2026-03-20",
+  "teams": {
+    "1610612737": {
+      "id": 1610612737,
+      "abbr": "ATL",
+      "name": "Atlanta Hawks",
+      "stats": {
+        "efg_pct": 0.551,
+        "tov_pct": 0.12300000000000001,
+        "orb_pct": 0.23800000000000002,
+        "ft_rate": 0.182,
+        "opp_efg_pct": 0.546,
+        "opp_tov_pct": 0.13699999999999998,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.207,
+        "off_rating": 115.5,
+        "def_rating": 114.0,
+        "pace": 102.0,
+        "srs": 1.15
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 38,
+        "losses": 31,
+        "home": "19-16",
+        "away": "19-15",
+        "conf": "22-21"
+      },
+      "form": {
+        "recent_record": "3-3",
+        "close_games": "6-7",
+        "blowouts": "26-17"
+      }
+    },
+    "1610612738": {
+      "id": 1610612738,
+      "abbr": "BOS",
+      "name": "Boston Celtics",
+      "stats": {
+        "efg_pct": 0.549,
+        "tov_pct": 0.111,
+        "orb_pct": 0.294,
+        "ft_rate": 0.163,
+        "opp_efg_pct": 0.521,
+        "opp_tov_pct": 0.11599999999999999,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.192,
+        "off_rating": 120.5,
+        "def_rating": 112.6,
+        "pace": 94.7,
+        "srs": 6.73
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 46,
+        "losses": 23,
+        "home": "24-10",
+        "away": "22-13",
+        "conf": "29-14"
+      },
+      "form": {
+        "recent_record": "3-3",
+        "close_games": "5-7",
+        "blowouts": "31-8"
+      }
+    },
+    "1610612751": {
+      "id": 1610612751,
+      "abbr": "BKN",
+      "name": "Brooklyn Nets",
+      "stats": {
+        "efg_pct": 0.522,
+        "tov_pct": 0.14400000000000002,
+        "orb_pct": 0.248,
+        "ft_rate": 0.214,
+        "opp_efg_pct": 0.567,
+        "opp_tov_pct": 0.127,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.221,
+        "off_rating": 109.4,
+        "def_rating": 119.0,
+        "pace": 96.8,
+        "srs": -8.51
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 17,
+        "losses": 52,
+        "home": "9-25",
+        "away": "8-27",
+        "conf": "12-31"
+      },
+      "form": {
+        "recent_record": "0-5",
+        "close_games": "2-2",
+        "blowouts": "11-36"
+      }
+    },
+    "1610612766": {
+      "id": 1610612766,
+      "abbr": "CHA",
+      "name": "Charlotte Hornets",
+      "stats": {
+        "efg_pct": 0.55,
+        "tov_pct": 0.13699999999999998,
+        "orb_pct": 0.302,
+        "ft_rate": 0.204,
+        "opp_efg_pct": 0.54,
+        "opp_tov_pct": 0.11599999999999999,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.191,
+        "off_rating": 118.7,
+        "def_rating": 114.8,
+        "pace": 97.3,
+        "srs": 3.36
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 36,
+        "losses": 34,
+        "home": "16-17",
+        "away": "20-17",
+        "conf": "22-22"
+      },
+      "form": {
+        "recent_record": "2-3",
+        "close_games": "3-6",
+        "blowouts": "24-16"
+      }
+    },
+    "1610612741": {
+      "id": 1610612741,
+      "abbr": "CHI",
+      "name": "Chicago Bulls",
+      "stats": {
+        "efg_pct": 0.549,
+        "tov_pct": 0.132,
+        "orb_pct": 0.23199999999999998,
+        "ft_rate": 0.186,
+        "opp_efg_pct": 0.549,
+        "opp_tov_pct": 0.109,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.191,
+        "off_rating": 113.3,
+        "def_rating": 117.6,
+        "pace": 101.8,
+        "srs": -4.17
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 28,
+        "losses": 42,
+        "home": "17-20",
+        "away": "11-22",
+        "conf": "17-28"
+      },
+      "form": {
+        "recent_record": "5-0",
+        "close_games": "10-5",
+        "blowouts": "11-25"
+      }
+    },
+    "1610612739": {
+      "id": 1610612739,
+      "abbr": "CLE",
+      "name": "Cleveland Cavaliers",
+      "stats": {
+        "efg_pct": 0.558,
+        "tov_pct": 0.12300000000000001,
+        "orb_pct": 0.27,
+        "ft_rate": 0.202,
+        "opp_efg_pct": 0.541,
+        "opp_tov_pct": 0.135,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.208,
+        "off_rating": 118.6,
+        "def_rating": 114.3,
+        "pace": 100.0,
+        "srs": 4.16
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 43,
+        "losses": 27,
+        "home": "22-13",
+        "away": "21-14",
+        "conf": "28-17"
+      },
+      "form": {
+        "recent_record": "3-3",
+        "close_games": "2-5",
+        "blowouts": "24-14"
+      }
+    },
+    "1610612742": {
+      "id": 1610612742,
+      "abbr": "DAL",
+      "name": "Dallas Mavericks",
+      "stats": {
+        "efg_pct": 0.529,
+        "tov_pct": 0.129,
+        "orb_pct": 0.231,
+        "ft_rate": 0.213,
+        "opp_efg_pct": 0.54,
+        "opp_tov_pct": 0.11199999999999999,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.177,
+        "off_rating": 110.6,
+        "def_rating": 115.7,
+        "pace": 101.6,
+        "srs": -5.1
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 23,
+        "losses": 47,
+        "home": "14-21",
+        "away": "9-26",
+        "conf": "12-30"
+      },
+      "form": {
+        "recent_record": "2-3",
+        "close_games": "5-7",
+        "blowouts": "8-25"
+      }
+    },
+    "1610612743": {
+      "id": 1610612743,
+      "abbr": "DEN",
+      "name": "Denver Nuggets",
+      "stats": {
+        "efg_pct": 0.572,
+        "tov_pct": 0.11699999999999999,
+        "orb_pct": 0.233,
+        "ft_rate": 0.244,
+        "opp_efg_pct": 0.543,
+        "opp_tov_pct": 0.107,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.197,
+        "off_rating": 121.3,
+        "def_rating": 117.1,
+        "pace": 98.3,
+        "srs": 4.03
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 42,
+        "losses": 28,
+        "home": "19-13",
+        "away": "23-15",
+        "conf": "25-16"
+      },
+      "form": {
+        "recent_record": "3-2",
+        "close_games": "7-11",
+        "blowouts": "22-9"
+      }
+    },
+    "1610612765": {
+      "id": 1610612765,
+      "abbr": "DET",
+      "name": "Detroit Pistons",
+      "stats": {
+        "efg_pct": 0.541,
+        "tov_pct": 0.128,
+        "orb_pct": 0.311,
+        "ft_rate": 0.224,
+        "opp_efg_pct": 0.517,
+        "opp_tov_pct": 0.149,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.255,
+        "off_rating": 117.5,
+        "def_rating": 109.8,
+        "pace": 99.4,
+        "srs": 6.91
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 50,
+        "losses": 19,
+        "home": "26-8",
+        "away": "24-11",
+        "conf": "34-11"
+      },
+      "form": {
+        "recent_record": "3-2",
+        "close_games": "9-5",
+        "blowouts": "26-7"
+      }
+    },
+    "1610612744": {
+      "id": 1610612744,
+      "abbr": "GSW",
+      "name": "Golden State Warriors",
+      "stats": {
+        "efg_pct": 0.548,
+        "tov_pct": 0.135,
+        "orb_pct": 0.258,
+        "ft_rate": 0.186,
+        "opp_efg_pct": 0.545,
+        "opp_tov_pct": 0.14,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.202,
+        "off_rating": 115.2,
+        "def_rating": 114.7,
+        "pace": 99.2,
+        "srs": 0.91
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 33,
+        "losses": 36,
+        "home": "19-15",
+        "away": "14-21",
+        "conf": "22-22"
+      },
+      "form": {
+        "recent_record": "4-2",
+        "close_games": "4-5",
+        "blowouts": "20-18"
+      }
+    },
+    "1610612745": {
+      "id": 1610612745,
+      "abbr": "HOU",
+      "name": "Houston Rockets",
+      "stats": {
+        "efg_pct": 0.537,
+        "tov_pct": 0.136,
+        "orb_pct": 0.35100000000000003,
+        "ft_rate": 0.198,
+        "opp_efg_pct": 0.531,
+        "opp_tov_pct": 0.121,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.191,
+        "off_rating": 117.4,
+        "def_rating": 113.4,
+        "pace": 95.8,
+        "srs": 3.63
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 41,
+        "losses": 27,
+        "home": "23-10",
+        "away": "18-17",
+        "conf": "23-21"
+      },
+      "form": {
+        "recent_record": "2-2",
+        "close_games": "3-8",
+        "blowouts": "19-11"
+      }
+    },
+    "1610612754": {
+      "id": 1610612754,
+      "abbr": "IND",
+      "name": "Indiana Pacers",
+      "stats": {
+        "efg_pct": 0.524,
+        "tov_pct": 0.127,
+        "orb_pct": 0.221,
+        "ft_rate": 0.199,
+        "opp_efg_pct": 0.557,
+        "opp_tov_pct": 0.11900000000000001,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.226,
+        "off_rating": 109.9,
+        "def_rating": 118.8,
+        "pace": 100.8,
+        "srs": -8.76
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 15,
+        "losses": 55,
+        "home": "10-25",
+        "away": "5-30",
+        "conf": "11-33"
+      },
+      "form": {
+        "recent_record": "0-5",
+        "close_games": "6-5",
+        "blowouts": "4-33"
+      }
+    },
+    "1610612746": {
+      "id": 1610612746,
+      "abbr": "LAC",
+      "name": "Los Angeles Clippers",
+      "stats": {
+        "efg_pct": 0.556,
+        "tov_pct": 0.134,
+        "orb_pct": 0.23800000000000002,
+        "ft_rate": 0.25,
+        "opp_efg_pct": 0.546,
+        "opp_tov_pct": 0.127,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.199,
+        "off_rating": 116.9,
+        "def_rating": 116.4,
+        "pace": 96.4,
+        "srs": 0.61
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 34,
+        "losses": 36,
+        "home": "19-15",
+        "away": "15-21",
+        "conf": "21-23"
+      },
+      "form": {
+        "recent_record": "3-2",
+        "close_games": "6-8",
+        "blowouts": "20-19"
+      }
+    },
+    "1610612747": {
+      "id": 1610612747,
+      "abbr": "LAL",
+      "name": "Los Angeles Lakers",
+      "stats": {
+        "efg_pct": 0.572,
+        "tov_pct": 0.131,
+        "orb_pct": 0.24,
+        "ft_rate": 0.241,
+        "opp_efg_pct": 0.558,
+        "opp_tov_pct": 0.131,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.193,
+        "off_rating": 118.3,
+        "def_rating": 116.8,
+        "pace": 98.4,
+        "srs": 1.52
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 45,
+        "losses": 25,
+        "home": "23-12",
+        "away": "22-13",
+        "conf": "30-16"
+      },
+      "form": {
+        "recent_record": "4-2",
+        "close_games": "7-2",
+        "blowouts": "22-19"
+      }
+    },
+    "1610612763": {
+      "id": 1610612763,
+      "abbr": "MEM",
+      "name": "Memphis Grizzlies",
+      "stats": {
+        "efg_pct": 0.535,
+        "tov_pct": 0.13,
+        "orb_pct": 0.259,
+        "ft_rate": 0.205,
+        "opp_efg_pct": 0.553,
+        "opp_tov_pct": 0.134,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.201,
+        "off_rating": 113.9,
+        "def_rating": 116.8,
+        "pace": 101.3,
+        "srs": -3.21
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 24,
+        "losses": 44,
+        "home": "13-20",
+        "away": "11-24",
+        "conf": "19-27"
+      },
+      "form": {
+        "recent_record": "3-3",
+        "close_games": "2-5",
+        "blowouts": "9-20"
+      }
+    },
+    "1610612748": {
+      "id": 1610612748,
+      "abbr": "MIA",
+      "name": "Miami Heat",
+      "stats": {
+        "efg_pct": 0.535,
+        "tov_pct": 0.11699999999999999,
+        "orb_pct": 0.258,
+        "ft_rate": 0.214,
+        "opp_efg_pct": 0.533,
+        "opp_tov_pct": 0.132,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.194,
+        "off_rating": 115.8,
+        "def_rating": 112.8,
+        "pace": 103.7,
+        "srs": 3.14
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 38,
+        "losses": 32,
+        "home": "23-13",
+        "away": "15-19",
+        "conf": "22-20"
+      },
+      "form": {
+        "recent_record": "3-2",
+        "close_games": "6-3",
+        "blowouts": "24-17"
+      }
+    },
+    "1610612749": {
+      "id": 1610612749,
+      "abbr": "MIL",
+      "name": "Milwaukee Bucks",
+      "stats": {
+        "efg_pct": 0.565,
+        "tov_pct": 0.135,
+        "orb_pct": 0.204,
+        "ft_rate": 0.166,
+        "opp_efg_pct": 0.553,
+        "opp_tov_pct": 0.11699999999999999,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.214,
+        "off_rating": 113.1,
+        "def_rating": 118.5,
+        "pace": 97.7,
+        "srs": -5.3
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 28,
+        "losses": 41,
+        "home": "16-19",
+        "away": "12-22",
+        "conf": "20-27"
+      },
+      "form": {
+        "recent_record": "4-1",
+        "close_games": "5-6",
+        "blowouts": "16-26"
+      }
+    },
+    "1610612750": {
+      "id": 1610612750,
+      "abbr": "MIN",
+      "name": "Minnesota Timberwolves",
+      "stats": {
+        "efg_pct": 0.565,
+        "tov_pct": 0.131,
+        "orb_pct": 0.261,
+        "ft_rate": 0.22,
+        "opp_efg_pct": 0.532,
+        "opp_tov_pct": 0.128,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.218,
+        "off_rating": 117.6,
+        "def_rating": 113.8,
+        "pace": 100.6,
+        "srs": 3.41
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 43,
+        "losses": 27,
+        "home": "24-12",
+        "away": "19-15",
+        "conf": "27-20"
+      },
+      "form": {
+        "recent_record": "2-3",
+        "close_games": "5-4",
+        "blowouts": "25-14"
+      }
+    },
+    "1610612740": {
+      "id": 1610612740,
+      "abbr": "NOP",
+      "name": "New Orleans Pelicans",
+      "stats": {
+        "efg_pct": 0.529,
+        "tov_pct": 0.124,
+        "orb_pct": 0.273,
+        "ft_rate": 0.223,
+        "opp_efg_pct": 0.552,
+        "opp_tov_pct": 0.125,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.2,
+        "off_rating": 114.6,
+        "def_rating": 118.3,
+        "pace": 100.1,
+        "srs": -3.63
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 25,
+        "losses": 46,
+        "home": "16-21",
+        "away": "9-25",
+        "conf": "16-30"
+      },
+      "form": {
+        "recent_record": "0-5",
+        "close_games": "2-5",
+        "blowouts": "14-20"
+      }
+    },
+    "1610612752": {
+      "id": 1610612752,
+      "abbr": "NYK",
+      "name": "New York Knicks",
+      "stats": {
+        "efg_pct": 0.555,
+        "tov_pct": 0.121,
+        "orb_pct": 0.294,
+        "ft_rate": 0.188,
+        "opp_efg_pct": 0.538,
+        "opp_tov_pct": 0.13,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.21,
+        "off_rating": 119.6,
+        "def_rating": 113.0,
+        "pace": 97.5,
+        "srs": 6.16
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 45,
+        "losses": 25,
+        "home": "25-9",
+        "away": "20-16",
+        "conf": "29-15"
+      },
+      "form": {
+        "recent_record": "2-3",
+        "close_games": "7-4",
+        "blowouts": "28-15"
+      }
+    },
+    "1610612760": {
+      "id": 1610612760,
+      "abbr": "OKC",
+      "name": "Oklahoma City Thunder",
+      "stats": {
+        "efg_pct": 0.557,
+        "tov_pct": 0.11199999999999999,
+        "orb_pct": 0.21899999999999997,
+        "ft_rate": 0.218,
+        "opp_efg_pct": 0.515,
+        "opp_tov_pct": 0.147,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.19,
+        "off_rating": 118.3,
+        "def_rating": 107.3,
+        "pace": 99.3,
+        "srs": 10.77
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 55,
+        "losses": 15,
+        "home": "29-7",
+        "away": "26-8",
+        "conf": "37-9"
+      },
+      "form": {
+        "recent_record": "6-0",
+        "close_games": "5-6",
+        "blowouts": "35-6"
+      }
+    },
+    "1610612753": {
+      "id": 1610612753,
+      "abbr": "ORL",
+      "name": "Orlando Magic",
+      "stats": {
+        "efg_pct": 0.529,
+        "tov_pct": 0.12,
+        "orb_pct": 0.249,
+        "ft_rate": 0.242,
+        "opp_efg_pct": 0.542,
+        "opp_tov_pct": 0.132,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.222,
+        "off_rating": 115.0,
+        "def_rating": 113.9,
+        "pace": 99.5,
+        "srs": 1.27
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 38,
+        "losses": 31,
+        "home": "22-13",
+        "away": "16-18",
+        "conf": "24-21"
+      },
+      "form": {
+        "recent_record": "2-4",
+        "close_games": "11-3",
+        "blowouts": "15-17"
+      }
+    },
+    "1610612755": {
+      "id": 1610612755,
+      "abbr": "PHI",
+      "name": "Philadelphia 76ers",
+      "stats": {
+        "efg_pct": 0.528,
+        "tov_pct": 0.12,
+        "orb_pct": 0.264,
+        "ft_rate": 0.227,
+        "opp_efg_pct": 0.545,
+        "opp_tov_pct": 0.13699999999999998,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.215,
+        "off_rating": 115.1,
+        "def_rating": 115.7,
+        "pace": 99.2,
+        "srs": -0.67
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 38,
+        "losses": 32,
+        "home": "20-16",
+        "away": "18-16",
+        "conf": "22-23"
+      },
+      "form": {
+        "recent_record": "4-1",
+        "close_games": "6-8",
+        "blowouts": "20-15"
+      }
+    },
+    "1610612756": {
+      "id": 1610612756,
+      "abbr": "PHX",
+      "name": "Phoenix Suns",
+      "stats": {
+        "efg_pct": 0.535,
+        "tov_pct": 0.128,
+        "orb_pct": 0.28800000000000003,
+        "ft_rate": 0.177,
+        "opp_efg_pct": 0.541,
+        "opp_tov_pct": 0.145,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.219,
+        "off_rating": 115.1,
+        "def_rating": 114.1,
+        "pace": 97.1,
+        "srs": 1.33
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 39,
+        "losses": 31,
+        "home": "22-13",
+        "away": "17-18",
+        "conf": "25-20"
+      },
+      "form": {
+        "recent_record": "2-4",
+        "close_games": "7-8",
+        "blowouts": "20-14"
+      }
+    },
+    "1610612757": {
+      "id": 1610612757,
+      "abbr": "POR",
+      "name": "Portland Trail Blazers",
+      "stats": {
+        "efg_pct": 0.531,
+        "tov_pct": 0.146,
+        "orb_pct": 0.311,
+        "ft_rate": 0.213,
+        "opp_efg_pct": 0.545,
+        "opp_tov_pct": 0.134,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.215,
+        "off_rating": 113.9,
+        "def_rating": 115.9,
+        "pace": 100.9,
+        "srs": -1.6
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 34,
+        "losses": 36,
+        "home": "18-16",
+        "away": "16-20",
+        "conf": "24-19"
+      },
+      "form": {
+        "recent_record": "4-2",
+        "close_games": "6-5",
+        "blowouts": "16-16"
+      }
+    },
+    "1610612758": {
+      "id": 1610612758,
+      "abbr": "SAC",
+      "name": "Sacramento Kings",
+      "stats": {
+        "efg_pct": 0.522,
+        "tov_pct": 0.125,
+        "orb_pct": 0.25,
+        "ft_rate": 0.198,
+        "opp_efg_pct": 0.569,
+        "opp_tov_pct": 0.12300000000000001,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.216,
+        "off_rating": 110.7,
+        "def_rating": 120.9,
+        "pace": 99.7,
+        "srs": -9.49
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 18,
+        "losses": 53,
+        "home": "12-25",
+        "away": "6-28",
+        "conf": "12-35"
+      },
+      "form": {
+        "recent_record": "1-4",
+        "close_games": "3-4",
+        "blowouts": "6-35"
+      }
+    },
+    "1610612759": {
+      "id": 1610612759,
+      "abbr": "SAS",
+      "name": "San Antonio Spurs",
+      "stats": {
+        "efg_pct": 0.556,
+        "tov_pct": 0.11900000000000001,
+        "orb_pct": 0.256,
+        "ft_rate": 0.219,
+        "opp_efg_pct": 0.522,
+        "opp_tov_pct": 0.11599999999999999,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.184,
+        "off_rating": 118.6,
+        "def_rating": 111.4,
+        "pace": 100.0,
+        "srs": 7.48
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 52,
+        "losses": 18,
+        "home": "27-7",
+        "away": "25-11",
+        "conf": "31-14"
+      },
+      "form": {
+        "recent_record": "5-0",
+        "close_games": "8-4",
+        "blowouts": "33-7"
+      }
+    },
+    "1610612761": {
+      "id": 1610612761,
+      "abbr": "TOR",
+      "name": "Toronto Raptors",
+      "stats": {
+        "efg_pct": 0.539,
+        "tov_pct": 0.122,
+        "orb_pct": 0.256,
+        "ft_rate": 0.205,
+        "opp_efg_pct": 0.539,
+        "opp_tov_pct": 0.142,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.22,
+        "off_rating": 115.1,
+        "def_rating": 112.9,
+        "pace": 98.5,
+        "srs": 2.06
+      },
+      "b2b": false,
+      "rest_days": 1,
+      "record": {
+        "wins": 39,
+        "losses": 29,
+        "home": "19-16",
+        "away": "20-13",
+        "conf": "29-16"
+      },
+      "form": {
+        "recent_record": "2-4",
+        "close_games": "7-4",
+        "blowouts": "26-18"
+      }
+    },
+    "1610612762": {
+      "id": 1610612762,
+      "abbr": "UTA",
+      "name": "Utah Jazz",
+      "stats": {
+        "efg_pct": 0.538,
+        "tov_pct": 0.134,
+        "orb_pct": 0.265,
+        "ft_rate": 0.225,
+        "opp_efg_pct": 0.574,
+        "opp_tov_pct": 0.124,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.232,
+        "off_rating": 114.6,
+        "def_rating": 121.8,
+        "pace": 101.5,
+        "srs": -7.23
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 21,
+        "losses": 49,
+        "home": "13-22",
+        "away": "8-27",
+        "conf": "11-33"
+      },
+      "form": {
+        "recent_record": "2-3",
+        "close_games": "5-8",
+        "blowouts": "8-32"
+      }
+    },
+    "1610612764": {
+      "id": 1610612764,
+      "abbr": "WAS",
+      "name": "Washington Wizards",
+      "stats": {
+        "efg_pct": 0.533,
+        "tov_pct": 0.13699999999999998,
+        "orb_pct": 0.245,
+        "ft_rate": 0.184,
+        "opp_efg_pct": 0.553,
+        "opp_tov_pct": 0.11599999999999999,
+        "drb_pct": 0.75,
+        "opp_ft_rate": 0.233,
+        "off_rating": 110.8,
+        "def_rating": 121.9,
+        "pace": 101.1,
+        "srs": -10.84
+      },
+      "b2b": true,
+      "rest_days": 0,
+      "record": {
+        "wins": 16,
+        "losses": 53,
+        "home": "11-25",
+        "away": "5-28",
+        "conf": "11-33"
+      },
+      "form": {
+        "recent_record": "1-4",
+        "close_games": "2-2",
+        "blowouts": "7-41"
+      }
+    }
+  },
+  "games": [
+    {
+      "id": "18447834",
+      "start_time": "2026-03-20T23:30:00.000Z",
+      "status": "2026-03-20T23:30:00Z",
+      "home_team_id": 1610612751,
+      "away_team_id": 1610612752
+    },
+    {
+      "id": "18447835",
+      "start_time": "2026-03-20T23:30:00.000Z",
+      "status": "2026-03-20T23:30:00Z",
+      "home_team_id": 1610612765,
+      "away_team_id": 1610612744
+    },
+    {
+      "id": "18447836",
+      "start_time": "2026-03-21T00:00:00.000Z",
+      "status": "2026-03-21T00:00:00Z",
+      "home_team_id": 1610612745,
+      "away_team_id": 1610612737
+    },
+    {
+      "id": "18447837",
+      "start_time": "2026-03-21T00:00:00.000Z",
+      "status": "2026-03-21T00:00:00Z",
+      "home_team_id": 1610612763,
+      "away_team_id": 1610612738
+    },
+    {
+      "id": "18447838",
+      "start_time": "2026-03-21T00:00:00.000Z",
+      "status": "2026-03-21T00:00:00Z",
+      "home_team_id": 1610612750,
+      "away_team_id": 1610612757
+    },
+    {
+      "id": "18447839",
+      "start_time": "2026-03-21T01:00:00.000Z",
+      "status": "2026-03-21T01:00:00Z",
+      "home_team_id": 1610612743,
+      "away_team_id": 1610612761
+    }
+  ]
+}

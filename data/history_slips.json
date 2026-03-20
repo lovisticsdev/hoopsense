@@ -1,0 +1,137 @@
+{
+  "2026-03-19": {
+    "date": "2026-03-19",
+    "lock": {
+      "game_id": "18447827",
+      "away_abbr": "DET",
+      "home_abbr": "WAS",
+      "selection": "DET",
+      "win_prob": 0.9823,
+      "confidence": "HIGH",
+      "reasoning": "Model gave DET a 98.2% win probability.",
+      "status": "PENDING"
+    },
+    "premium": [
+      {
+        "game_id": "18447831",
+        "away_abbr": "PHX",
+        "home_abbr": "SAS",
+        "selection": "SAS",
+        "win_prob": 0.9734,
+        "confidence": "HIGH",
+        "reasoning": "Model gave SAS a 97.3% win probability.",
+        "status": "PENDING"
+      },
+      {
+        "game_id": "18447828",
+        "away_abbr": "LAL",
+        "home_abbr": "MIA",
+        "selection": "MIA",
+        "win_prob": 0.8943,
+        "confidence": "HIGH",
+        "reasoning": "Model gave MIA a 89.4% win probability.",
+        "status": "PENDING"
+      },
+      {
+        "game_id": "18447826",
+        "away_abbr": "ORL",
+        "home_abbr": "CHA",
+        "selection": "CHA",
+        "win_prob": 0.853,
+        "confidence": "HIGH",
+        "reasoning": "Model gave CHA a 85.3% win probability.",
+        "status": "PENDING"
+      }
+    ]
+  },
+  "2026-03-17": {
+    "date": "2026-03-17",
+    "lock": {
+      "game_id": "18447812",
+      "away_abbr": "IND",
+      "home_abbr": "NYK",
+      "selection": "NYK",
+      "win_prob": 0.9979,
+      "confidence": "HIGH",
+      "reasoning": "Model gave NYK a 99.8% win probability.",
+      "status": "WIN"
+    },
+    "premium": [
+      {
+        "game_id": "18447816",
+        "away_abbr": "SAS",
+        "home_abbr": "SAC",
+        "selection": "SAS",
+        "win_prob": 0.9837,
+        "confidence": "HIGH",
+        "reasoning": "Model gave SAS a 98.4% win probability.",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447811",
+        "away_abbr": "DET",
+        "home_abbr": "WAS",
+        "selection": "DET",
+        "win_prob": 0.9823,
+        "confidence": "HIGH",
+        "reasoning": "Model gave DET a 98.2% win probability.",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447815",
+        "away_abbr": "PHI",
+        "home_abbr": "DEN",
+        "selection": "DEN",
+        "win_prob": 0.9493,
+        "confidence": "HIGH",
+        "reasoning": "Model gave DEN a 94.9% win probability.",
+        "status": "WIN"
+      }
+    ]
+  },
+  "2026-03-16": {
+    "date": "2026-03-16",
+    "lock": {
+      "game_id": "18447804",
+      "away_abbr": "PHX",
+      "home_abbr": "BOS",
+      "selection": "BOS",
+      "win_prob": 0.9745,
+      "confidence": "HIGH",
+      "reasoning": "Model gave BOS a 97.5% win probability.",
+      "status": "WIN"
+    },
+    "premium": [
+      {
+        "game_id": "18447802",
+        "away_abbr": "GSW",
+        "home_abbr": "WAS",
+        "selection": "GSW",
+        "win_prob": 0.955,
+        "confidence": "HIGH",
+        "reasoning": "Model gave GSW a 95.5% win probability.",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447807",
+        "away_abbr": "LAL",
+        "home_abbr": "HOU",
+        "selection": "HOU",
+        "win_prob": 0.9473,
+        "confidence": "HIGH",
+        "reasoning": "Model gave HOU a 94.7% win probability.",
+        "status": "LOSS"
+      },
+      {
+        "game_id": "18447801",
+        "away_abbr": "ORL",
+        "home_abbr": "ATL",
+        "selection": "ATL",
+        "win_prob": 0.8582,
+        "confidence": "HIGH",
+        "reasoning": "Model gave ATL a 85.8% win probability.",
+        "status": "WIN"
+      }
+    ]
+  }
+}

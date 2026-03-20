@@ -40,13 +40,7 @@ if [ "$DRY_RUN" = true ]; then
     echo "[3/3] Dry run — skipping git push."
 else
     cd "$PROJECT_ROOT"
-    git add data/nba_daily.json
-    git add data/history_slips.json   2>/dev/null || true
-    git add data/season_stats.json    2>/dev/null || true
-    git add data/nba_raw_stats_cache.json 2>/dev/null || true
-    git add scripts/*.py scripts/*.sh scripts/requirements.txt 2>/dev/null || true
-    git add .github/ 2>/dev/null || true
-
+    git add .
     if git diff --staged --quiet; then
         echo "[3/3] No changes to commit."
     else
