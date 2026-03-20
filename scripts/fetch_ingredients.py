@@ -437,7 +437,12 @@ def _get_api_key() -> str:
     return key
 
 
-def _api_get(endpoint: str, params: dict = None, max_retries: int = 3) -> dict:
+def _api_get(endpoint: str, params: dict = None, max_retries: int = 4) -> dict:
+    """
+    BDL API request with exponential backoff + jitter on 429s.
+
+    Backoff sequence: ~3s, ~7s, ~15s, ~31s (base 2^(attempt+1) + jitter).
+    """
     api_key = _get_api_key()
     if not api_key:
         return {}
@@ -449,9 +454,10 @@ def _api_get(endpoint: str, params: dict = None, max_retries: int = 3) -> dict:
             time.sleep(REQUEST_DELAY)
             response = requests.get(url, headers=headers, params=params, timeout=15)
             if response.status_code == 429:
-                wait = 15 * (attempt + 1)
-                logger.warning(f"BDL 429, waiting {wait}s…")
-                time.sleep(wait)
+                backoff = (2 ** (attempt + 1)) + random.uniform(1, 4)
+                logger.warning(f"BDL 429 (attempt {attempt + 1}/{max_retries}), "
+                               f"backoff {backoff:.0f}s…")
+                time.sleep(backoff)
                 continue
             response.raise_for_status()
             return response.json()
@@ -459,12 +465,53 @@ def _api_get(endpoint: str, params: dict = None, max_retries: int = 3) -> dict:
             if attempt == max_retries - 1:
                 logger.error(f"BDL API failed after {max_retries} attempts: {e}")
                 return {}
+            backoff = (2 ** (attempt + 1)) + random.uniform(0, 2)
+            logger.warning(f"BDL request error (attempt {attempt + 1}): {e}, "
+                           f"retrying in {backoff:.0f}s…")
+            time.sleep(backoff)
     return {}
 
 
 def _find_nba_team_id(team: dict) -> int:
     """Map a BDL team dict → internal ID via abbreviation."""
     return ABBR_TO_ID.get(team.get("abbreviation", ""), 0)
+
+
+def _normalize_game_status(raw_status: str) -> str:
+    """
+    Normalize the BDL 'status' field to a clean enum.
+
+    BDL returns:
+      - "Final" for completed games
+      - A tipoff timestamp (e.g. "2026-03-20T23:30:00Z") for future games
+      - "In Progress" / a quarter string for live games
+      - Various other strings
+
+    We normalize to: FINAL, SCHEDULED, IN_PROGRESS.
+    """
+    if not raw_status:
+        return "SCHEDULED"
+
+    lower = raw_status.strip().lower()
+
+    if lower == "final":
+        return "FINAL"
+
+    # BDL sometimes returns timestamps like "2026-03-20T23:30:00Z"
+    if "t" in lower and ("z" in lower or "+" in lower or "-" in lower[11:]):
+        return "SCHEDULED"
+
+    # Check for in-progress indicators
+    in_progress_keywords = ("in progress", "1st qtr", "2nd qtr", "3rd qtr",
+                            "4th qtr", "halftime", "ot", "overtime")
+    if any(kw in lower for kw in in_progress_keywords):
+        return "IN_PROGRESS"
+
+    # If it looks like a date/time string (digits and dashes), treat as scheduled
+    if lower.replace("-", "").replace(":", "").replace(" ", "").isdigit():
+        return "SCHEDULED"
+
+    return "SCHEDULED"
 
 
 def fetch_schedule_and_fatigue(season: int) -> Tuple[List[Dict], Set[int]]:
@@ -496,10 +543,17 @@ def fetch_schedule_and_fatigue(season: int) -> Tuple[List[Dict], Set[int]]:
             yesterdays_teams.add(home_id)
             yesterdays_teams.add(away_id)
         elif game_date.startswith(today_str):
+            # start_time: always UTC ISO-8601 (e.g. "2026-03-20T23:30:00.000Z").
+            # The Android app converts to device-local TZ for display.
+            raw_time = game.get("datetime", game_date)
+            # Ensure UTC suffix if missing (BDL sometimes omits it)
+            if raw_time and not raw_time.endswith("Z") and "+" not in raw_time:
+                raw_time = raw_time.rstrip() + "Z"
+
             todays_games.append({
                 "id": str(game.get("id")),
-                "start_time": game.get("datetime", game_date),
-                "status": game.get("status", "SCHEDULED"),
+                "start_time": raw_time,
+                "status": _normalize_game_status(game.get("status", "")),
                 "home_team_id": home_id,
                 "away_team_id": away_id,
             })
@@ -545,11 +599,15 @@ def fetch_last10_form(team_abbrs: List[str], season: int) -> Dict[str, Dict]:
     yesterday_str = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
     form_data: Dict[str, Dict] = {}
 
-    for abbr in team_abbrs:
+    for idx, abbr in enumerate(team_abbrs):
         bdl_id = bdl_lookup.get(abbr)
         if not bdl_id:
             logger.debug(f"No BDL ID for {abbr}, skipping last-10.")
             continue
+
+        # Extra pacing between teams to stay under BDL rate limits
+        if idx > 0:
+            time.sleep(1.5 + random.uniform(0, 1))
 
         result = _api_get("/nba/v1/games", {
             "team_ids[]": bdl_id,

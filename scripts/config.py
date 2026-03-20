@@ -233,8 +233,19 @@ def spread_to_prob(spread: float) -> float:
 
 
 # ── Pick selection thresholds ──────────────────────────
+#
+# Confidence bands are calibrated to the logistic model's output range.
+# With LOGISTIC_K = 5.5:
+#   +2.0 spread ≈ 58%   → LOW
+#   +3.5 spread ≈ 65%   → MEDIUM
+#   +5.5 spread ≈ 73%   → HIGH
+#   +8.0 spread ≈ 83%   → VERY HIGH
+#   +11  spread ≈ 91%   → LOCK
+#
+# This gives meaningful differentiation across the typical NBA spread range.
 
-HIGH_CONFIDENCE_PROB = 0.65
-MEDIUM_CONFIDENCE_PROB = 0.58
-MIN_PICK_PROB = 0.55
+LOCK_CONFIDENCE_PROB = 0.90      # ~11+ point spread — near-certain
+HIGH_CONFIDENCE_PROB = 0.80      # ~7-11 point spread — strong edge
+MEDIUM_CONFIDENCE_PROB = 0.65    # ~3.5-7 point spread — moderate edge
+MIN_PICK_PROB = 0.55             # minimum to surface as a pick at all
 MIN_GAMES_FOR_STATS = 10

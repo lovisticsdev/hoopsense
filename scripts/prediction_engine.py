@@ -42,7 +42,8 @@ from config import (
     # Head-to-head
     H2H_SCALING, H2H_CAP, H2H_MIN_GAMES,
     # Spread → probability
-    HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB, MIN_PICK_PROB,
+    LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB,
+    MIN_PICK_PROB,
     spread_to_prob,
     # Division/conference lookups
     TEAM_DIVISIONS, OPPONENT_DIV_TO_KEY, OPPONENT_CONF_TO_KEY,
@@ -387,7 +388,17 @@ def apply_adjustments(
 # ═══════════════════════════════════════════════════════
 
 def confidence_from_prob(max_prob: float) -> str:
-    """Derive confidence label from the model's strongest win probability."""
+    """
+    Derive confidence label from the model's strongest win probability.
+
+    5-tier system calibrated to NBA spread ranges:
+      LOCK      ≥ 90%  (~11+ pt spread)   — near-certain
+      HIGH      ≥ 80%  (~7-11 pt spread)  — strong edge
+      MEDIUM    ≥ 65%  (~3.5-7 pt spread) — moderate edge
+      LOW       < 65%  (below ~3.5 pts)   — slight edge
+    """
+    if max_prob >= LOCK_CONFIDENCE_PROB:
+        return "LOCK"
     if max_prob >= HIGH_CONFIDENCE_PROB:
         return "HIGH"
     if max_prob >= MEDIUM_CONFIDENCE_PROB:

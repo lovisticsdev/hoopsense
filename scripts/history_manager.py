@@ -2,6 +2,7 @@
 History manager: grade past picks, maintain a 5-day rolling history, backfill gaps.
 """
 import logging
+import random
 import time
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
@@ -43,8 +44,8 @@ def _last_n_dates(n: int) -> List[str]:
 
 
 def _fetch_games_for_date(date_str: str) -> list:
-    """Fetch games from BDL with rate-limit-friendly delay."""
-    time.sleep(HISTORY_API_DELAY)
+    """Fetch games from BDL with rate-limit-friendly delay + jitter."""
+    time.sleep(HISTORY_API_DELAY + random.uniform(0.5, 2.0))
     result = _api_get("/nba/v1/games", {"dates[]": date_str})
     games = result.get("data", [])
     if not games:
