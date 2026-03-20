@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-03-20T10:31:58.976504+00:00",
+    "generated_at": "2026-03-20T10:39:04.507241+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "3.0",
@@ -357,13 +357,58 @@
             "status": "WIN"
           }
         ]
+      },
+      {
+        "date": "2026-03-15",
+        "lock": {
+          "game_id": "18447794",
+          "away_abbr": "MIN",
+          "home_abbr": "OKC",
+          "selection": "OKC",
+          "win_prob": 0.9734,
+          "confidence": "HIGH",
+          "reasoning": "Model gave OKC a 97.3% win probability.",
+          "status": "WIN"
+        },
+        "premium": [
+          {
+            "game_id": "18447795",
+            "away_abbr": "DAL",
+            "home_abbr": "CLE",
+            "selection": "CLE",
+            "win_prob": 0.9617,
+            "confidence": "HIGH",
+            "reasoning": "Model gave CLE a 96.2% win probability.",
+            "status": "LOSS"
+          },
+          {
+            "game_id": "18447799",
+            "away_abbr": "GSW",
+            "home_abbr": "NYK",
+            "selection": "NYK",
+            "win_prob": 0.9513,
+            "confidence": "HIGH",
+            "reasoning": "Model gave NYK a 95.1% win probability.",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447797",
+            "away_abbr": "IND",
+            "home_abbr": "MIL",
+            "selection": "MIL",
+            "win_prob": 0.9091,
+            "confidence": "HIGH",
+            "reasoning": "Model gave MIL a 90.9% win probability.",
+            "status": "WIN"
+          }
+        ]
       }
     ],
     "season_stats": {
-      "wins": 13,
-      "losses": 3,
-      "total_bets": 16,
-      "win_rate": 81.2
+      "wins": 16,
+      "losses": 4,
+      "total_bets": 20,
+      "win_rate": 80.0
     }
   }
 }
