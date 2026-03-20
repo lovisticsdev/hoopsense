@@ -230,7 +230,7 @@
       "win_prob": 0.9868,
       "confidence": "LOCK",
       "reasoning": "Model gave BOS a 98.7% win probability.",
-      "status": "PENDING"
+      "status": "WIN"
     },
     "premium": [
       {
@@ -241,7 +241,7 @@
         "win_prob": 0.9429,
         "confidence": "LOCK",
         "reasoning": "Model gave HOU a 94.3% win probability.",
-        "status": "PENDING"
+        "status": "LOSS"
       },
       {
         "game_id": "18447801",
@@ -251,7 +251,7 @@
         "win_prob": 0.9406,
         "confidence": "LOCK",
         "reasoning": "Model gave ATL a 94.1% win probability.",
-        "status": "PENDING"
+        "status": "WIN"
       },
       {
         "game_id": "18447802",
@@ -261,7 +261,7 @@
         "win_prob": 0.8943,
         "confidence": "HIGH",
         "reasoning": "Model gave GSW a 89.4% win probability.",
-        "status": "PENDING"
+        "status": "WIN"
       }
     ]
   }
