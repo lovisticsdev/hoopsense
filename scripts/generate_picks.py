@@ -278,7 +278,7 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
         lock_info = game_lookup.get(best_picks[0]["game_id"], {})
         lock = _build_pick(best_picks[0], teams, lock_info, h2h_matrix)
 
-        for pick in best_picks[1:4]:
+        for pick in best_picks[1:]:
             p_info = game_lookup.get(pick["game_id"], {})
             premium.append(_build_pick(pick, teams, p_info, h2h_matrix))
 

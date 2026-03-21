@@ -201,7 +201,7 @@ def _generate_historical_picks(
     return {
         "date": date_str,
         "lock": candidates[0],
-        "premium": candidates[1:4],
+        "premium": candidates[1:],
     }
 
 
