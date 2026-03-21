@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-03-21T16:24:04.941724+00:00",
+    "generated_at": "2026-03-21T16:27:33.930609+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "4.0",
@@ -299,7 +299,7 @@
           "win_prob": 0.9674,
           "confidence": "LOCK",
           "reasoning": "HOU (HOU vs ATL).",
-          "status": "PENDING"
+          "status": "WIN"
         },
         "premium": [
           {
@@ -310,7 +310,7 @@
             "win_prob": 0.9585,
             "confidence": "LOCK",
             "reasoning": "DET (DET vs GSW).",
-            "status": "PENDING"
+            "status": "WIN"
           },
           {
             "game_id": "18447839",
@@ -320,7 +320,7 @@
             "win_prob": 0.9473,
             "confidence": "LOCK",
             "reasoning": "DEN (DEN vs TOR).",
-            "status": "PENDING"
+            "status": "WIN"
           },
           {
             "game_id": "18447838",
@@ -330,7 +330,7 @@
             "win_prob": 0.9332,
             "confidence": "LOCK",
             "reasoning": "MIN (MIN vs POR).",
-            "status": "PENDING"
+            "status": "LOSS"
           },
           {
             "game_id": "18447834",
@@ -340,7 +340,7 @@
             "win_prob": 0.922,
             "confidence": "LOCK",
             "reasoning": "NYK (BKN vs NYK).",
-            "status": "PENDING"
+            "status": "WIN"
           },
           {
             "game_id": "18447837",
@@ -350,7 +350,92 @@
             "win_prob": 0.8248,
             "confidence": "HIGH",
             "reasoning": "BOS (MEM vs BOS).",
-            "status": "PENDING"
+            "status": "WIN"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-19",
+        "lock": {
+          "game_id": "18447826",
+          "away_abbr": "ORL",
+          "home_abbr": "CHA",
+          "selection": "CHA",
+          "win_prob": 0.922,
+          "confidence": "LOCK",
+          "reasoning": "CHA (CHA vs ORL).",
+          "status": "WIN"
+        },
+        "premium": [
+          {
+            "game_id": "18447831",
+            "away_abbr": "PHX",
+            "home_abbr": "SAS",
+            "selection": "SAS",
+            "win_prob": 0.9125,
+            "confidence": "LOCK",
+            "reasoning": "SAS (SAS vs PHX).",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447827",
+            "away_abbr": "DET",
+            "home_abbr": "WAS",
+            "selection": "DET",
+            "win_prob": 0.8477,
+            "confidence": "HIGH",
+            "reasoning": "DET (WAS vs DET).",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447832",
+            "away_abbr": "MIL",
+            "home_abbr": "UTA",
+            "selection": "UTA",
+            "win_prob": 0.8365,
+            "confidence": "HIGH",
+            "reasoning": "UTA (UTA vs MIL).",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447828",
+            "away_abbr": "LAL",
+            "home_abbr": "MIA",
+            "selection": "MIA",
+            "win_prob": 0.8307,
+            "confidence": "HIGH",
+            "reasoning": "MIA (MIA vs LAL).",
+            "status": "LOSS"
+          },
+          {
+            "game_id": "18447833",
+            "away_abbr": "PHI",
+            "home_abbr": "SAC",
+            "selection": "PHI",
+            "win_prob": 0.7992,
+            "confidence": "MEDIUM",
+            "reasoning": "PHI (SAC vs PHI).",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447829",
+            "away_abbr": "CLE",
+            "home_abbr": "CHI",
+            "selection": "CLE",
+            "win_prob": 0.7559,
+            "confidence": "MEDIUM",
+            "reasoning": "CLE (CHI vs CLE).",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447830",
+            "away_abbr": "LAC",
+            "home_abbr": "NOP",
+            "selection": "NOP",
+            "win_prob": 0.7066,
+            "confidence": "MEDIUM",
+            "reasoning": "NOP (NOP vs LAC).",
+            "status": "WIN"
           }
         ]
       },
@@ -513,13 +598,98 @@
             "status": "WIN"
           }
         ]
+      },
+      {
+        "date": "2026-03-16",
+        "lock": {
+          "game_id": "18447804",
+          "away_abbr": "PHX",
+          "home_abbr": "BOS",
+          "selection": "BOS",
+          "win_prob": 0.9429,
+          "confidence": "LOCK",
+          "reasoning": "BOS (BOS vs PHX).",
+          "status": "PENDING"
+        },
+        "premium": [
+          {
+            "game_id": "18447806",
+            "away_abbr": "DAL",
+            "home_abbr": "NOP",
+            "selection": "NOP",
+            "win_prob": 0.9278,
+            "confidence": "LOCK",
+            "reasoning": "NOP (NOP vs DAL).",
+            "status": "PENDING"
+          },
+          {
+            "game_id": "18447805",
+            "away_abbr": "MEM",
+            "home_abbr": "CHI",
+            "selection": "CHI",
+            "win_prob": 0.8307,
+            "confidence": "HIGH",
+            "reasoning": "CHI (CHI vs MEM).",
+            "status": "PENDING"
+          },
+          {
+            "game_id": "18447807",
+            "away_abbr": "LAL",
+            "home_abbr": "HOU",
+            "selection": "HOU",
+            "win_prob": 0.8059,
+            "confidence": "HIGH",
+            "reasoning": "HOU (HOU vs LAL).",
+            "status": "PENDING"
+          },
+          {
+            "game_id": "18447801",
+            "away_abbr": "ORL",
+            "home_abbr": "ATL",
+            "selection": "ATL",
+            "win_prob": 0.7855,
+            "confidence": "MEDIUM",
+            "reasoning": "ATL (ATL vs ORL).",
+            "status": "PENDING"
+          },
+          {
+            "game_id": "18447802",
+            "away_abbr": "GSW",
+            "home_abbr": "WAS",
+            "selection": "GSW",
+            "win_prob": 0.652,
+            "confidence": "MEDIUM",
+            "reasoning": "GSW (WAS vs GSW).",
+            "status": "PENDING"
+          },
+          {
+            "game_id": "18447808",
+            "away_abbr": "SAS",
+            "home_abbr": "LAC",
+            "selection": "SAS",
+            "win_prob": 0.6328,
+            "confidence": "LOW",
+            "reasoning": "SAS (LAC vs SAS).",
+            "status": "PENDING"
+          },
+          {
+            "game_id": "18447803",
+            "away_abbr": "POR",
+            "home_abbr": "BKN",
+            "selection": "BKN",
+            "win_prob": 0.5625,
+            "confidence": "LOW",
+            "reasoning": "BKN (BKN vs POR).",
+            "status": "PENDING"
+          }
+        ]
       }
     ],
     "season_stats": {
-      "wins": 13,
-      "losses": 2,
-      "total_bets": 15,
-      "win_rate": 86.7
+      "wins": 25,
+      "losses": 4,
+      "total_bets": 29,
+      "win_rate": 86.2
     }
   }
 }
