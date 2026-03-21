@@ -1,0 +1,420 @@
+{
+  "2026-03-20": {
+    "date": "2026-03-20",
+    "lock": {
+      "game_id": "18447836",
+      "away_abbr": "ATL",
+      "home_abbr": "HOU",
+      "selection": "HOU",
+      "win_prob": 0.9632,
+      "confidence": "LOCK",
+      "status": "WIN"
+    },
+    "premium": [
+      {
+        "game_id": "18447835",
+        "away_abbr": "GSW",
+        "home_abbr": "DET",
+        "selection": "DET",
+        "win_prob": 0.9585,
+        "confidence": "LOCK",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447839",
+        "away_abbr": "TOR",
+        "home_abbr": "DEN",
+        "selection": "DEN",
+        "win_prob": 0.9473,
+        "confidence": "LOCK",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447838",
+        "away_abbr": "POR",
+        "home_abbr": "MIN",
+        "selection": "MIN",
+        "win_prob": 0.9332,
+        "confidence": "LOCK",
+        "status": "LOSS"
+      },
+      {
+        "game_id": "18447834",
+        "away_abbr": "NYK",
+        "home_abbr": "BKN",
+        "selection": "NYK",
+        "win_prob": 0.922,
+        "confidence": "LOCK",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447837",
+        "away_abbr": "BOS",
+        "home_abbr": "MEM",
+        "selection": "BOS",
+        "win_prob": 0.8307,
+        "confidence": "HIGH",
+        "status": "WIN"
+      }
+    ]
+  },
+  "2026-03-18": {
+    "date": "2026-03-18",
+    "lock": {
+      "game_id": "18447818",
+      "away_abbr": "OKC",
+      "home_abbr": "BKN",
+      "selection": "OKC",
+      "win_prob": 0.9873,
+      "confidence": "LOCK",
+      "status": "WIN"
+    },
+    "premium": [
+      {
+        "game_id": "18447817",
+        "away_abbr": "GSW",
+        "home_abbr": "BOS",
+        "selection": "BOS",
+        "win_prob": 0.9808,
+        "confidence": "LOCK",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447822",
+        "away_abbr": "UTA",
+        "home_abbr": "MIN",
+        "selection": "MIN",
+        "win_prob": 0.9617,
+        "confidence": "LOCK",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447825",
+        "away_abbr": "LAL",
+        "home_abbr": "HOU",
+        "selection": "HOU",
+        "win_prob": 0.8059,
+        "confidence": "HIGH",
+        "status": "LOSS"
+      },
+      {
+        "game_id": "18447823",
+        "away_abbr": "LAC",
+        "home_abbr": "NOP",
+        "selection": "NOP",
+        "win_prob": 0.68,
+        "confidence": "MEDIUM",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447820",
+        "away_abbr": "TOR",
+        "home_abbr": "CHI",
+        "selection": "TOR",
+        "win_prob": 0.583,
+        "confidence": "LOW",
+        "status": "WIN"
+      }
+    ]
+  },
+  "2026-03-17": {
+    "date": "2026-03-17",
+    "lock": {
+      "game_id": "18447812",
+      "away_abbr": "IND",
+      "home_abbr": "NYK",
+      "selection": "NYK",
+      "win_prob": 0.9856,
+      "confidence": "LOCK",
+      "status": "WIN"
+    },
+    "premium": [
+      {
+        "game_id": "18447816",
+        "away_abbr": "SAS",
+        "home_abbr": "SAC",
+        "selection": "SAS",
+        "win_prob": 0.925,
+        "confidence": "LOCK",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447815",
+        "away_abbr": "PHI",
+        "home_abbr": "DEN",
+        "selection": "DEN",
+        "win_prob": 0.8982,
+        "confidence": "HIGH",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447811",
+        "away_abbr": "DET",
+        "home_abbr": "WAS",
+        "selection": "DET",
+        "win_prob": 0.8477,
+        "confidence": "HIGH",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447810",
+        "away_abbr": "OKC",
+        "home_abbr": "ORL",
+        "selection": "OKC",
+        "win_prob": 0.8186,
+        "confidence": "HIGH",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447813",
+        "away_abbr": "CLE",
+        "home_abbr": "MIL",
+        "selection": "CLE",
+        "win_prob": 0.7783,
+        "confidence": "MEDIUM",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447809",
+        "away_abbr": "MIA",
+        "home_abbr": "CHA",
+        "selection": "CHA",
+        "win_prob": 0.7559,
+        "confidence": "MEDIUM",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447814",
+        "away_abbr": "PHX",
+        "home_abbr": "MIN",
+        "selection": "MIN",
+        "win_prob": 0.689,
+        "confidence": "MEDIUM",
+        "status": "WIN"
+      }
+    ]
+  },
+  "2026-03-21": {
+    "date": "2026-03-21",
+    "lock": {
+      "game_id": "18447846",
+      "away_abbr": "IND",
+      "home_abbr": "SAS",
+      "selection": "SAS",
+      "win_prob": 0.9932,
+      "confidence": "LOCK"
+    },
+    "premium": [
+      {
+        "game_id": "18447841",
+        "away_abbr": "MEM",
+        "home_abbr": "CHA",
+        "selection": "CHA",
+        "win_prob": 0.9755,
+        "confidence": "LOCK"
+      },
+      {
+        "game_id": "18447840",
+        "away_abbr": "OKC",
+        "home_abbr": "WAS",
+        "selection": "OKC",
+        "win_prob": 0.9712,
+        "confidence": "LOCK"
+      },
+      {
+        "game_id": "18447849",
+        "away_abbr": "MIL",
+        "home_abbr": "PHX",
+        "selection": "PHX",
+        "win_prob": 0.9473,
+        "confidence": "LOCK"
+      },
+      {
+        "game_id": "18447842",
+        "away_abbr": "LAL",
+        "home_abbr": "ORL",
+        "selection": "ORL",
+        "win_prob": 0.8248,
+        "confidence": "HIGH"
+      },
+      {
+        "game_id": "18447844",
+        "away_abbr": "GSW",
+        "home_abbr": "ATL",
+        "selection": "ATL",
+        "win_prob": 0.8248,
+        "confidence": "HIGH"
+      },
+      {
+        "game_id": "18447845",
+        "away_abbr": "MIA",
+        "home_abbr": "HOU",
+        "selection": "HOU",
+        "win_prob": 0.8059,
+        "confidence": "HIGH"
+      },
+      {
+        "game_id": "18447843",
+        "away_abbr": "CLE",
+        "home_abbr": "NOP",
+        "selection": "CLE",
+        "win_prob": 0.5521,
+        "confidence": "LOW"
+      }
+    ]
+  },
+  "2026-03-19": {
+    "date": "2026-03-19",
+    "lock": {
+      "game_id": "18447826",
+      "away_abbr": "ORL",
+      "home_abbr": "CHA",
+      "selection": "CHA",
+      "win_prob": 0.9158,
+      "confidence": "LOCK",
+      "status": "WIN"
+    },
+    "premium": [
+      {
+        "game_id": "18447831",
+        "away_abbr": "PHX",
+        "home_abbr": "SAS",
+        "selection": "SAS",
+        "win_prob": 0.9125,
+        "confidence": "LOCK",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447827",
+        "away_abbr": "DET",
+        "home_abbr": "WAS",
+        "selection": "DET",
+        "win_prob": 0.8477,
+        "confidence": "HIGH",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447832",
+        "away_abbr": "MIL",
+        "home_abbr": "UTA",
+        "selection": "UTA",
+        "win_prob": 0.8477,
+        "confidence": "HIGH",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447828",
+        "away_abbr": "LAL",
+        "home_abbr": "MIA",
+        "selection": "MIA",
+        "win_prob": 0.8248,
+        "confidence": "HIGH",
+        "status": "LOSS"
+      },
+      {
+        "game_id": "18447833",
+        "away_abbr": "PHI",
+        "home_abbr": "SAC",
+        "selection": "PHI",
+        "win_prob": 0.8059,
+        "confidence": "HIGH",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447829",
+        "away_abbr": "CLE",
+        "home_abbr": "CHI",
+        "selection": "CLE",
+        "win_prob": 0.7559,
+        "confidence": "MEDIUM",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447830",
+        "away_abbr": "LAC",
+        "home_abbr": "NOP",
+        "selection": "NOP",
+        "win_prob": 0.68,
+        "confidence": "MEDIUM",
+        "status": "WIN"
+      }
+    ]
+  },
+  "2026-03-16": {
+    "date": "2026-03-16",
+    "lock": {
+      "game_id": "18447804",
+      "away_abbr": "PHX",
+      "home_abbr": "BOS",
+      "selection": "BOS",
+      "win_prob": 0.9429,
+      "confidence": "LOCK",
+      "status": "WIN"
+    },
+    "premium": [
+      {
+        "game_id": "18447806",
+        "away_abbr": "DAL",
+        "home_abbr": "NOP",
+        "selection": "NOP",
+        "win_prob": 0.919,
+        "confidence": "LOCK",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447805",
+        "away_abbr": "MEM",
+        "home_abbr": "CHI",
+        "selection": "CHI",
+        "win_prob": 0.8365,
+        "confidence": "HIGH",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447801",
+        "away_abbr": "ORL",
+        "home_abbr": "ATL",
+        "selection": "ATL",
+        "win_prob": 0.8059,
+        "confidence": "HIGH",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447807",
+        "away_abbr": "LAL",
+        "home_abbr": "HOU",
+        "selection": "HOU",
+        "win_prob": 0.8059,
+        "confidence": "HIGH",
+        "status": "LOSS"
+      },
+      {
+        "game_id": "18447802",
+        "away_abbr": "GSW",
+        "home_abbr": "WAS",
+        "selection": "GSW",
+        "win_prob": 0.652,
+        "confidence": "MEDIUM",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447808",
+        "away_abbr": "SAS",
+        "home_abbr": "LAC",
+        "selection": "SAS",
+        "win_prob": 0.6328,
+        "confidence": "LOW",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447803",
+        "away_abbr": "POR",
+        "home_abbr": "BKN",
+        "selection": "BKN",
+        "win_prob": 0.5625,
+        "confidence": "LOW",
+        "status": "LOSS"
+      }
+    ]
+  }
+}

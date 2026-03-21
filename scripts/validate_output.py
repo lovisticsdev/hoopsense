@@ -34,7 +34,7 @@ def validate() -> bool:
 
         lock = (data.get("picks") or {}).get("lock")
         if lock:
-            for key in ("game_id", "selection", "win_prob", "reasoning"):
+            for key in ("game_id", "selection", "win_prob"):
                 if key not in lock:
                     errors.append(f"lock missing '{key}'")
 
