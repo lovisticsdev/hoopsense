@@ -387,7 +387,7 @@
       "win_prob": 0.9429,
       "confidence": "LOCK",
       "reasoning": "BOS (BOS vs PHX).",
-      "status": "PENDING"
+      "status": "WIN"
     },
     "premium": [
       {
@@ -398,7 +398,7 @@
         "win_prob": 0.9278,
         "confidence": "LOCK",
         "reasoning": "NOP (NOP vs DAL).",
-        "status": "PENDING"
+        "status": "WIN"
       },
       {
         "game_id": "18447805",
@@ -408,7 +408,7 @@
         "win_prob": 0.8307,
         "confidence": "HIGH",
         "reasoning": "CHI (CHI vs MEM).",
-        "status": "PENDING"
+        "status": "WIN"
       },
       {
         "game_id": "18447807",
@@ -418,7 +418,7 @@
         "win_prob": 0.8059,
         "confidence": "HIGH",
         "reasoning": "HOU (HOU vs LAL).",
-        "status": "PENDING"
+        "status": "LOSS"
       },
       {
         "game_id": "18447801",
@@ -428,7 +428,7 @@
         "win_prob": 0.7855,
         "confidence": "MEDIUM",
         "reasoning": "ATL (ATL vs ORL).",
-        "status": "PENDING"
+        "status": "WIN"
       },
       {
         "game_id": "18447802",
@@ -438,7 +438,7 @@
         "win_prob": 0.652,
         "confidence": "MEDIUM",
         "reasoning": "GSW (WAS vs GSW).",
-        "status": "PENDING"
+        "status": "WIN"
       },
       {
         "game_id": "18447808",
@@ -448,7 +448,7 @@
         "win_prob": 0.6328,
         "confidence": "LOW",
         "reasoning": "SAS (LAC vs SAS).",
-        "status": "PENDING"
+        "status": "WIN"
       },
       {
         "game_id": "18447803",
@@ -458,7 +458,7 @@
         "win_prob": 0.5625,
         "confidence": "LOW",
         "reasoning": "BKN (BKN vs POR).",
-        "status": "PENDING"
+        "status": "LOSS"
       }
     ]
   }
