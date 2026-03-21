@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 data class HistoryUiState(
     val history: History? = null,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false
 )
 
 @HiltViewModel
@@ -29,13 +30,26 @@ class HistoryViewModel @Inject constructor(
             repository.dailyDataStream.collect { data ->
                 if (data != null) {
                     _uiState.update {
-                        it.copy(history = data.history, isLoading = false)
+                        it.copy(
+                            history = data.history,
+                            isLoading = false,
+                            isRefreshing = false
+                        )
                     }
                 }
             }
         }
         viewModelScope.launch {
             repository.getDailyData()
+        }
+    }
+
+    fun refresh() {
+        _uiState.update { it.copy(isRefreshing = true) }
+        viewModelScope.launch {
+            repository.getDailyData(forceRefresh = true).onFailure {
+                _uiState.update { it.copy(isRefreshing = false) }
+            }
         }
     }
 }

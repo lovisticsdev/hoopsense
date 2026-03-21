@@ -21,6 +21,7 @@ val LossRed = Color(0xFFFF3D00)
 val LossRedGlow = Color(0x26FF3D00)
 
 // Confidence-level Colors
+val ConfidenceLock = Color(0xFFFF6B00)    // brand orange — strongest signal
 val ConfidenceHigh = Color(0xFF00E676)
 val ConfidenceMedium = Color(0xFFFFAB00)
 val ConfidenceLow = Color(0xFF78909C)

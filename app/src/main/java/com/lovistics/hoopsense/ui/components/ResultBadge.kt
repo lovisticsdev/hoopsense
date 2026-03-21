@@ -30,14 +30,16 @@ fun ResultBadge(status: String) {
 
 @Composable
 fun ConfidenceBadge(confidence: String) {
-    val (bgColor, textColor) = when (confidence.uppercase()) {
-        "HIGH" -> ConfidenceHigh.copy(alpha = 0.15f) to ConfidenceHigh
-        "MEDIUM" -> ConfidenceMedium.copy(alpha = 0.15f) to ConfidenceMedium
-        else -> ConfidenceLow.copy(alpha = 0.15f) to ConfidenceLow
+    // User-friendly labels instead of raw tier names
+    val (bgColor, textColor, label) = when (confidence.uppercase()) {
+        "LOCK" -> Triple(ConfidenceLock.copy(alpha = 0.15f), ConfidenceLock, "STRONG")
+        "HIGH" -> Triple(ConfidenceHigh.copy(alpha = 0.15f), ConfidenceHigh, "SOLID")
+        "MEDIUM" -> Triple(ConfidenceMedium.copy(alpha = 0.15f), ConfidenceMedium, "LEAN")
+        else -> Triple(ConfidenceLow.copy(alpha = 0.15f), ConfidenceLow, "EDGE")
     }
 
     Text(
-        text = confidence.uppercase(),
+        text = label,
         color = textColor,
         style = MaterialTheme.typography.labelSmall,
         modifier = Modifier

@@ -182,18 +182,5 @@ private fun PickSelection(pick: Pick) {
                 color = TextPrimary
             )
         }
-
-        Box(
-            modifier = Modifier
-                .background(ValueGreenGlow, RoundedCornerShape(4.dp))
-                .padding(horizontal = 8.dp, vertical = 3.dp)
-        ) {
-            Text(
-                FormatUtils.formatProbability(pick.winProb),
-                color = ValueGreen,
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Bold
-            )
-        }
     }
 }

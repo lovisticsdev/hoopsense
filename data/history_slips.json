@@ -143,7 +143,8 @@
       "selection": "MIN",
       "win_prob": 0.9473,
       "confidence": "LOCK",
-      "reasoning": "MIN (43-27, Pyth 43-27) \u2014 model gives them a 95% win probability. Opponent: POR (34-36). SRS: +3.41, Net Rtg: +3.8. Post-ASB: 9-5. Season series vs POR: 3-0. vs West: 27-20. Confidence: LOCK."
+      "reasoning": "MIN (43-27, Pyth 43-27) \u2014 model gives them a 95% win probability. Opponent: POR (34-36). SRS: +3.41, Net Rtg: +3.8. Post-ASB: 9-5. Season series vs POR: 3-0. vs West: 27-20. Confidence: LOCK.",
+      "status": "LOSS"
     },
     "premium": [
       {
@@ -153,7 +154,8 @@
         "selection": "NYK",
         "win_prob": 0.9452,
         "confidence": "LOCK",
-        "reasoning": "NYK (45-25, Pyth 48-22) \u2014 model gives them a 95% win probability. Opponent: BKN (17-52). SRS: +6.16, Net Rtg: +6.6. Last 10: 7-3. Post-ASB: 10-5. Season series vs BKN: 3-0. vs East: 29-15. BKN has a poor net rating (-9.6). Confidence: LOCK."
+        "reasoning": "NYK (45-25, Pyth 48-22) \u2014 model gives them a 95% win probability. Opponent: BKN (17-52). SRS: +6.16, Net Rtg: +6.6. Last 10: 7-3. Post-ASB: 10-5. Season series vs BKN: 3-0. vs East: 29-15. BKN has a poor net rating (-9.6). Confidence: LOCK.",
+        "status": "WIN"
       },
       {
         "game_id": "18447836",
@@ -162,7 +164,8 @@
         "selection": "HOU",
         "win_prob": 0.9091,
         "confidence": "LOCK",
-        "reasoning": "HOU (41-27, Pyth 42-26) \u2014 model gives them a 91% win probability. Opponent: ATL (38-31). SRS: +3.63, Net Rtg: +4.0. Last 10: 7-3. Post-ASB: 8-7. Season series vs ATL: 1-0. vs East: 18-6. Close-game record (3-8) suggests bad luck \u2014 regression boosted. Confidence: LOCK."
+        "reasoning": "HOU (41-27, Pyth 42-26) \u2014 model gives them a 91% win probability. Opponent: ATL (38-31). SRS: +3.63, Net Rtg: +4.0. Last 10: 7-3. Post-ASB: 8-7. Season series vs ATL: 1-0. vs East: 18-6. Close-game record (3-8) suggests bad luck \u2014 regression boosted. Confidence: LOCK.",
+        "status": "WIN"
       },
       {
         "game_id": "18447839",
@@ -171,7 +174,8 @@
         "selection": "DEN",
         "win_prob": 0.8818,
         "confidence": "HIGH",
-        "reasoning": "DEN (42-28, Pyth 44-26) \u2014 model gives them a 88% win probability. Opponent: TOR (39-29). SRS: +4.03, Net Rtg: +4.2. Last 10: 8-2. Post-ASB: 7-8. Season series vs TOR: 1-0. vs East: 17-12. Confidence: HIGH."
+        "reasoning": "DEN (42-28, Pyth 44-26) \u2014 model gives them a 88% win probability. Opponent: TOR (39-29). SRS: +4.03, Net Rtg: +4.2. Last 10: 8-2. Post-ASB: 7-8. Season series vs TOR: 1-0. vs East: 17-12. Confidence: HIGH.",
+        "status": "WIN"
       }
     ]
   },

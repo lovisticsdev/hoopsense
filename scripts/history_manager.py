@@ -190,8 +190,7 @@ def _generate_historical_picks(
             "selection": selection,
             "win_prob": round(prob, 4),
             "confidence": confidence_from_prob(prob),
-            "reasoning": f"Model gave {selection} a "
-                         f"{round(prob * 100, 1)}% win probability.",
+            "reasoning": f"{selection} ({home_abbr} vs {away_abbr}).",
             "status": "PENDING",
         })
 

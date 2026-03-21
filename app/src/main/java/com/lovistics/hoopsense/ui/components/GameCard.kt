@@ -1,6 +1,5 @@
 package com.lovistics.hoopsense.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -10,8 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.lovistics.hoopsense.data.model.Game
@@ -22,9 +19,6 @@ import com.lovistics.hoopsense.ui.theme.*
 @Composable
 fun GameCard(game: Game) {
     val prediction = game.prediction
-    val homeProb = prediction?.homeWinProb ?: 0.5
-    val awayProb = prediction?.awayWinProb ?: 0.5
-    val spread = prediction?.predictedSpread ?: 0.0
 
     Card(
         modifier = Modifier
@@ -35,7 +29,7 @@ fun GameCard(game: Game) {
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
 
-            // Header: time + confidence
+            // Header: time + confidence badge (no probabilities)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -53,7 +47,7 @@ fun GameCard(game: Game) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Matchup row
+            // Matchup row — teams only, no spread or probabilities
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -64,31 +58,14 @@ fun GameCard(game: Game) {
                     alignment = Alignment.Start
                 )
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                ) {
-                    Text("@", style = MaterialTheme.typography.titleMedium, color = TextMuted)
-                    if (spread != 0.0) {
-                        Text(
-                            text = FormatUtils.formatSpread(spread),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = TextSecondary
-                        )
-                    }
-                }
+                Text("@", style = MaterialTheme.typography.titleMedium, color = TextMuted,
+                    modifier = Modifier.padding(horizontal = 8.dp))
 
                 TeamColumn(
                     abbr = game.home.abbr,
                     modifier = Modifier.weight(1f),
                     alignment = Alignment.End
                 )
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            if (prediction != null) {
-                ProbabilityBar(homeProb = homeProb, awayProb = awayProb)
             }
         }
     }
@@ -127,51 +104,4 @@ private fun TeamLogo(abbr: String, size: Int = 28) {
         contentDescription = "$abbr logo",
         modifier = Modifier.size(size.dp)
     )
-}
-
-@Composable
-private fun ProbabilityBar(homeProb: Double, awayProb: Double) {
-    val homePct = (homeProb * 100).toInt()
-    val awayPct = (awayProb * 100).toInt()
-
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "${awayPct}%",
-                style = MaterialTheme.typography.labelSmall,
-                color = ProbBarAway,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "${homePct}%",
-                style = MaterialTheme.typography.labelSmall,
-                color = ProbBarHome,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Spacer(modifier = Modifier.height(3.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .clip(RoundedCornerShape(2.dp))
-        ) {
-            Box(
-                modifier = Modifier
-                    .weight(awayProb.toFloat().coerceAtLeast(0.05f))
-                    .fillMaxHeight()
-                    .background(ProbBarAway)
-            )
-            Spacer(modifier = Modifier.width(2.dp))
-            Box(
-                modifier = Modifier
-                    .weight(homeProb.toFloat().coerceAtLeast(0.05f))
-                    .fillMaxHeight()
-                    .background(ProbBarHome)
-            )
-        }
-    }
 }

@@ -1,47 +1,68 @@
 {
   "metadata": {
-    "generated_at": "2026-03-20T13:33:51.480325+00:00",
+    "generated_at": "2026-03-21T15:52:27.841808+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "4.0",
-    "games_count": 6,
-    "picks_found": 6
+    "games_count": 10,
+    "picks_found": 7
   },
   "games": [
     {
-      "id": "18447834",
-      "start_time": "2026-03-20T23:30:00.000Z",
+      "id": "18447840",
+      "start_time": "2026-03-21T21:00:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612751,
-        "abbr": "BKN",
-        "name": "Brooklyn Nets"
+        "team_id": 1610612764,
+        "abbr": "WAS",
+        "name": "Washington Wizards"
       },
       "away": {
-        "team_id": 1610612752,
-        "abbr": "NYK",
-        "name": "New York Knicks"
+        "team_id": 1610612760,
+        "abbr": "OKC",
+        "name": "Oklahoma City Thunder"
       },
       "prediction": {
-        "home_win_prob": 0.0548,
-        "away_win_prob": 0.9452,
-        "predicted_spread": -6.8,
+        "home_win_prob": 0.0288,
+        "away_win_prob": 0.9712,
+        "predicted_spread": -8.4,
         "confidence": "LOCK"
       }
     },
     {
-      "id": "18447835",
-      "start_time": "2026-03-20T23:30:00.000Z",
+      "id": "18447841",
+      "start_time": "2026-03-21T23:00:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612765,
-        "abbr": "DET",
-        "name": "Detroit Pistons"
+        "team_id": 1610612766,
+        "abbr": "CHA",
+        "name": "Charlotte Hornets"
       },
       "away": {
-        "team_id": 1610612744,
-        "abbr": "GSW",
-        "name": "Golden State Warriors"
+        "team_id": 1610612763,
+        "abbr": "MEM",
+        "name": "Memphis Grizzlies"
+      },
+      "prediction": {
+        "home_win_prob": 0.9745,
+        "away_win_prob": 0.0255,
+        "predicted_spread": 8.7,
+        "confidence": "LOCK"
+      }
+    },
+    {
+      "id": "18447842",
+      "start_time": "2026-03-21T23:00:00.000Z",
+      "status": "SCHEDULED",
+      "home": {
+        "team_id": 1610612753,
+        "abbr": "ORL",
+        "name": "Orlando Magic"
+      },
+      "away": {
+        "team_id": 1610612747,
+        "abbr": "LAL",
+        "name": "Los Angeles Lakers"
       },
       "prediction": {
         "home_win_prob": 0.8248,
@@ -51,8 +72,50 @@
       }
     },
     {
-      "id": "18447836",
-      "start_time": "2026-03-21T00:00:00.000Z",
+      "id": "18447843",
+      "start_time": "2026-03-21T23:00:00.000Z",
+      "status": "SCHEDULED",
+      "home": {
+        "team_id": 1610612740,
+        "abbr": "NOP",
+        "name": "New Orleans Pelicans"
+      },
+      "away": {
+        "team_id": 1610612739,
+        "abbr": "CLE",
+        "name": "Cleveland Cavaliers"
+      },
+      "prediction": {
+        "home_win_prob": 0.4791,
+        "away_win_prob": 0.5209,
+        "predicted_spread": -0.2,
+        "confidence": "LOW"
+      }
+    },
+    {
+      "id": "18447844",
+      "start_time": "2026-03-22T00:00:00.000Z",
+      "status": "SCHEDULED",
+      "home": {
+        "team_id": 1610612737,
+        "abbr": "ATL",
+        "name": "Atlanta Hawks"
+      },
+      "away": {
+        "team_id": 1610612744,
+        "abbr": "GSW",
+        "name": "Golden State Warriors"
+      },
+      "prediction": {
+        "home_win_prob": 0.8186,
+        "away_win_prob": 0.1814,
+        "predicted_spread": 3.6,
+        "confidence": "HIGH"
+      }
+    },
+    {
+      "id": "18447845",
+      "start_time": "2026-03-22T00:00:00.000Z",
       "status": "SCHEDULED",
       "home": {
         "team_id": 1610612745,
@@ -60,124 +123,190 @@
         "name": "Houston Rockets"
       },
       "away": {
-        "team_id": 1610612737,
-        "abbr": "ATL",
-        "name": "Atlanta Hawks"
+        "team_id": 1610612748,
+        "abbr": "MIA",
+        "name": "Miami Heat"
       },
       "prediction": {
-        "home_win_prob": 0.9091,
-        "away_win_prob": 0.0909,
-        "predicted_spread": 5.5,
-        "confidence": "LOCK"
-      }
-    },
-    {
-      "id": "18447837",
-      "start_time": "2026-03-21T00:00:00.000Z",
-      "status": "SCHEDULED",
-      "home": {
-        "team_id": 1610612763,
-        "abbr": "MEM",
-        "name": "Memphis Grizzlies"
-      },
-      "away": {
-        "team_id": 1610612738,
-        "abbr": "BOS",
-        "name": "Boston Celtics"
-      },
-      "prediction": {
-        "home_win_prob": 0.2365,
-        "away_win_prob": 0.7635,
-        "predicted_spread": -2.8,
+        "home_win_prob": 0.7992,
+        "away_win_prob": 0.2008,
+        "predicted_spread": 3.3,
         "confidence": "MEDIUM"
       }
     },
     {
-      "id": "18447838",
-      "start_time": "2026-03-21T00:00:00.000Z",
+      "id": "18447846",
+      "start_time": "2026-03-22T00:00:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612750,
-        "abbr": "MIN",
-        "name": "Minnesota Timberwolves"
+        "team_id": 1610612759,
+        "abbr": "SAS",
+        "name": "San Antonio Spurs"
       },
       "away": {
-        "team_id": 1610612757,
-        "abbr": "POR",
-        "name": "Portland Trail Blazers"
+        "team_id": 1610612754,
+        "abbr": "IND",
+        "name": "Indiana Pacers"
       },
       "prediction": {
-        "home_win_prob": 0.9473,
-        "away_win_prob": 0.0527,
-        "predicted_spread": 6.9,
+        "home_win_prob": 0.9932,
+        "away_win_prob": 0.0068,
+        "predicted_spread": 11.9,
         "confidence": "LOCK"
       }
     },
     {
-      "id": "18447839",
-      "start_time": "2026-03-21T01:00:00.000Z",
+      "id": "18447847",
+      "start_time": "2026-03-22T00:30:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612743,
-        "abbr": "DEN",
-        "name": "Denver Nuggets"
+        "team_id": 1610612742,
+        "abbr": "DAL",
+        "name": "Dallas Mavericks"
       },
       "away": {
-        "team_id": 1610612761,
-        "abbr": "TOR",
-        "name": "Toronto Raptors"
+        "team_id": 1610612746,
+        "abbr": "LAC",
+        "name": "Los Angeles Clippers"
       },
       "prediction": {
-        "home_win_prob": 0.8818,
-        "away_win_prob": 0.1182,
-        "predicted_spread": 4.8,
-        "confidence": "HIGH"
+        "home_win_prob": 0.5314,
+        "away_win_prob": 0.4686,
+        "predicted_spread": 0.3,
+        "confidence": "LOW"
+      }
+    },
+    {
+      "id": "18447848",
+      "start_time": "2026-03-22T01:30:00.000Z",
+      "status": "SCHEDULED",
+      "home": {
+        "team_id": 1610612762,
+        "abbr": "UTA",
+        "name": "Utah Jazz"
+      },
+      "away": {
+        "team_id": 1610612755,
+        "abbr": "PHI",
+        "name": "Philadelphia 76ers"
+      },
+      "prediction": {
+        "home_win_prob": 0.5209,
+        "away_win_prob": 0.4791,
+        "predicted_spread": 0.2,
+        "confidence": "LOW"
+      }
+    },
+    {
+      "id": "18447849",
+      "start_time": "2026-03-22T02:00:00.000Z",
+      "status": "SCHEDULED",
+      "home": {
+        "team_id": 1610612756,
+        "abbr": "PHX",
+        "name": "Phoenix Suns"
+      },
+      "away": {
+        "team_id": 1610612749,
+        "abbr": "MIL",
+        "name": "Milwaukee Bucks"
+      },
+      "prediction": {
+        "home_win_prob": 0.9493,
+        "away_win_prob": 0.0507,
+        "predicted_spread": 7.0,
+        "confidence": "LOCK"
       }
     }
   ],
   "picks": {
-    "date": "2026-03-20",
+    "date": "2026-03-21",
     "lock": {
-      "game_id": "18447838",
-      "away_abbr": "POR",
-      "home_abbr": "MIN",
-      "selection": "MIN",
-      "win_prob": 0.9473,
+      "game_id": "18447846",
+      "away_abbr": "IND",
+      "home_abbr": "SAS",
+      "selection": "SAS",
+      "win_prob": 0.9932,
       "confidence": "LOCK",
-      "reasoning": "MIN (43-27, Pyth 43-27) \u2014 model gives them a 95% win probability. Opponent: POR (34-36). SRS: +3.41, Net Rtg: +3.8. Post-ASB: 9-5. Season series vs POR: 3-0. vs West: 27-20. Confidence: LOCK."
+      "reasoning": "SAS (52-18, Pyth 49-21) \u2014 model gives them a 99% win probability. Opponent: IND (15-55). SRS: +7.48, Net Rtg: +7.2. Post-ASB: 14-2. Season series vs IND: 1-0. vs East: 21-4. IND has a poor net rating (-8.9). Close-game record (8-4) suggests some luck \u2014 regression adjusted. Confidence: LOCK."
     },
     "premium": [
       {
-        "game_id": "18447834",
-        "away_abbr": "NYK",
-        "home_abbr": "BKN",
-        "selection": "NYK",
-        "win_prob": 0.9452,
+        "game_id": "18447841",
+        "away_abbr": "MEM",
+        "home_abbr": "CHA",
+        "selection": "CHA",
+        "win_prob": 0.9745,
         "confidence": "LOCK",
-        "reasoning": "NYK (45-25, Pyth 48-22) \u2014 model gives them a 95% win probability. Opponent: BKN (17-52). SRS: +6.16, Net Rtg: +6.6. Last 10: 7-3. Post-ASB: 10-5. Season series vs BKN: 3-0. vs East: 29-15. BKN has a poor net rating (-9.6). Confidence: LOCK."
+        "reasoning": "CHA (36-34, Pyth 43-27) \u2014 model gives them a 97% win probability. Opponent: MEM (24-45). SRS: +3.34, Net Rtg: +3.9. Last 10: 3-7. Post-ASB: 10-5. Season series vs MEM: 1-0. vs West: 14-12. Close-game record (3-6) suggests bad luck \u2014 regression boosted. Confidence: LOCK."
       },
       {
-        "game_id": "18447836",
-        "away_abbr": "ATL",
-        "home_abbr": "HOU",
-        "selection": "HOU",
-        "win_prob": 0.9091,
+        "game_id": "18447840",
+        "away_abbr": "OKC",
+        "home_abbr": "WAS",
+        "selection": "OKC",
+        "win_prob": 0.9712,
         "confidence": "LOCK",
-        "reasoning": "HOU (41-27, Pyth 42-26) \u2014 model gives them a 91% win probability. Opponent: ATL (38-31). SRS: +3.63, Net Rtg: +4.0. Last 10: 7-3. Post-ASB: 8-7. Season series vs ATL: 1-0. vs East: 18-6. Close-game record (3-8) suggests bad luck \u2014 regression boosted. Confidence: LOCK."
+        "reasoning": "OKC (55-15, Pyth 56-14) \u2014 model gives them a 97% win probability. Opponent: WAS (16-53). SRS: +10.77, Net Rtg: +11.0. Post-ASB: 13-1. Season series vs WAS: 1-0. vs East: 18-6. WAS has a poor net rating (-11.1). Confidence: LOCK."
       },
       {
-        "game_id": "18447839",
-        "away_abbr": "TOR",
-        "home_abbr": "DEN",
-        "selection": "DEN",
-        "win_prob": 0.8818,
-        "confidence": "HIGH",
-        "reasoning": "DEN (42-28, Pyth 44-26) \u2014 model gives them a 88% win probability. Opponent: TOR (39-29). SRS: +4.03, Net Rtg: +4.2. Last 10: 8-2. Post-ASB: 7-8. Season series vs TOR: 1-0. vs East: 17-12. Confidence: HIGH."
+        "game_id": "18447849",
+        "away_abbr": "MIL",
+        "home_abbr": "PHX",
+        "selection": "PHX",
+        "win_prob": 0.9493,
+        "confidence": "LOCK",
+        "reasoning": "PHX (39-31, Pyth 37-33) \u2014 model gives them a 95% win probability. Opponent: MIL (28-41). SRS: +1.33, Net Rtg: +1.0. Last 10: 5-5. Post-ASB: 7-8. Season series vs MIL: 1-0. vs East: 14-11. MIL has a poor net rating (-5.4). Confidence: LOCK."
       }
     ]
   },
   "history": {
     "past_slips": [
+      {
+        "date": "2026-03-20",
+        "lock": {
+          "game_id": "18447838",
+          "away_abbr": "POR",
+          "home_abbr": "MIN",
+          "selection": "MIN",
+          "win_prob": 0.9473,
+          "confidence": "LOCK",
+          "reasoning": "MIN (43-27, Pyth 43-27) \u2014 model gives them a 95% win probability. Opponent: POR (34-36). SRS: +3.41, Net Rtg: +3.8. Post-ASB: 9-5. Season series vs POR: 3-0. vs West: 27-20. Confidence: LOCK.",
+          "status": "LOSS"
+        },
+        "premium": [
+          {
+            "game_id": "18447834",
+            "away_abbr": "NYK",
+            "home_abbr": "BKN",
+            "selection": "NYK",
+            "win_prob": 0.9452,
+            "confidence": "LOCK",
+            "reasoning": "NYK (45-25, Pyth 48-22) \u2014 model gives them a 95% win probability. Opponent: BKN (17-52). SRS: +6.16, Net Rtg: +6.6. Last 10: 7-3. Post-ASB: 10-5. Season series vs BKN: 3-0. vs East: 29-15. BKN has a poor net rating (-9.6). Confidence: LOCK.",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447836",
+            "away_abbr": "ATL",
+            "home_abbr": "HOU",
+            "selection": "HOU",
+            "win_prob": 0.9091,
+            "confidence": "LOCK",
+            "reasoning": "HOU (41-27, Pyth 42-26) \u2014 model gives them a 91% win probability. Opponent: ATL (38-31). SRS: +3.63, Net Rtg: +4.0. Last 10: 7-3. Post-ASB: 8-7. Season series vs ATL: 1-0. vs East: 18-6. Close-game record (3-8) suggests bad luck \u2014 regression boosted. Confidence: LOCK.",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447839",
+            "away_abbr": "TOR",
+            "home_abbr": "DEN",
+            "selection": "DEN",
+            "win_prob": 0.8818,
+            "confidence": "HIGH",
+            "reasoning": "DEN (42-28, Pyth 44-26) \u2014 model gives them a 88% win probability. Opponent: TOR (39-29). SRS: +4.03, Net Rtg: +4.2. Last 10: 8-2. Post-ASB: 7-8. Season series vs TOR: 1-0. vs East: 17-12. Confidence: HIGH.",
+            "status": "WIN"
+          }
+        ]
+      },
       {
         "date": "2026-03-19",
         "lock": {
@@ -357,58 +486,13 @@
             "status": "WIN"
           }
         ]
-      },
-      {
-        "date": "2026-03-15",
-        "lock": {
-          "game_id": "18447794",
-          "away_abbr": "MIN",
-          "home_abbr": "OKC",
-          "selection": "OKC",
-          "win_prob": 0.9493,
-          "confidence": "LOCK",
-          "reasoning": "Model gave OKC a 94.9% win probability.",
-          "status": "WIN"
-        },
-        "premium": [
-          {
-            "game_id": "18447799",
-            "away_abbr": "GSW",
-            "home_abbr": "NYK",
-            "selection": "NYK",
-            "win_prob": 0.922,
-            "confidence": "LOCK",
-            "reasoning": "Model gave NYK a 92.2% win probability.",
-            "status": "WIN"
-          },
-          {
-            "game_id": "18447795",
-            "away_abbr": "DAL",
-            "home_abbr": "CLE",
-            "selection": "CLE",
-            "win_prob": 0.9158,
-            "confidence": "LOCK",
-            "reasoning": "Model gave CLE a 91.6% win probability.",
-            "status": "LOSS"
-          },
-          {
-            "game_id": "18447797",
-            "away_abbr": "IND",
-            "home_abbr": "MIL",
-            "selection": "MIL",
-            "win_prob": 0.8943,
-            "confidence": "HIGH",
-            "reasoning": "Model gave MIL a 89.4% win probability.",
-            "status": "WIN"
-          }
-        ]
       }
     ],
     "season_stats": {
-      "wins": 17,
-      "losses": 3,
-      "total_bets": 20,
-      "win_rate": 85.0
+      "wins": 20,
+      "losses": 4,
+      "total_bets": 24,
+      "win_rate": 83.3
     }
   }
 }

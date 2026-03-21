@@ -1,11 +1,9 @@
 package com.lovistics.hoopsense.ui.screens.betslip
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
@@ -156,30 +154,13 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
         contentPadding = PaddingValues(bottom = 100.dp)
     ) {
         uiState.metadata?.let { meta ->
-            if (meta.modelVersion.isNotEmpty()) {
-                item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "${meta.gamesCount} games today",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = TextMuted
-                        )
-                        Text(
-                            text = "v${meta.modelVersion}",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = TextMuted,
-                            modifier = Modifier
-                                .background(SurfaceHighlight, RoundedCornerShape(4.dp))
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        )
-                    }
-                }
+            item {
+                Text(
+                    text = "${meta.gamesCount} games today",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextMuted,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
             }
         }
 

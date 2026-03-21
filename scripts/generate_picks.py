@@ -58,13 +58,11 @@ def _generate_reasoning(pick: dict, teams: dict, game_info: dict, h2h_matrix: di
     pyth_losses = stats.get("pyth_losses", 0)
     if pyth_wins > 0:
         parts.append(
-            f"{selection} ({wins}-{losses}, Pyth {pyth_wins}-{pyth_losses}) — "
-            f"model gives them a {win_prob:.0%} win probability."
+            f"{selection} ({wins}-{losses}, expected {pyth_wins}-{pyth_losses})."
         )
     else:
         parts.append(
-            f"{selection} ({wins}-{losses}) — "
-            f"model gives them a {win_prob:.0%} win probability."
+            f"{selection} ({wins}-{losses})."
         )
 
     # Opponent
@@ -131,8 +129,6 @@ def _generate_reasoning(pick: dict, teams: dict, game_info: dict, h2h_matrix: di
             parts.append(f"Close-game record ({close_rec}) suggests some luck — regression adjusted.")
         elif close_wpct <= 0.35:
             parts.append(f"Close-game record ({close_rec}) suggests bad luck — regression boosted.")
-
-    parts.append(f"Confidence: {confidence}.")
 
     return " ".join(parts)
 
