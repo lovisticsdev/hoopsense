@@ -11,126 +11,13 @@ from typing import Dict, List
 from fetch_ingredients import fetch_all_ingredients
 from prediction_engine import predict_game, find_best_picks
 from history_manager import update_and_get_history
-from config import DATA_DIR, CURRENT_SEASON, TEAM_DIVISIONS
-from utils import setup_logging, write_json_atomic, parse_record
+from config import DATA_DIR, CURRENT_SEASON
+from utils import setup_logging, write_json_atomic
 
 logger = logging.getLogger(__name__)
 
 OUTPUT_FILE = DATA_DIR / "nba_daily.json"
 MODEL_VERSION = "4.0"
-
-
-# ═══════════════════════════════════════════════════════
-#  Reasoning generator (v4 — enriched with new signals)
-# ═══════════════════════════════════════════════════════
-
-def _generate_reasoning(pick: dict, teams: dict, game_info: dict, h2h_matrix: dict) -> str:
-    """
-    Generate human-readable reasoning for a pick.
-    Covers: team record, Pythagorean, opponent context, key stats, form,
-    fatigue, conference/H2H context, close-game regression.
-    """
-    team = teams.get(str(pick["team_id"]), {})
-    record = team.get("record", {})
-    form = team.get("form", {})
-    stats = team.get("stats", {})
-    standings = team.get("standings", {})
-
-    selection = pick["selection"]
-    win_prob = pick["win_prob"]
-    confidence = pick.get("confidence", "MEDIUM")
-    wins = record.get("wins", 0)
-    losses = record.get("losses", 0)
-
-    # Identify opponent
-    home = game_info.get("home", {})
-    away = game_info.get("away", {})
-    is_home_pick = selection == home.get("abbr", "")
-    opp = away if is_home_pick else home
-    opp_abbr = opp.get("abbr", "")
-    opp_team = teams.get(str(opp.get("team_id", "")), {})
-    opp_record = opp_team.get("record", {})
-
-    parts = []
-
-    # Core pick statement with Pythagorean context
-    pyth_wins = stats.get("pyth_wins", 0)
-    pyth_losses = stats.get("pyth_losses", 0)
-    if pyth_wins > 0:
-        parts.append(
-            f"{selection} ({wins}-{losses}, expected {pyth_wins}-{pyth_losses})."
-        )
-    else:
-        parts.append(
-            f"{selection} ({wins}-{losses})."
-        )
-
-    # Opponent
-    parts.append(
-        f"Opponent: {opp_abbr} "
-        f"({opp_record.get('wins', 0)}-{opp_record.get('losses', 0)})."
-    )
-
-    # Key stats
-    if stats:
-        net_rtg = round(stats.get("off_rating", 0) - stats.get("def_rating", 0), 1)
-        srs = stats.get("srs", 0.0)
-        parts.append(f"SRS: {srs:+}, Net Rtg: {net_rtg:+}.")
-
-    # Last-10 form
-    last10_games = form.get("last10_games", 0)
-    last10_wins = form.get("last10_wins", 0)
-    last10_losses = form.get("last10_losses", 0)
-    if last10_games >= 5:
-        parts.append(f"Last 10: {last10_wins}-{last10_losses}.")
-
-    # Post-ASB form
-    post_rec = form.get("post_allstar", "0-0")
-    post_w, post_l = parse_record(post_rec)
-    if post_w + post_l >= 5:
-        parts.append(f"Post-ASB: {post_w}-{post_l}.")
-
-    # Head-to-head
-    if h2h_matrix and selection in h2h_matrix:
-        h2h_rec = h2h_matrix.get(selection, {}).get(opp_abbr, "")
-        if h2h_rec:
-            parts.append(f"Season series vs {opp_abbr}: {h2h_rec}.")
-
-    # Conference matchup context
-    opp_info = TEAM_DIVISIONS.get(opp_abbr, {})
-    opp_conf = opp_info.get("conference", "")
-    if opp_conf == "EAST":
-        vs_rec = standings.get("vs_east", "")
-        if vs_rec and vs_rec != "0-0":
-            parts.append(f"vs East: {vs_rec}.")
-    elif opp_conf == "WEST":
-        vs_rec = standings.get("vs_west", "")
-        if vs_rec and vs_rec != "0-0":
-            parts.append(f"vs West: {vs_rec}.")
-
-    # B2B fatigue
-    if team.get("b2b"):
-        parts.append("Note: on a back-to-back (fatigue adjusted).")
-
-    # Opponent weakness
-    opp_stats = opp_team.get("stats", {})
-    if opp_stats:
-        opp_net = round(opp_stats.get("off_rating", 0) - opp_stats.get("def_rating", 0), 1)
-        if opp_net < -3:
-            parts.append(f"{opp_abbr} has a poor net rating ({opp_net:+}).")
-
-    # Close-game luck context
-    close_rec = form.get("close_games", "0-0")
-    close_w, close_l = parse_record(close_rec)
-    close_total = close_w + close_l
-    if close_total >= 5:
-        close_wpct = close_w / close_total
-        if close_wpct >= 0.65:
-            parts.append(f"Close-game record ({close_rec}) suggests some luck — regression adjusted.")
-        elif close_wpct <= 0.35:
-            parts.append(f"Close-game record ({close_rec}) suggests bad luck — regression boosted.")
-
-    return " ".join(parts)
 
 
 # ═══════════════════════════════════════════════════════
@@ -155,7 +42,7 @@ def _validate_daily_json(data: dict) -> bool:
 
     picks = data.get("picks")
     if picks and picks.get("lock"):
-        for key in ("game_id", "selection", "win_prob", "reasoning"):
+        for key in ("game_id", "selection", "win_prob"):
             if key not in picks["lock"]:
                 errors.append(f"lock missing '{key}'")
 
@@ -198,7 +85,7 @@ def _build_game_object(
     }
 
 
-def _build_pick(pick: dict, teams: dict, game_info: dict, h2h_matrix: dict) -> Dict:
+def _build_pick(pick: dict, game_info: dict) -> Dict:
     """Build a single pick object."""
     home = game_info.get("home", {})
     away = game_info.get("away", {})
@@ -209,7 +96,6 @@ def _build_pick(pick: dict, teams: dict, game_info: dict, h2h_matrix: dict) -> D
         "selection": pick["selection"],
         "win_prob": pick["win_prob"],
         "confidence": pick["confidence"],
-        "reasoning": _generate_reasoning(pick, teams, game_info, h2h_matrix),
     }
 
 
@@ -276,11 +162,11 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
 
     if best_picks:
         lock_info = game_lookup.get(best_picks[0]["game_id"], {})
-        lock = _build_pick(best_picks[0], teams, lock_info, h2h_matrix)
+        lock = _build_pick(best_picks[0], lock_info)
 
         for pick in best_picks[1:]:
             p_info = game_lookup.get(pick["game_id"], {})
-            premium.append(_build_pick(pick, teams, p_info, h2h_matrix))
+            premium.append(_build_pick(pick, p_info))
 
     picks = {"date": today, "lock": lock, "premium": premium}
 

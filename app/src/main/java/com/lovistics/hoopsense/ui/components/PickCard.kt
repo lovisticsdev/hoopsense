@@ -58,20 +58,8 @@ fun PickCard(
                     Spacer(modifier = Modifier.height(14.dp))
                 }
 
-                // ── ROW 3: THE PICK + WIN PROBABILITY ──
+                // ── ROW 3: THE PICK ──
                 PickSelection(pick = pick)
-
-                // ── ROW 4: REASONING ──
-                if (!pick.reasoning.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    HorizontalDivider(color = SurfaceHighlight, thickness = 1.dp)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        pick.reasoning,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
-                    )
-                }
             }
         }
     }
