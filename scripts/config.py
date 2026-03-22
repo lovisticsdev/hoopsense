@@ -247,12 +247,13 @@ def spread_to_prob(spread: float) -> float:
 LOCK_CONFIDENCE_PROB = 0.90      # ~11+ point spread — near-certain
 HIGH_CONFIDENCE_PROB = 0.80      # ~7-11 point spread — strong edge
 MEDIUM_CONFIDENCE_PROB = 0.65    # ~3.5-7 point spread — moderate edge
-MIN_PICK_PROB = 0.55             # minimum to surface as a pick at all
 MIN_GAMES_FOR_STATS = 10
 
 # ── Pick selection ───────────────────────────────────
 #
-# Take top PICK_COUNT picks by probability, each must clear MIN_PICK_PROB.
-# If fewer than PICK_COUNT games clear the threshold, only those are surfaced.
+# 1. Take ALL "STRONG" picks (prob >= LOCK_CONFIDENCE_PROB)
+# 2. If fewer than MIN_PICKS, fill remaining slots with "SOLID" picks
+#    (prob >= HIGH_CONFIDENCE_PROB), ordered by probability.
+# 3. Never surface anything below HIGH_CONFIDENCE_PROB.
 
-PICK_COUNT = 3
+MIN_PICKS = 3

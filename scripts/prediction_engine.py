@@ -43,7 +43,7 @@ from config import (
     H2H_SCALING, H2H_CAP, H2H_MIN_GAMES,
     # Spread → probability
     LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB,
-    MIN_PICK_PROB, PICK_COUNT,
+    MIN_PICKS,
     spread_to_prob,
     # Division/conference lookups
     TEAM_DIVISIONS, OPPONENT_DIV_TO_KEY, OPPONENT_CONF_TO_KEY,
@@ -489,20 +489,17 @@ def predict_game(
 #  Pick selection (ranked by model probability)
 # ═══════════════════════════════════════════════════════
 
-def find_best_picks(
-    games: List[Dict],
-    min_prob: float = MIN_PICK_PROB,
-    pick_count: int = PICK_COUNT,
-) -> List[Dict]:
+def find_best_picks(games: List[Dict]) -> List[Dict]:
     """
-    Select the strongest model-based picks across all games.
-
-    Takes the top `pick_count` games by probability, each must clear `min_prob`.
-    If fewer than `pick_count` games clear the threshold, only those are returned.
+    Select picks using a confidence-tier approach:
+      1. Take ALL "STRONG" picks (prob >= LOCK_CONFIDENCE_PROB).
+      2. If fewer than MIN_PICKS, fill remaining slots with "SOLID" picks
+         (prob >= HIGH_CONFIDENCE_PROB), ordered by probability.
+      3. Never surface anything below HIGH_CONFIDENCE_PROB.
 
     Returns picks ranked by win probability (highest first).
     """
-    picks = []
+    candidates = []
 
     for game in games:
         pred = game.get("prediction", {})
@@ -512,8 +509,9 @@ def find_best_picks(
         home_info = game.get("home", {})
         away_info = game.get("away", {})
 
-        if home_prob > away_prob and home_prob >= min_prob:
-            picks.append({
+        # Only consider games where the best side clears SOLID (HIGH) threshold
+        if home_prob > away_prob and home_prob >= HIGH_CONFIDENCE_PROB:
+            candidates.append({
                 "game_id": game.get("id"),
                 "selection": home_info.get("abbr", ""),
                 "team_id": home_info.get("team_id", 0),
@@ -521,8 +519,8 @@ def find_best_picks(
                 "predicted_spread": pred.get("predicted_spread", 0),
                 "confidence": pred.get("confidence", "LOW"),
             })
-        elif away_prob > home_prob and away_prob >= min_prob:
-            picks.append({
+        elif away_prob > home_prob and away_prob >= HIGH_CONFIDENCE_PROB:
+            candidates.append({
                 "game_id": game.get("id"),
                 "selection": away_info.get("abbr", ""),
                 "team_id": away_info.get("team_id", 0),
@@ -531,5 +529,16 @@ def find_best_picks(
                 "confidence": pred.get("confidence", "LOW"),
             })
 
-    picks.sort(key=lambda x: x["win_prob"], reverse=True)
-    return picks[:pick_count]
+    candidates.sort(key=lambda x: x["win_prob"], reverse=True)
+
+    # All STRONGs (LOCK tier)
+    strongs = [c for c in candidates if c["win_prob"] >= LOCK_CONFIDENCE_PROB]
+
+    # If STRONGs already meet minimum, return them all
+    if len(strongs) >= MIN_PICKS:
+        return strongs
+
+    # Fill remaining slots with SOLIDs (HIGH tier, below LOCK)
+    solids = [c for c in candidates if c not in strongs]
+    needed = MIN_PICKS - len(strongs)
+    return strongs + solids[:needed]

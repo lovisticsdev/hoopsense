@@ -62,8 +62,12 @@ class GameRepository @Inject constructor(
 
     private fun fetchFromNetwork(): Result<DailyData> {
         return try {
-            Log.d(TAG, "Fetching data from network: $DATA_URL")
-            val request = Request.Builder().url(DATA_URL).build()
+            val bustUrl = "$DATA_URL?t=${System.currentTimeMillis()}"
+            Log.d(TAG, "Fetching data from network: $bustUrl")
+            val request = Request.Builder()
+                .url(bustUrl)
+                .header("Cache-Control", "no-cache, no-store")
+                .build()
             val response = client.newCall(request).execute()
 
             if (!response.isSuccessful) {

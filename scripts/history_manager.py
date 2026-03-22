@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 
 from fetch_ingredients import _api_get
 from prediction_engine import predict_game, confidence_from_prob
-from config import DATA_DIR, MIN_PICK_PROB, PICK_COUNT
+from config import DATA_DIR, LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MIN_PICKS
 from utils import write_json_atomic, read_json_safe
 
 logger = logging.getLogger(__name__)
@@ -160,7 +160,8 @@ def _generate_historical_picks(
         else:
             selection, prob = away_abbr, prediction["away_win_prob"]
 
-        if prob < MIN_PICK_PROB:
+        # Only consider SOLID (HIGH) or better
+        if prob < HIGH_CONFIDENCE_PROB:
             continue
 
         candidates.append({
@@ -175,7 +176,14 @@ def _generate_historical_picks(
         })
 
     candidates.sort(key=lambda x: x["win_prob"], reverse=True)
-    candidates = candidates[:PICK_COUNT]
+
+    # All STRONGs, then fill to MIN_PICKS with SOLIDs
+    strongs = [c for c in candidates if c["win_prob"] >= LOCK_CONFIDENCE_PROB]
+    if len(strongs) >= MIN_PICKS:
+        candidates = strongs
+    else:
+        solids = [c for c in candidates if c["win_prob"] < LOCK_CONFIDENCE_PROB]
+        candidates = strongs + solids[:MIN_PICKS - len(strongs)]
 
     if not candidates:
         return None
