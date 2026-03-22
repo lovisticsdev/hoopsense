@@ -36,7 +36,7 @@ fun GameCard(game: Game) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = FormatUtils.formatGameTime(game.startTime),
+                    text = FormatUtils.formatGameDateTime(game.startTime),
                     style = MaterialTheme.typography.labelSmall,
                     color = TextSecondary
                 )
@@ -47,22 +47,22 @@ fun GameCard(game: Game) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Matchup row — teams only, no spread or probabilities
+            // Matchup row — HOME vs AWAY
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TeamColumn(
-                    abbr = game.away.abbr,
+                    abbr = game.home.abbr,
                     modifier = Modifier.weight(1f),
                     alignment = Alignment.Start
                 )
 
-                Text("@", style = MaterialTheme.typography.titleMedium, color = TextMuted,
+                Text("vs", style = MaterialTheme.typography.titleMedium, color = TextMuted,
                     modifier = Modifier.padding(horizontal = 8.dp))
 
                 TeamColumn(
-                    abbr = game.home.abbr,
+                    abbr = game.away.abbr,
                     modifier = Modifier.weight(1f),
                     alignment = Alignment.End
                 )

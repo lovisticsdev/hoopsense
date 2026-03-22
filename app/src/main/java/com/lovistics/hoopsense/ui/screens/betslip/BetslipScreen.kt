@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.lovistics.hoopsense.domain.FormatUtils
 import com.lovistics.hoopsense.ui.components.GameCard
 import com.lovistics.hoopsense.ui.components.HoopSenseTopBar
 import com.lovistics.hoopsense.ui.components.PickCard
@@ -153,21 +154,14 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 100.dp)
     ) {
-        uiState.metadata?.let { meta ->
-            item {
-                Text(
-                    text = "${meta.gamesCount} games today",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                )
-            }
-        }
-
         if (uiState.games.isNotEmpty()) {
             item {
+                val dateStr = uiState.picks?.date
+                    ?: uiState.metadata?.generatedAt?.substringBefore("T")
+                    ?: ""
                 Text(
-                    "TODAY'S GAMES",
+                    text = if (dateStr.isNotEmpty()) FormatUtils.formatDateHeader(dateStr).uppercase()
+                           else "GAMES",
                     modifier = Modifier.padding(start = 12.dp, top = 4.dp, bottom = 6.dp),
                     style = MaterialTheme.typography.labelSmall,
                     color = TextSecondary

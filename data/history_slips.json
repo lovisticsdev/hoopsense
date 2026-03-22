@@ -202,7 +202,8 @@
       "home_abbr": "SAS",
       "selection": "SAS",
       "win_prob": 0.9932,
-      "confidence": "LOCK"
+      "confidence": "LOCK",
+      "status": "WIN"
     },
     "premium": [
       {
@@ -211,7 +212,8 @@
         "home_abbr": "CHA",
         "selection": "CHA",
         "win_prob": 0.9755,
-        "confidence": "LOCK"
+        "confidence": "LOCK",
+        "status": "WIN"
       },
       {
         "game_id": "18447840",
@@ -219,7 +221,8 @@
         "home_abbr": "WAS",
         "selection": "OKC",
         "win_prob": 0.9712,
-        "confidence": "LOCK"
+        "confidence": "LOCK",
+        "status": "WIN"
       },
       {
         "game_id": "18447849",
@@ -227,7 +230,8 @@
         "home_abbr": "PHX",
         "selection": "PHX",
         "win_prob": 0.9473,
-        "confidence": "LOCK"
+        "confidence": "LOCK",
+        "status": "LOSS"
       },
       {
         "game_id": "18447842",
@@ -235,7 +239,8 @@
         "home_abbr": "ORL",
         "selection": "ORL",
         "win_prob": 0.8248,
-        "confidence": "HIGH"
+        "confidence": "HIGH",
+        "status": "LOSS"
       },
       {
         "game_id": "18447844",
@@ -243,7 +248,8 @@
         "home_abbr": "ATL",
         "selection": "ATL",
         "win_prob": 0.8248,
-        "confidence": "HIGH"
+        "confidence": "HIGH",
+        "status": "WIN"
       },
       {
         "game_id": "18447845",
@@ -251,7 +257,8 @@
         "home_abbr": "HOU",
         "selection": "HOU",
         "win_prob": 0.8059,
-        "confidence": "HIGH"
+        "confidence": "HIGH",
+        "status": "WIN"
       },
       {
         "game_id": "18447843",
@@ -259,7 +266,8 @@
         "home_abbr": "NOP",
         "selection": "CLE",
         "win_prob": 0.5521,
-        "confidence": "LOW"
+        "confidence": "LOW",
+        "status": "WIN"
       }
     ]
   },

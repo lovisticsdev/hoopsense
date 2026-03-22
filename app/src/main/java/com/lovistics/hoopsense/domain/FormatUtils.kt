@@ -79,6 +79,25 @@ object FormatUtils {
         return local.format(DateTimeFormatter.ofPattern("MMM d, h:mm a", Locale.getDefault()))
     }
 
+    /** Section header: "2026-03-21" → "Saturday, Mar 21" (in user's timezone). */
+    fun formatDateHeader(utcDateStr: String): String {
+        return try {
+            val utcDate = LocalDate.parse(utcDateStr)
+            val noonUtc = utcDate.atTime(12, 0).atZone(ZoneOffset.UTC)
+            val localDate = noonUtc.withZoneSameInstant(ZoneId.systemDefault()).toLocalDate()
+            localDate.format(DateTimeFormatter.ofPattern("EEEE, MMM d", Locale.getDefault()))
+        } catch (_: Exception) {
+            formatDateShortRaw(utcDateStr)
+        }
+    }
+
+    /** Card display: UTC ISO time → "Sat, Mar 21 · 7:30 PM" in user's local timezone. */
+    fun formatGameDateTime(isoTime: String): String {
+        val instant = parseUtcInstant(isoTime) ?: return extractTimeFallback(isoTime)
+        val local = instant.atZone(ZoneId.systemDefault())
+        return local.format(DateTimeFormatter.ofPattern("EEE, MMM d · h:mm a", Locale.getDefault()))
+    }
+
     /** Check if a UTC date string represents "today" in the user's local timezone. */
     fun isLocalToday(utcDateStr: String): Boolean {
         return try {

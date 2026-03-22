@@ -83,7 +83,7 @@ private fun PickHeader(pick: Pick, isLock: Boolean, startTime: String?) {
             )
             if (startTime != null) {
                 Text(
-                    text = "• ${FormatUtils.formatGameTime(startTime)}",
+                    text = "• ${FormatUtils.formatGameDateTime(startTime)}",
                     style = MaterialTheme.typography.labelSmall,
                     color = TextSecondary
                 )
@@ -109,36 +109,36 @@ private fun PickMatchup(pick: Pick, awayName: String?, homeName: String?) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Away team
+        // Home team (left)
         Row(verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
-                model = NbaConstants.teamLogoUrl(pick.awayAbbr),
-                contentDescription = "${pick.awayAbbr} logo",
+                model = NbaConstants.teamLogoUrl(pick.homeAbbr),
+                contentDescription = "${pick.homeAbbr} logo",
                 modifier = Modifier.size(36.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
-                Text(pick.awayAbbr, style = MaterialTheme.typography.titleMedium, color = TextPrimary)
-                if (awayName != null) {
-                    Text(awayName, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
-                }
-            }
-        }
-
-        Text("@", style = MaterialTheme.typography.titleMedium, color = TextMuted)
-
-        // Home team
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(horizontalAlignment = Alignment.End) {
                 Text(pick.homeAbbr, style = MaterialTheme.typography.titleMedium, color = TextPrimary)
                 if (homeName != null) {
                     Text(homeName, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
                 }
             }
+        }
+
+        Text("vs", style = MaterialTheme.typography.titleMedium, color = TextMuted)
+
+        // Away team (right)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(horizontalAlignment = Alignment.End) {
+                Text(pick.awayAbbr, style = MaterialTheme.typography.titleMedium, color = TextPrimary)
+                if (awayName != null) {
+                    Text(awayName, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+                }
+            }
             Spacer(modifier = Modifier.width(8.dp))
             AsyncImage(
-                model = NbaConstants.teamLogoUrl(pick.homeAbbr),
-                contentDescription = "${pick.homeAbbr} logo",
+                model = NbaConstants.teamLogoUrl(pick.awayAbbr),
+                contentDescription = "${pick.awayAbbr} logo",
                 modifier = Modifier.size(36.dp)
             )
         }
