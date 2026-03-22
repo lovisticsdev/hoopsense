@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-03-22T10:25:59.927955+00:00",
+    "generated_at": "2026-03-22T10:27:17.911725+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "4.0",
@@ -322,7 +322,7 @@
           "selection": "MIN",
           "win_prob": 0.9913,
           "confidence": "LOCK",
-          "status": "PENDING",
+          "status": "WIN",
           "start_time": "2026-03-19T00:00:00.000Z"
         },
         "premium": [
@@ -333,7 +333,7 @@
             "selection": "BOS",
             "win_prob": 0.9897,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-18T23:00:00.000Z"
           },
           {
@@ -343,7 +343,7 @@
             "selection": "OKC",
             "win_prob": 0.9473,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-18T23:30:00.000Z"
           }
         ]
