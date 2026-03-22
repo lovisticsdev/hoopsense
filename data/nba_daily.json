@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-03-22T06:42:43.670691+00:00",
+    "generated_at": "2026-03-22T06:44:58.693112+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "4.0",
@@ -157,7 +157,7 @@
           "selection": "SAS",
           "win_prob": 0.9945,
           "confidence": "LOCK",
-          "status": "PENDING",
+          "status": "WIN",
           "start_time": "2026-03-22T00:00:00.000Z"
         },
         "premium": [
@@ -168,7 +168,7 @@
             "selection": "OKC",
             "win_prob": 0.9647,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-21T21:00:00.000Z"
           },
           {
@@ -178,7 +178,7 @@
             "selection": "CHA",
             "win_prob": 0.9585,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-21T23:00:00.000Z"
           }
         ]
@@ -215,6 +215,41 @@
             "confidence": "LOCK",
             "status": "WIN",
             "start_time": "2026-03-21T01:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-19",
+        "lock": {
+          "game_id": "18447827",
+          "away_abbr": "DET",
+          "home_abbr": "WAS",
+          "selection": "DET",
+          "win_prob": 0.9601,
+          "confidence": "LOCK",
+          "status": "PENDING",
+          "start_time": "2026-03-19T23:00:00.000Z"
+        },
+        "premium": [
+          {
+            "game_id": "18447826",
+            "away_abbr": "ORL",
+            "home_abbr": "CHA",
+            "selection": "CHA",
+            "win_prob": 0.9332,
+            "confidence": "LOCK",
+            "status": "PENDING",
+            "start_time": "2026-03-19T23:00:00.000Z"
+          },
+          {
+            "game_id": "18447831",
+            "away_abbr": "PHX",
+            "home_abbr": "SAS",
+            "selection": "SAS",
+            "win_prob": 0.9278,
+            "confidence": "LOCK",
+            "status": "PENDING",
+            "start_time": "2026-03-20T00:00:00.000Z"
           }
         ]
       },
@@ -262,7 +297,7 @@
           "selection": "NYK",
           "win_prob": 0.9966,
           "confidence": "LOCK",
-          "status": "PENDING",
+          "status": "WIN",
           "start_time": "2026-03-17T23:30:00.000Z"
         },
         "premium": [
@@ -273,7 +308,7 @@
             "selection": "DEN",
             "win_prob": 0.9774,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-18T02:00:00.000Z"
           },
           {
@@ -283,7 +318,7 @@
             "selection": "DET",
             "win_prob": 0.9601,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-17T23:00:00.000Z"
           }
         ]
