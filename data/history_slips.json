@@ -180,7 +180,7 @@
       "selection": "DET",
       "win_prob": 0.9601,
       "confidence": "LOCK",
-      "status": "PENDING",
+      "status": "WIN",
       "start_time": "2026-03-19T23:00:00.000Z"
     },
     "premium": [
@@ -191,7 +191,7 @@
         "selection": "CHA",
         "win_prob": 0.9332,
         "confidence": "LOCK",
-        "status": "PENDING",
+        "status": "WIN",
         "start_time": "2026-03-19T23:00:00.000Z"
       },
       {
@@ -201,7 +201,7 @@
         "selection": "SAS",
         "win_prob": 0.9278,
         "confidence": "LOCK",
-        "status": "PENDING",
+        "status": "WIN",
         "start_time": "2026-03-20T00:00:00.000Z"
       }
     ]
