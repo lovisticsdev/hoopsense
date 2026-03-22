@@ -1,0 +1,154 @@
+"""
+Schema validation for nba_daily.json output.
+
+Single source of truth — used by both the pipeline (generate_picks.py)
+and the standalone validator (validate_output.py).
+"""
+import json
+import logging
+from pathlib import Path
+from typing import List
+
+from config import LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB
+
+logger = logging.getLogger(__name__)
+
+
+def confidence_label_for_prob(prob: float) -> str:
+    """Expected confidence label for a given win probability."""
+    if prob >= LOCK_CONFIDENCE_PROB:
+        return "LOCK"
+    if prob >= HIGH_CONFIDENCE_PROB:
+        return "HIGH"
+    if prob >= MEDIUM_CONFIDENCE_PROB:
+        return "MEDIUM"
+    return "LOW"
+
+
+def validate_daily_json(data: dict) -> List[str]:
+    """
+    Validate the structure and consistency of a daily JSON payload.
+
+    Returns a list of error strings. Empty list = valid.
+    """
+    errors: List[str] = []
+
+    # ── Top-level keys ──
+    if "metadata" not in data:
+        errors.append("missing 'metadata'")
+    if "games" not in data:
+        errors.append("missing 'games'")
+    elif not isinstance(data["games"], list):
+        errors.append("'games' is not a list")
+
+    meta = data.get("metadata", {})
+
+    # ── Game structure (only iterate if games is actually a list) ──
+    game_ids = set()
+    games_list = data.get("games", [])
+    if not isinstance(games_list, list):
+        games_list = []
+    for i, game in enumerate(games_list):
+        for key in ("id", "start_time", "status", "home", "away"):
+            if key not in game:
+                errors.append(f"game[{i}] missing '{key}'")
+
+        if "id" in game:
+            game_ids.add(game["id"])
+
+        # Prediction validation
+        pred = game.get("prediction", {})
+        if pred:
+            for prob_key in ("home_win_prob", "away_win_prob"):
+                prob = pred.get(prob_key, -1)
+                if not isinstance(prob, (int, float)) or not (0.0 <= prob <= 1.0):
+                    errors.append(f"game[{i}] {prob_key}={prob} outside [0.0, 1.0]")
+
+            home_p = pred.get("home_win_prob", 0)
+            away_p = pred.get("away_win_prob", 0)
+            if isinstance(home_p, (int, float)) and isinstance(away_p, (int, float)):
+                if abs((home_p + away_p) - 1.0) > 0.01:
+                    errors.append(
+                        f"game[{i}] probabilities sum to {home_p + away_p:.4f} (expected ~1.0)"
+                    )
+
+    # ── Picks validation (only if ACTIVE status) ──
+    if meta.get("status") == "ACTIVE":
+        if not data.get("games"):
+            errors.append("status is ACTIVE but no games found")
+
+        picks = data.get("picks") or {}
+        _validate_pick_object(picks.get("lock"), "lock", game_ids, errors)
+
+        for i, premium_pick in enumerate(picks.get("premium", [])):
+            _validate_pick_object(premium_pick, f"premium[{i}]", game_ids, errors)
+
+    return errors
+
+
+def _validate_pick_object(
+    pick: dict | None,
+    label: str,
+    valid_game_ids: set,
+    errors: List[str],
+) -> None:
+    """Validate a single pick object (lock or premium)."""
+    if pick is None:
+        return
+
+    # Required keys
+    for key in ("game_id", "selection", "win_prob", "confidence"):
+        if key not in pick:
+            errors.append(f"{label} missing '{key}'")
+
+    # Probability range
+    prob = pick.get("win_prob", -1)
+    if isinstance(prob, (int, float)) and not (0.0 <= prob <= 1.0):
+        errors.append(f"{label} win_prob={prob} outside [0.0, 1.0]")
+
+    # Game ID cross-reference
+    game_id = pick.get("game_id")
+    if game_id is not None and valid_game_ids and game_id not in valid_game_ids:
+        errors.append(f"{label} references game_id='{game_id}' not in games list")
+
+    # Confidence-probability consistency
+    if isinstance(prob, (int, float)) and 0.0 <= prob <= 1.0:
+        expected = confidence_label_for_prob(prob)
+        actual = pick.get("confidence", "")
+        if actual and actual != expected:
+            errors.append(
+                f"{label} confidence='{actual}' but prob={prob} expects '{expected}'"
+            )
+
+
+def validate_file(filepath: Path) -> bool:
+    """
+    Load and validate a JSON file. Prints results and returns True if valid.
+
+    Used by the standalone validate_output.py script.
+    """
+    if not filepath.exists():
+        print(f"ERROR: {filepath.name} not found at {filepath}")
+        return False
+
+    try:
+        with open(filepath) as f:
+            data = json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"ERROR: {filepath.name} is not valid JSON: {e}")
+        return False
+
+    errors = validate_daily_json(data)
+
+    if errors:
+        print(f"VALIDATION ERRORS: {'; '.join(errors)}")
+        return False
+
+    meta = data.get("metadata", {})
+    games_count = len(data.get("games", []))
+    version = meta.get("model_version", "?")
+    picks_found = meta.get("picks_found", 0)
+    status = meta.get("status", "UNKNOWN")
+    print(f"OK: {games_count} games, {picks_found} picks, "
+          f"status={status}, model=v{version}")
+    return True
