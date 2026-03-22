@@ -33,8 +33,7 @@ fun PremiumGate(
 
                 val obscuredPick = pick.copy(
                     selection = "HIDDEN",
-                    winProb = 0.5,
-                    reasoning = "Upgrade to view full analysis."
+                    winProb = 0.5
                 )
 
                 PickCard(

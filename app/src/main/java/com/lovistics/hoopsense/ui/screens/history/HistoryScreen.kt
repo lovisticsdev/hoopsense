@@ -56,7 +56,7 @@ fun HistoryScreen(
 
                     item {
                         Text(
-                            "LAST 5 DAYS",
+                            "LAST 10 DAYS",
                             modifier = Modifier.padding(bottom = 8.dp),
                             style = MaterialTheme.typography.labelSmall,
                             color = TextSecondary

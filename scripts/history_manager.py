@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 
 from fetch_ingredients import _api_get
 from prediction_engine import predict_game, confidence_from_prob
-from config import DATA_DIR, MIN_PICK_PROB, PICK_MODE, MANUAL_PICK_COUNT
+from config import DATA_DIR, MIN_PICK_PROB, PICK_COUNT
 from utils import write_json_atomic, read_json_safe
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ HISTORY_FILE = DATA_DIR / "history_slips.json"
 DAILY_FILE = DATA_DIR / "nba_daily.json"
 
 HISTORY_API_DELAY = 3.0
-HISTORY_WINDOW_DAYS = 5
+HISTORY_WINDOW_DAYS = 10
 
 
 # ═══════════════════════════════════════════════════════
@@ -160,8 +160,7 @@ def _generate_historical_picks(
         else:
             selection, prob = away_abbr, prediction["away_win_prob"]
 
-        # In auto mode, apply threshold; in manual mode, take everything
-        if PICK_MODE == "auto" and prob < MIN_PICK_PROB:
+        if prob < MIN_PICK_PROB:
             continue
 
         candidates.append({
@@ -176,10 +175,7 @@ def _generate_historical_picks(
         })
 
     candidates.sort(key=lambda x: x["win_prob"], reverse=True)
-
-    # In manual mode, cap to MANUAL_PICK_COUNT
-    if PICK_MODE == "manual":
-        candidates = candidates[:MANUAL_PICK_COUNT]
+    candidates = candidates[:PICK_COUNT]
 
     if not candidates:
         return None

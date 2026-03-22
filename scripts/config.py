@@ -250,11 +250,9 @@ MEDIUM_CONFIDENCE_PROB = 0.65    # ~3.5-7 point spread — moderate edge
 MIN_PICK_PROB = 0.55             # minimum to surface as a pick at all
 MIN_GAMES_FOR_STATS = 10
 
-# ── Pick mode ────────────────────────────────────────
+# ── Pick selection ───────────────────────────────────
 #
-# "auto"   — surface all games above MIN_PICK_PROB
-# "manual" — surface exactly MANUAL_PICK_COUNT picks (top N by probability,
-#            ignores MIN_PICK_PROB threshold)
+# Take top PICK_COUNT picks by probability, each must clear MIN_PICK_PROB.
+# If fewer than PICK_COUNT games clear the threshold, only those are surfaced.
 
-PICK_MODE = "manual"               # "auto" | "manual"
-MANUAL_PICK_COUNT = 3           # only used when PICK_MODE == "manual"
+PICK_COUNT = 3
