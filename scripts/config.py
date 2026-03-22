@@ -256,5 +256,5 @@ MIN_GAMES_FOR_STATS = 10
 # "manual" — surface exactly MANUAL_PICK_COUNT picks (top N by probability,
 #            ignores MIN_PICK_PROB threshold)
 
-PICK_MODE = "auto"               # "auto" | "manual"
+PICK_MODE = "manual"               # "auto" | "manual"
 MANUAL_PICK_COUNT = 3           # only used when PICK_MODE == "manual"

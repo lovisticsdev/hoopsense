@@ -62,20 +62,10 @@ data class Pick(
     @SerialName("win_prob") val winProb: Double = 0.0,
     val confidence: String = "MEDIUM",
     @SerialName("start_time") val startTime: String? = null,
-    val reasoning: String? = null,
     val status: String? = null
 )
 
 @Serializable
 data class History(
-    @SerialName("past_slips") val pastSlips: List<Picks> = emptyList(),
-    @SerialName("season_stats") val seasonStats: SeasonStats? = null
-)
-
-@Serializable
-data class SeasonStats(
-    val wins: Int = 0,
-    val losses: Int = 0,
-    @SerialName("total_bets") val totalBets: Int = 0,
-    @SerialName("win_rate") val winRate: Double = 0.0
+    @SerialName("past_slips") val pastSlips: List<Picks> = emptyList()
 )

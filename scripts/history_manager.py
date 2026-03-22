@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 HISTORY_FILE = DATA_DIR / "history_slips.json"
 DAILY_FILE = DATA_DIR / "nba_daily.json"
-STATS_FILE = DATA_DIR / "season_stats.json"
 
 HISTORY_API_DELAY = 3.0
 HISTORY_WINDOW_DAYS = 5
@@ -123,32 +122,6 @@ def _grade_slip(slip: dict, date_str: str) -> None:
 
 
 # ═══════════════════════════════════════════════════════
-#  Season stats (wins/losses only — no odds-based metrics)
-# ═══════════════════════════════════════════════════════
-
-def _tally_stats(history_data: dict) -> Dict[str, float]:
-    """Compute season-level stats from all graded picks."""
-    wins = 0
-    losses = 0
-
-    for slip in history_data.values():
-        for pick in _get_all_picks(slip):
-            status = pick.get("status")
-            if status == "WIN":
-                wins += 1
-            elif status == "LOSS":
-                losses += 1
-
-    total_bets = wins + losses
-    return {
-        "wins": wins,
-        "losses": losses,
-        "total_bets": total_bets,
-        "win_rate": round((wins / total_bets) * 100, 1) if total_bets > 0 else 0.0,
-    }
-
-
-# ═══════════════════════════════════════════════════════
 #  Backfill (generate picks for missing dates)
 # ═══════════════════════════════════════════════════════
 
@@ -228,8 +201,9 @@ def update_and_get_history(teams: dict, h2h_matrix: dict = None) -> dict:
     2. Archive today's daily picks (if they exist).
     3. Backfill any missing days in the last 5.
     4. Grade all ungraded picks.
-    5. Compute and save season stats.
-    6. Return the history payload for the daily JSON.
+    5. Return the history payload for the daily JSON.
+
+    Stats are computed client-side from the displayed slips.
     """
     h2h = h2h_matrix or {}
     history_data: dict = read_json_safe(HISTORY_FILE, default={})
@@ -260,12 +234,8 @@ def update_and_get_history(teams: dict, h2h_matrix: dict = None) -> dict:
 
     write_json_atomic(history_data, HISTORY_FILE)
 
-    season_stats = _tally_stats(history_data)
-    write_json_atomic(season_stats, STATS_FILE)
-
     past_slips = [history_data[d] for d in dates if d in history_data]
 
     return {
         "past_slips": past_slips,
-        "season_stats": season_stats,
     }
