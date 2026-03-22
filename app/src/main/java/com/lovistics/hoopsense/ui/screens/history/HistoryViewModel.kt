@@ -47,9 +47,18 @@ class HistoryViewModel @Inject constructor(
     fun refresh() {
         _uiState.update { it.copy(isRefreshing = true) }
         viewModelScope.launch {
-            repository.getDailyData(forceRefresh = true).onFailure {
-                _uiState.update { it.copy(isRefreshing = false) }
-            }
+            repository.getDailyData(forceRefresh = true)
+                .onSuccess { data ->
+                    _uiState.update {
+                        it.copy(
+                            history = data.history,
+                            isRefreshing = false
+                        )
+                    }
+                }
+                .onFailure {
+                    _uiState.update { it.copy(isRefreshing = false) }
+                }
         }
     }
 }

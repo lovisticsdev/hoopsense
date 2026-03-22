@@ -74,14 +74,26 @@ class BetslipViewModel @Inject constructor(
     fun refresh() {
         _uiState.update { it.copy(isRefreshing = true) }
         viewModelScope.launch {
-            repository.getDailyData(forceRefresh = true).onFailure { e ->
-                _uiState.update {
-                    it.copy(
-                        isRefreshing = false,
-                        error = e.message ?: "Refresh failed"
-                    )
+            repository.getDailyData(forceRefresh = true)
+                .onSuccess { data ->
+                    _uiState.update {
+                        it.copy(
+                            picks = data.picks,
+                            games = data.games,
+                            metadata = data.metadata,
+                            isRefreshing = false,
+                            error = null
+                        )
+                    }
                 }
-            }
+                .onFailure { e ->
+                    _uiState.update {
+                        it.copy(
+                            isRefreshing = false,
+                            error = e.message ?: "Refresh failed"
+                        )
+                    }
+                }
         }
     }
 

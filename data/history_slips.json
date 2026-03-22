@@ -78,7 +78,7 @@
       "selection": "MIN",
       "win_prob": 0.9909,
       "confidence": "LOCK",
-      "status": "PENDING",
+      "status": "WIN",
       "start_time": "2026-03-19T00:00:00.000Z"
     },
     "premium": [
@@ -89,7 +89,7 @@
         "selection": "BOS",
         "win_prob": 0.9892,
         "confidence": "LOCK",
-        "status": "PENDING",
+        "status": "WIN",
         "start_time": "2026-03-18T23:00:00.000Z"
       },
       {
@@ -99,7 +99,7 @@
         "selection": "OKC",
         "win_prob": 0.9473,
         "confidence": "LOCK",
-        "status": "PENDING",
+        "status": "WIN",
         "start_time": "2026-03-18T23:30:00.000Z"
       }
     ]
