@@ -11,15 +11,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.lovistics.hoopsense.data.model.SeasonStats
+import com.lovistics.hoopsense.data.model.Picks
 import com.lovistics.hoopsense.ui.theme.*
 
 @Composable
-fun StatsGrid(stats: SeasonStats?) {
-    val wins = stats?.wins ?: 0
-    val losses = stats?.losses ?: 0
-    val winRate = stats?.winRate ?: 0.0
-    val totalBets = stats?.totalBets ?: 0
+fun StatsGrid(slips: List<Picks>) {
+    val allPicks = slips.flatMap { slip ->
+        buildList {
+            slip.lock?.let { add(it) }
+            addAll(slip.premium)
+        }
+    }
+    val wins = allPicks.count { it.status?.uppercase() == "WIN" }
+    val losses = allPicks.count { it.status?.uppercase() == "LOSS" }
+    val totalBets = wins + losses
+    val winRate = if (totalBets > 0) (wins.toDouble() / totalBets) * 100.0 else 0.0
 
     Row(
         modifier = Modifier.fillMaxWidth(),

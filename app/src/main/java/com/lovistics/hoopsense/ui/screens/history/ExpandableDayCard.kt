@@ -47,7 +47,7 @@ fun ExpandableDayCard(slip: Picks) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    FormatUtils.formatDateShort(slip.date),
+                    FormatUtils.formatDateHeader(slip.date),
                     style = MaterialTheme.typography.titleMedium,
                     color = TextPrimary
                 )
@@ -79,10 +79,10 @@ fun ExpandableDayCard(slip: Picks) {
             if (expanded) {
                 Column(modifier = Modifier.padding(bottom = 8.dp)) {
                     slip.lock?.let {
-                        PickCard(pick = it, isLock = true)
+                        PickCard(pick = it, isLock = true, startTime = it.startTime)
                     }
                     slip.premium.forEach {
-                        PickCard(pick = it, isLock = false)
+                        PickCard(pick = it, isLock = false, startTime = it.startTime)
                     }
                 }
             }

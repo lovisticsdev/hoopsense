@@ -249,3 +249,12 @@ HIGH_CONFIDENCE_PROB = 0.80      # ~7-11 point spread — strong edge
 MEDIUM_CONFIDENCE_PROB = 0.65    # ~3.5-7 point spread — moderate edge
 MIN_PICK_PROB = 0.55             # minimum to surface as a pick at all
 MIN_GAMES_FOR_STATS = 10
+
+# ── Pick mode ────────────────────────────────────────
+#
+# "auto"   — surface all games above MIN_PICK_PROB
+# "manual" — surface exactly MANUAL_PICK_COUNT picks (top N by probability,
+#            ignores MIN_PICK_PROB threshold)
+
+PICK_MODE = "auto"               # "auto" | "manual"
+MANUAL_PICK_COUNT = 3           # only used when PICK_MODE == "manual"

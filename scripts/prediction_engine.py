@@ -45,6 +45,8 @@ from config import (
     LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB,
     MIN_PICK_PROB,
     spread_to_prob,
+    # Pick mode
+    PICK_MODE, MANUAL_PICK_COUNT,
     # Division/conference lookups
     TEAM_DIVISIONS, OPPONENT_DIV_TO_KEY, OPPONENT_CONF_TO_KEY,
 )
@@ -492,13 +494,25 @@ def predict_game(
 def find_best_picks(
     games: List[Dict],
     min_prob: float = MIN_PICK_PROB,
+    pick_mode: str = PICK_MODE,
+    manual_count: int = MANUAL_PICK_COUNT,
 ) -> List[Dict]:
     """
     Select the strongest model-based picks across all games.
 
-    For each game, picks the team with higher win probability (if above min_prob).
+    Modes:
+      "auto"   — pick every game above min_prob threshold.
+      "manual" — pick the top `manual_count` games by probability
+                 (ignores min_prob, always returns exactly N or fewer
+                 if there aren't enough games).
+
     Returns picks ranked by win probability (highest first).
     """
+    is_manual = pick_mode == "manual"
+
+    # In manual mode, no threshold — take every game's best side
+    threshold = 0.0 if is_manual else min_prob
+
     picks = []
 
     for game in games:
@@ -509,7 +523,7 @@ def find_best_picks(
         home_info = game.get("home", {})
         away_info = game.get("away", {})
 
-        if home_prob > away_prob and home_prob >= min_prob:
+        if home_prob > away_prob and home_prob >= threshold:
             picks.append({
                 "game_id": game.get("id"),
                 "selection": home_info.get("abbr", ""),
@@ -518,7 +532,7 @@ def find_best_picks(
                 "predicted_spread": pred.get("predicted_spread", 0),
                 "confidence": pred.get("confidence", "LOW"),
             })
-        elif away_prob > home_prob and away_prob >= min_prob:
+        elif away_prob > home_prob and away_prob >= threshold:
             picks.append({
                 "game_id": game.get("id"),
                 "selection": away_info.get("abbr", ""),
@@ -529,4 +543,8 @@ def find_best_picks(
             })
 
     picks.sort(key=lambda x: x["win_prob"], reverse=True)
+
+    if is_manual:
+        picks = picks[:manual_count]
+
     return picks

@@ -61,6 +61,7 @@ data class Pick(
     val selection: String,
     @SerialName("win_prob") val winProb: Double = 0.0,
     val confidence: String = "MEDIUM",
+    @SerialName("start_time") val startTime: String? = null,
     val reasoning: String? = null,
     val status: String? = null
 )

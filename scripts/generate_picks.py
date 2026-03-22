@@ -96,6 +96,7 @@ def _build_pick(pick: dict, game_info: dict) -> Dict:
         "selection": pick["selection"],
         "win_prob": pick["win_prob"],
         "confidence": pick["confidence"],
+        "start_time": game_info.get("start_time", ""),
     }
 
 

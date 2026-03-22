@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 
 from fetch_ingredients import _api_get
 from prediction_engine import predict_game, confidence_from_prob
-from config import DATA_DIR, MIN_PICK_PROB
+from config import DATA_DIR, MIN_PICK_PROB, PICK_MODE, MANUAL_PICK_COUNT
 from utils import write_json_atomic, read_json_safe
 
 logger = logging.getLogger(__name__)
@@ -111,7 +111,14 @@ def _grade_slip(slip: dict, date_str: str) -> None:
         logger.info(f"Games for {date_str} not yet Final — keeping PENDING")
         return
 
+    # Backfill start_time for picks that lack it
+    all_results = {str(g["id"]): g for g in games_data}
     for pick in all_picks:
+        if not pick.get("start_time"):
+            gid = str(pick.get("game_id"))
+            g = all_results.get(gid)
+            if g:
+                pick["start_time"] = g.get("datetime", g.get("date", ""))
         _grade_pick(pick, results_map)
 
 
@@ -180,7 +187,8 @@ def _generate_historical_picks(
         else:
             selection, prob = away_abbr, prediction["away_win_prob"]
 
-        if prob < MIN_PICK_PROB:
+        # In auto mode, apply threshold; in manual mode, take everything
+        if PICK_MODE == "auto" and prob < MIN_PICK_PROB:
             continue
 
         candidates.append({
@@ -191,9 +199,15 @@ def _generate_historical_picks(
             "win_prob": round(prob, 4),
             "confidence": confidence_from_prob(prob),
             "status": "PENDING",
+            "start_time": game.get("datetime", game.get("date", "")),
         })
 
     candidates.sort(key=lambda x: x["win_prob"], reverse=True)
+
+    # In manual mode, cap to MANUAL_PICK_COUNT
+    if PICK_MODE == "manual":
+        candidates = candidates[:MANUAL_PICK_COUNT]
+
     if not candidates:
         return None
 

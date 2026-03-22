@@ -194,7 +194,7 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
                 PickCard(
                     pick = lock,
                     isLock = true,
-                    startTime = game?.startTime,
+                    startTime = lock.startTime ?: game?.startTime,
                     awayName = game?.away?.name,
                     homeName = game?.home?.name
                 )
@@ -218,7 +218,7 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
                 PickCard(
                     pick = pick,
                     isLock = false,
-                    startTime = game?.startTime,
+                    startTime = pick.startTime ?: game?.startTime,
                     awayName = game?.away?.name,
                     homeName = game?.home?.name
                 )
