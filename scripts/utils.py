@@ -69,9 +69,9 @@ def record_total_games(record_str: str) -> int:
     return w + l
 
 
-def clamp(value: float, lo: float, hi: float) -> float:
-    """Clamp a value to [lo, hi]."""
-    return max(lo, min(hi, value))
+def clamp(value: float, minimum: float, maximum: float) -> float:
+    """Clamp a value to [minimum, maximum]."""
+    return max(minimum, min(maximum, value))
 
 
 # ── Atomic file I/O ────────────────────────────────────

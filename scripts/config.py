@@ -1,5 +1,5 @@
 """
-Configuration and constants for HoopSense v4.
+Configuration and constants for HoopSense v5.
 
 Single source of truth for: team registry, division/conference mappings,
 model weights, thresholds, and derived lookups.
@@ -244,6 +244,7 @@ def spread_to_prob(spread: float) -> float:
 #
 # This gives meaningful differentiation across the typical NBA spread range.
 
+DEFAULT_WIN_PROB = 0.50          # Prior for no-information / coin-flip games
 LOCK_CONFIDENCE_PROB = 0.90      # ~11+ point spread — near-certain
 HIGH_CONFIDENCE_PROB = 0.80      # ~7-11 point spread — strong edge
 MEDIUM_CONFIDENCE_PROB = 0.65    # ~3.5-7 point spread — moderate edge

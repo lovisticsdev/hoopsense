@@ -110,18 +110,6 @@ object FormatUtils {
         }
     }
 
-    /**
-     * Compare a UTC date string against today-in-UTC.
-     * Used for cache freshness checks where both sides should stay in UTC.
-     */
-    fun isUtcToday(utcDateStr: String): Boolean {
-        return try {
-            LocalDate.parse(utcDateStr) == LocalDate.now(ZoneOffset.UTC)
-        } catch (_: Exception) {
-            false
-        }
-    }
-
     // ── Internal helpers ────────────────────────────────
 
     private fun parseUtcInstant(raw: String): Instant? {

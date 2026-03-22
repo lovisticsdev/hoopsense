@@ -42,7 +42,7 @@ from config import (
     # Head-to-head
     H2H_SCALING, H2H_CAP, H2H_MIN_GAMES,
     # Spread → probability
-    LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB,
+    DEFAULT_WIN_PROB, LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB,
     MIN_PICKS,
     spread_to_prob,
     # Division/conference lookups
@@ -183,10 +183,12 @@ def _weighted_monthly_form(monthly: dict, season_wpct: float) -> Optional[float]
 
 def calculate_power_score(stats: dict) -> float:
     """
-    Team power score on a points scale. League avg ≈ 0, elite ≈ +8 to +12.
+    Base power score (excludes form trajectory).
 
-    v4 formula:
-      0.50 × SRS + 0.20 × Four Factors Net + 0.15 × Pythagorean + 0.15 × Form
+    0.50 × SRS + 0.20 × Four Factors Net + 0.15 × Pythagorean Regression.
+    League avg ≈ 0, elite ≈ +8 to +12.
+
+    See calculate_full_power_score() for the complete score including form.
     """
     if not stats:
         return 0.0
@@ -232,67 +234,59 @@ def _team_specific_hca(record: dict) -> float:
     return round(max(floor, min(ceiling, hca)), 2)
 
 
-def _conference_matchup_adj(
-    team_standings: dict, overall_record: dict, opponent_abbr: str,
+def _record_vs_segment_adj(
+    team_standings: dict,
+    overall_record: dict,
+    standings_key: str | None,
+    scaling: float,
+    cap: float,
+    min_games: int = 5,
 ) -> float:
     """
-    Adjust based on how the team performs against the opponent's conference.
+    Generic adjustment based on team's record vs an opponent segment.
 
-    If a team performs significantly better/worse against the opponent's conference
-    compared to their overall record, apply a small adjustment.
+    Compares the team's win% in a specific segment (conference, division)
+    against their overall win%, then scales and clamps the delta.
+    Shared logic for both conference and division matchup adjustments.
     """
-    opp_info = TEAM_DIVISIONS.get(opponent_abbr)
-    if not opp_info:
+    if not standings_key:
         return 0.0
 
-    opp_conf = opp_info["conference"]
-    conf_key = OPPONENT_CONF_TO_KEY.get(opp_conf)
-    if not conf_key:
+    vs_rec = team_standings.get(standings_key, "0-0")
+    if record_total_games(vs_rec) < min_games:
         return 0.0
 
-    vs_conf_rec = team_standings.get(conf_key, "0-0")
-    vs_conf_total = record_total_games(vs_conf_rec)
-    if vs_conf_total < 5:
-        return 0.0
-
-    vs_conf_wpct = record_win_pct(vs_conf_rec)
     overall_wins = overall_record.get("wins", 0)
     overall_losses = overall_record.get("losses", 0)
     overall_total = overall_wins + overall_losses
-    overall_wpct = overall_wins / overall_total if overall_total > 0 else 0.5
+    overall_wpct = overall_wins / overall_total if overall_total > 0 else DEFAULT_WIN_PROB
 
-    delta = vs_conf_wpct - overall_wpct
-    return clamp(delta * CONF_MATCHUP_SCALING, -CONF_MATCHUP_CAP, CONF_MATCHUP_CAP)
+    delta = record_win_pct(vs_rec) - overall_wpct
+    return clamp(delta * scaling, -cap, cap)
+
+
+def _conference_matchup_adj(
+    team_standings: dict, overall_record: dict, opponent_abbr: str,
+) -> float:
+    """Adjust based on how the team performs against the opponent's conference."""
+    opp_conf = TEAM_DIVISIONS.get(opponent_abbr, {}).get("conference")
+    standings_key = OPPONENT_CONF_TO_KEY.get(opp_conf) if opp_conf else None
+    return _record_vs_segment_adj(
+        team_standings, overall_record, standings_key,
+        CONF_MATCHUP_SCALING, CONF_MATCHUP_CAP,
+    )
 
 
 def _division_matchup_adj(
     team_standings: dict, overall_record: dict, opponent_abbr: str,
 ) -> float:
-    """
-    Adjust based on how the team performs against the opponent's specific division.
-    """
-    opp_info = TEAM_DIVISIONS.get(opponent_abbr)
-    if not opp_info:
-        return 0.0
-
-    opp_div = opp_info["division"]
-    div_key = OPPONENT_DIV_TO_KEY.get(opp_div)
-    if not div_key:
-        return 0.0
-
-    vs_div_rec = team_standings.get(div_key, "0-0")
-    vs_div_total = record_total_games(vs_div_rec)
-    if vs_div_total < DIV_MIN_GAMES:
-        return 0.0
-
-    vs_div_wpct = record_win_pct(vs_div_rec)
-    overall_wins = overall_record.get("wins", 0)
-    overall_losses = overall_record.get("losses", 0)
-    overall_total = overall_wins + overall_losses
-    overall_wpct = overall_wins / overall_total if overall_total > 0 else 0.5
-
-    delta = vs_div_wpct - overall_wpct
-    return clamp(delta * DIV_MATCHUP_SCALING, -DIV_MATCHUP_CAP, DIV_MATCHUP_CAP)
+    """Adjust based on how the team performs against the opponent's division."""
+    opp_div = TEAM_DIVISIONS.get(opponent_abbr, {}).get("division")
+    standings_key = OPPONENT_DIV_TO_KEY.get(opp_div) if opp_div else None
+    return _record_vs_segment_adj(
+        team_standings, overall_record, standings_key,
+        DIV_MATCHUP_SCALING, DIV_MATCHUP_CAP, DIV_MIN_GAMES,
+    )
 
 
 def _close_game_regression(form: dict) -> float:
@@ -503,8 +497,8 @@ def find_best_picks(games: List[Dict]) -> List[Dict]:
 
     for game in games:
         pred = game.get("prediction", {})
-        home_prob = pred.get("home_win_prob", 0.5)
-        away_prob = pred.get("away_win_prob", 0.5)
+        home_prob = pred.get("home_win_prob", DEFAULT_WIN_PROB)
+        away_prob = pred.get("away_win_prob", DEFAULT_WIN_PROB)
 
         home_info = game.get("home", {})
         away_info = game.get("away", {})

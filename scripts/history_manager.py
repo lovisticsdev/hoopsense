@@ -1,5 +1,7 @@
 """
-History manager: grade past picks, maintain a 5-day rolling history, backfill gaps.
+History manager: grade past picks, maintain rolling history, backfill gaps.
+
+History window is configured via HISTORY_WINDOW_DAYS (currently 10 days).
 """
 import logging
 import random
@@ -100,24 +102,20 @@ def _grade_slip(slip: dict, date_str: str) -> None:
         logger.warning(f"No API data for {date_str} — keeping existing statuses")
         return
 
-    results_map = {
-        str(g["id"]): g
-        for g in games_data
-        if g.get("status") == "Final"
-    }
+    # Build lookup once, reuse for both backfill and grading
+    games_by_id = {str(g["id"]): g for g in games_data}
+    results_map = {gid: g for gid, g in games_by_id.items() if g.get("status") == "Final"}
 
     if not results_map:
         logger.info(f"Games for {date_str} not yet Final — keeping PENDING")
         return
 
-    # Backfill start_time for picks that lack it
-    all_results = {str(g["id"]): g for g in games_data}
     for pick in all_picks:
+        # Backfill start_time for picks that lack it
         if not pick.get("start_time"):
-            gid = str(pick.get("game_id"))
-            g = all_results.get(gid)
-            if g:
-                pick["start_time"] = g.get("datetime", g.get("date", ""))
+            game = games_by_id.get(str(pick.get("game_id")))
+            if game:
+                pick["start_time"] = game.get("datetime", game.get("date", ""))
         _grade_pick(pick, results_map)
 
 
@@ -203,11 +201,13 @@ def update_and_get_history(teams: dict, h2h_matrix: dict = None) -> dict:
     """
     1. Load existing history.
     2. Archive today's daily picks (if they exist).
-    3. Backfill any missing days in the last 5.
+    3. Backfill any missing days in the history window.
     4. Grade all ungraded picks.
     5. Return the history payload for the daily JSON.
 
     Stats are computed client-side from the displayed slips.
+    Backfilled dates use current model state retroactively —
+    accuracy metrics for those dates may be inflated.
     """
     h2h = h2h_matrix or {}
     history_data: dict = read_json_safe(HISTORY_FILE, default={})
@@ -221,6 +221,9 @@ def update_and_get_history(teams: dict, h2h_matrix: dict = None) -> dict:
 
     dates = _last_n_dates(HISTORY_WINDOW_DAYS)
     abbr_lookup = _build_abbr_lookup(teams)
+
+    # Track which dates existed before backfill (for disclosure)
+    pre_existing_dates = set(history_data.keys())
 
     # Backfill missing dates
     for date_str in dates:
@@ -239,7 +242,9 @@ def update_and_get_history(teams: dict, h2h_matrix: dict = None) -> dict:
     write_json_atomic(history_data, HISTORY_FILE)
 
     past_slips = [history_data[d] for d in dates if d in history_data]
+    backfilled = [d for d in dates if d in history_data and d not in pre_existing_dates]
 
     return {
         "past_slips": past_slips,
+        "backfilled_dates": backfilled,
     }

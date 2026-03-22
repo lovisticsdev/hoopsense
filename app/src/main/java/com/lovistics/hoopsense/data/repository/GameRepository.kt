@@ -3,7 +3,8 @@ package com.lovistics.hoopsense.data.repository
 import android.util.Log
 import com.lovistics.hoopsense.data.cache.FileCache
 import com.lovistics.hoopsense.data.model.DailyData
-import com.lovistics.hoopsense.domain.FormatUtils
+import com.lovistics.hoopsense.data.util.DateUtils
+import com.lovistics.hoopsense.domain.repository.GameDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,19 +19,21 @@ class GameRepository @Inject constructor(
     private val json: Json,
     private val fileCache: FileCache,
     private val client: OkHttpClient
-) {
+) : GameDataRepository {
+
     companion object {
         private const val TAG = "GameRepository"
         const val DATA_URL =
             "https://raw.githubusercontent.com/lovisticsdev/hoopsense/main/data/nba_daily.json"
         private const val CACHE_FILE = "nba_daily.json"
-        private const val CACHE_MAX_AGE = 15 * 60 * 1000L
+        private const val CACHE_MAX_AGE_MS = 15 * 60 * 1000L   // 15 minutes
+        private const val STALE_CACHE_NO_EXPIRY = Long.MAX_VALUE
     }
 
     private val _dailyDataStream = MutableStateFlow<DailyData?>(null)
-    val dailyDataStream = _dailyDataStream.asStateFlow()
+    override val dailyDataStream = _dailyDataStream.asStateFlow()
 
-    suspend fun getDailyData(forceRefresh: Boolean = false): Result<DailyData> {
+    override suspend fun getDailyData(forceRefresh: Boolean): Result<DailyData> {
         return withContext(Dispatchers.IO) {
             if (!forceRefresh) {
                 val cached = loadFromCache()
@@ -41,12 +44,12 @@ class GameRepository @Inject constructor(
     }
 
     private fun loadFromCache(): DailyData? {
-        val cached = fileCache.read(CACHE_FILE, CACHE_MAX_AGE) ?: return null
+        val cached = fileCache.read(CACHE_FILE, CACHE_MAX_AGE_MS) ?: return null
         return try {
             val dailyData = json.decodeFromString<DailyData>(cached)
             val picksDate = dailyData.picks?.date
 
-            if (picksDate != null && !FormatUtils.isUtcToday(picksDate)) {
+            if (picksDate != null && !DateUtils.isUtcToday(picksDate)) {
                 Log.d(TAG, "Cache is from $picksDate (not today UTC). Forcing network fetch.")
                 return null
             }
@@ -98,7 +101,7 @@ class GameRepository @Inject constructor(
     }
 
     private fun fallbackToStaleCache(): Result<DailyData>? {
-        val stale = fileCache.read(CACHE_FILE, Long.MAX_VALUE) ?: return null
+        val stale = fileCache.read(CACHE_FILE, STALE_CACHE_NO_EXPIRY) ?: return null
         return try {
             Log.d(TAG, "Using stale cache as fallback")
             val staleData = json.decodeFromString<DailyData>(stale)

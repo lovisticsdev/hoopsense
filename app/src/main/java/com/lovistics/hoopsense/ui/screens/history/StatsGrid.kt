@@ -11,22 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.lovistics.hoopsense.data.model.Picks
 import com.lovistics.hoopsense.ui.theme.*
 
+/**
+ * Displays pre-computed aggregate stats (wins, losses, win rate, total bets).
+ * Receives a [HistoryStats] from the ViewModel — no computation in the composable.
+ */
 @Composable
-fun StatsGrid(slips: List<Picks>) {
-    val allPicks = slips.flatMap { slip ->
-        buildList {
-            slip.lock?.let { add(it) }
-            addAll(slip.premium)
-        }
-    }
-    val wins = allPicks.count { it.status?.uppercase() == "WIN" }
-    val losses = allPicks.count { it.status?.uppercase() == "LOSS" }
-    val totalBets = wins + losses
-    val winRate = if (totalBets > 0) (wins.toDouble() / totalBets) * 100.0 else 0.0
-
+fun StatsGrid(stats: HistoryStats) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -34,18 +26,18 @@ fun StatsGrid(slips: List<Picks>) {
         StatTile(
             modifier = Modifier.weight(1f),
             title = "RECORD",
-            value = "$wins-$losses"
+            value = "${stats.wins}-${stats.losses}"
         )
         StatTile(
             modifier = Modifier.weight(1f),
             title = "WIN %",
-            value = "%.1f%%".format(winRate),
-            isHighlight = winRate > 55.0
+            value = "%.1f%%".format(stats.winRate),
+            isHighlight = stats.winRate > 55.0
         )
         StatTile(
             modifier = Modifier.weight(1f),
             title = "BETS",
-            value = "$totalBets"
+            value = "${stats.totalBets}"
         )
     }
 }

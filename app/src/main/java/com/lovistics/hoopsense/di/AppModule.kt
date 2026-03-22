@@ -3,6 +3,7 @@ package com.lovistics.hoopsense.di
 import android.content.Context
 import com.lovistics.hoopsense.data.cache.FileCache
 import com.lovistics.hoopsense.data.repository.GameRepository
+import com.lovistics.hoopsense.domain.repository.GameDataRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,7 +45,7 @@ object AppModule {
         json: Json,
         fileCache: FileCache,
         client: OkHttpClient
-    ): GameRepository {
+    ): GameDataRepository {
         return GameRepository(json, fileCache, client)
     }
 }

@@ -1,64 +1,85 @@
 package com.lovistics.hoopsense.ui.screens.history
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.lovistics.hoopsense.data.model.DailyData
 import com.lovistics.hoopsense.data.model.History
-import com.lovistics.hoopsense.data.repository.GameRepository
+import com.lovistics.hoopsense.data.model.Picks
+import com.lovistics.hoopsense.domain.repository.GameDataRepository
+import com.lovistics.hoopsense.ui.screens.BaseDataViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+/**
+ * Pre-computed aggregate stats for the history screen.
+ * Keeps computation out of the composable (SoC: ViewModel owns logic).
+ */
+data class HistoryStats(
+    val wins: Int = 0,
+    val losses: Int = 0,
+    val totalBets: Int = 0,
+    val winRate: Double = 0.0
+)
 
 data class HistoryUiState(
     val history: History? = null,
+    val stats: HistoryStats = HistoryStats(),
     val isLoading: Boolean = true,
     val isRefreshing: Boolean = false
 )
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val repository: GameRepository
-) : ViewModel() {
+    repository: GameDataRepository
+) : BaseDataViewModel<HistoryUiState>(HistoryUiState(), repository) {
 
-    private val _uiState = MutableStateFlow(HistoryUiState())
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            repository.dailyDataStream.collect { data ->
-                if (data != null) {
-                    _uiState.update {
-                        it.copy(
-                            history = data.history,
-                            isLoading = false,
-                            isRefreshing = false
-                        )
-                    }
-                }
-            }
-        }
-        viewModelScope.launch {
-            repository.getDailyData()
-        }
+    override fun onDataLoaded(currentState: HistoryUiState, data: DailyData): HistoryUiState {
+        return currentState.copy(
+            history = data.history,
+            stats = computeStats(data.history?.pastSlips),
+            isLoading = false,
+            isRefreshing = false
+        )
     }
 
-    fun refresh() {
-        _uiState.update { it.copy(isRefreshing = true) }
-        viewModelScope.launch {
-            repository.getDailyData(forceRefresh = true)
-                .onSuccess { data ->
-                    _uiState.update {
-                        it.copy(
-                            history = data.history,
-                            isRefreshing = false
-                        )
-                    }
+    override fun onRefreshStarted(currentState: HistoryUiState): HistoryUiState {
+        return currentState.copy(isRefreshing = true)
+    }
+
+    override fun onRefreshSuccess(currentState: HistoryUiState, data: DailyData): HistoryUiState {
+        return currentState.copy(
+            history = data.history,
+            stats = computeStats(data.history?.pastSlips),
+            isRefreshing = false
+        )
+    }
+
+    override fun onRefreshFailed(currentState: HistoryUiState, error: Throwable): HistoryUiState {
+        return currentState.copy(
+            isLoading = false,
+            isRefreshing = false
+        )
+    }
+
+    companion object {
+        fun computeStats(slips: List<Picks>?): HistoryStats {
+            if (slips.isNullOrEmpty()) return HistoryStats()
+
+            val allPicks = slips.flatMap { slip ->
+                buildList {
+                    slip.lock?.let { add(it) }
+                    addAll(slip.premium)
                 }
-                .onFailure {
-                    _uiState.update { it.copy(isRefreshing = false) }
-                }
+            }
+            val wins = allPicks.count { it.status?.uppercase() == "WIN" }
+            val losses = allPicks.count { it.status?.uppercase() == "LOSS" }
+            val totalBets = wins + losses
+            val winRate = if (totalBets > 0) (wins.toDouble() / totalBets) * 100.0 else 0.0
+
+            return HistoryStats(
+                wins = wins,
+                losses = losses,
+                totalBets = totalBets,
+                winRate = winRate
+            )
         }
     }
 }

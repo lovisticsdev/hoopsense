@@ -179,7 +179,7 @@ def parse_advanced_stats(html_content: str) -> Dict[int, dict]:
                 continue
 
             stats_dict[team_id] = {
-                # ── Core metrics (v4: now extracted) ──
+                # ── Core metrics ──
                 "wins": _safe_int(row, "W", 0),
                 "losses": _safe_int(row, "L", 0),
                 "pyth_wins": _safe_int(row, "PW", 0),
@@ -208,9 +208,10 @@ def parse_advanced_stats(html_content: str) -> Dict[int, dict]:
         logger.info(f"Parsed advanced stats for {len(stats_dict)} teams.")
         return stats_dict
 
-    except Exception as e:
-        logger.error(f"CRITICAL: Advanced Stats parse failed: {e}")
-        return {}
+    except (ValueError, KeyError, IndexError) as e:
+        logger.error(f"CRITICAL: Advanced Stats parse failed — "
+                     f"B-Ref schema may have changed: {e}")
+        raise RuntimeError(f"Advanced Stats parsing failed: {e}") from e
 
 
 def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
@@ -291,9 +292,9 @@ def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
 
             # ── Recent form: most recent month with data ──
             recent_month = "0-0"
-            for mo in reversed(["Mo_Apr", "Mo_Mar", "Mo_Feb", "Mo_Jan",
-                                "Mo_Dec", "Mo_Nov", "Mo_Oct"]):
-                val = str(row.get(mo, ""))
+            for month_col in reversed(["Mo_Apr", "Mo_Mar", "Mo_Feb", "Mo_Jan",
+                                       "Mo_Dec", "Mo_Nov", "Mo_Oct"]):
+                val = str(row.get(month_col, ""))
                 if val and val != "nan" and val != "0-0":
                     recent_month = val
                     break
@@ -304,17 +305,17 @@ def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
                 "home": home_rec,
                 "away": road_rec,
                 "conf": conf_rec,
-                # v4: conference breakdown
+                # Conference breakdown
                 "vs_east": vs_east,
                 "vs_west": vs_west,
-                # v4: division breakdown
+                # Division breakdown
                 "vs_atlantic": vs_atlantic,
                 "vs_central": vs_central,
                 "vs_southeast": vs_southeast,
                 "vs_northwest": vs_northwest,
                 "vs_pacific": vs_pacific,
                 "vs_southwest": vs_southwest,
-                # v4: all-star split
+                # All-Star split
                 "pre_allstar": pre_allstar,
                 "post_allstar": post_allstar,
                 # Margins
@@ -328,7 +329,7 @@ def parse_expanded_standings(html_content: str) -> Dict[int, dict]:
         logger.info(f"Parsed expanded standings for {len(result)} teams.")
         return result
 
-    except Exception as e:
+    except (ValueError, KeyError, IndexError) as e:
         logger.warning(f"Expanded standings parse failed (non-fatal): {e}")
         return {}
 
@@ -383,7 +384,7 @@ def parse_h2h_matrix(html_content: str) -> Dict[str, Dict[str, str]]:
         logger.info(f"Parsed H2H matrix for {len(matrix)} teams.")
         return matrix
 
-    except Exception as e:
+    except (ValueError, KeyError, IndexError) as e:
         logger.warning(f"Team vs. Team parse failed (non-fatal): {e}")
         return {}
 
@@ -700,7 +701,7 @@ def fetch_all_ingredients(season: str = CURRENT_SEASON, force_refresh: bool = Fa
     teams: Dict[str, dict] = {}
     for team_id, team_info in NBA_TEAMS.items():
         raw_stats = bref_stats.get(team_id)
-        exp = bref_standings.get(team_id, {})
+        standings = bref_standings.get(team_id, {})
         abbr = team_info["abbr"]
 
         teams[str(team_id)] = {
@@ -711,34 +712,34 @@ def fetch_all_ingredients(season: str = CURRENT_SEASON, force_refresh: bool = Fa
             "b2b": team_id in yesterdays_teams,
             "rest_days": 0 if team_id in yesterdays_teams else 1,
             "record": {
-                "wins": exp.get("wins", 0),
-                "losses": exp.get("losses", 0),
-                "home": exp.get("home", "0-0"),
-                "away": exp.get("away", "0-0"),
-                "conf": exp.get("conf", "0-0"),
+                "wins": standings.get("wins", 0),
+                "losses": standings.get("losses", 0),
+                "home": standings.get("home", "0-0"),
+                "away": standings.get("away", "0-0"),
+                "conf": standings.get("conf", "0-0"),
             },
             "form": {
-                "recent_record": exp.get("recent_record", "0-0"),
-                "close_games": exp.get("close_games", "0-0"),
-                "blowouts": exp.get("blowouts", "0-0"),
-                "monthly": exp.get("monthly", {}),
-                "pre_allstar": exp.get("pre_allstar", "0-0"),
-                "post_allstar": exp.get("post_allstar", "0-0"),
-                # v4: last-10 rolling form
+                "recent_record": standings.get("recent_record", "0-0"),
+                "close_games": standings.get("close_games", "0-0"),
+                "blowouts": standings.get("blowouts", "0-0"),
+                "monthly": standings.get("monthly", {}),
+                "pre_allstar": standings.get("pre_allstar", "0-0"),
+                "post_allstar": standings.get("post_allstar", "0-0"),
+                # Last-10 rolling form
                 "last10_wins": last10_data.get(abbr, {}).get("last10_wins", 0),
                 "last10_losses": last10_data.get(abbr, {}).get("last10_losses", 0),
                 "last10_games": last10_data.get(abbr, {}).get("last10_games", 0),
             },
-            # v4: conference/division records for matchup adjustments
+            # Conference/division records for matchup adjustments
             "standings": {
-                "vs_east": exp.get("vs_east", "0-0"),
-                "vs_west": exp.get("vs_west", "0-0"),
-                "vs_atlantic": exp.get("vs_atlantic", "0-0"),
-                "vs_central": exp.get("vs_central", "0-0"),
-                "vs_southeast": exp.get("vs_southeast", "0-0"),
-                "vs_northwest": exp.get("vs_northwest", "0-0"),
-                "vs_pacific": exp.get("vs_pacific", "0-0"),
-                "vs_southwest": exp.get("vs_southwest", "0-0"),
+                "vs_east": standings.get("vs_east", "0-0"),
+                "vs_west": standings.get("vs_west", "0-0"),
+                "vs_atlantic": standings.get("vs_atlantic", "0-0"),
+                "vs_central": standings.get("vs_central", "0-0"),
+                "vs_southeast": standings.get("vs_southeast", "0-0"),
+                "vs_northwest": standings.get("vs_northwest", "0-0"),
+                "vs_pacific": standings.get("vs_pacific", "0-0"),
+                "vs_southwest": standings.get("vs_southwest", "0-0"),
             },
         }
 

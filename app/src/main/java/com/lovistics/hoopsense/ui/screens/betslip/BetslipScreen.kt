@@ -39,8 +39,8 @@ fun BetslipScreen(
         }
     }
 
-    LaunchedEffect(uiState.error) {
-        val error = uiState.error
+    LaunchedEffect(uiState.errorMessage) {
+        val error = uiState.errorMessage
         if (error != null && uiState.picks != null) {
             snackbarHostState.showSnackbar(
                 message = error,
@@ -69,9 +69,9 @@ fun BetslipScreen(
         when {
             uiState.isLoading -> LoadingState(modifier = Modifier.padding(padding))
 
-            uiState.error != null && uiState.picks == null -> {
+            uiState.errorMessage != null && uiState.picks == null -> {
                 ErrorState(
-                    error = uiState.error ?: "Unknown error",
+                    error = uiState.errorMessage ?: "Unknown error",
                     onRetry = { viewModel.refresh() },
                     modifier = Modifier.padding(padding)
                 )
@@ -190,7 +190,7 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
                     style = MaterialTheme.typography.labelSmall,
                     color = BrandOrange
                 )
-                val game = uiState.games.find { it.id == lock.gameId }
+                val game = uiState.gameById[lock.gameId]
                 PickCard(
                     pick = lock,
                     isLock = true,
@@ -214,7 +214,7 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
 
         if (uiState.isPremiumUnlocked) {
             items(premiumList) { pick ->
-                val game = uiState.games.find { it.id == pick.gameId }
+                val game = uiState.gameById[pick.gameId]
                 PickCard(
                     pick = pick,
                     isLock = false,
@@ -227,7 +227,7 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
             item {
                 PremiumGate(
                     premiumList = premiumList,
-                    games = uiState.games,
+                    gameById = uiState.gameById,
                     onUnlock = onUnlockPremium
                 )
             }

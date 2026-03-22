@@ -44,7 +44,16 @@ data class GamePrediction(
     @SerialName("away_win_prob") val awayWinProb: Double = 0.5,
     @SerialName("predicted_spread") val predictedSpread: Double = 0.0,
     val confidence: String = "LOW"
-)
+) {
+    init {
+        require(homeWinProb in 0.0..1.0) {
+            "homeWinProb must be in [0.0, 1.0], was $homeWinProb"
+        }
+        require(awayWinProb in 0.0..1.0) {
+            "awayWinProb must be in [0.0, 1.0], was $awayWinProb"
+        }
+    }
+}
 
 @Serializable
 data class Picks(

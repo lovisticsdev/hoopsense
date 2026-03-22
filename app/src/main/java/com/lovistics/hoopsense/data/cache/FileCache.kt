@@ -1,17 +1,23 @@
 package com.lovistics.hoopsense.data.cache
 
 import android.content.Context
+import android.util.Log
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 
 class FileCache @Inject constructor(private val context: Context) {
+
+    companion object {
+        private const val TAG = "FileCache"
+    }
 
     fun write(fileName: String, data: String) {
         try {
             val file = File(context.filesDir, fileName)
             file.writeText(data)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (e: IOException) {
+            Log.w(TAG, "Failed to write cache file: $fileName", e)
         }
     }
 
@@ -24,7 +30,8 @@ class FileCache @Inject constructor(private val context: Context) {
 
         return try {
             file.readText()
-        } catch (e: Exception) {
+        } catch (e: IOException) {
+            Log.w(TAG, "Failed to read cache file: $fileName", e)
             null
         }
     }

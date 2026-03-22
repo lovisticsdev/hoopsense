@@ -12,3 +12,4 @@ local.properties
 /scripts/.env
 __pycache__/
 *.pyc
+zzz.py

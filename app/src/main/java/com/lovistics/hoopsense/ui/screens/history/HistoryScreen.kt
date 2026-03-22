@@ -50,7 +50,7 @@ fun HistoryScreen(
                     contentPadding = PaddingValues(12.dp)
                 ) {
                     item {
-                        StatsGrid(slips = history?.pastSlips ?: emptyList())
+                        StatsGrid(stats = uiState.stats)
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 

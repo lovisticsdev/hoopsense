@@ -1,100 +1,64 @@
 package com.lovistics.hoopsense.ui.screens.betslip
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.lovistics.hoopsense.data.model.DailyData
 import com.lovistics.hoopsense.data.model.Game
 import com.lovistics.hoopsense.data.model.Metadata
 import com.lovistics.hoopsense.data.model.Picks
-import com.lovistics.hoopsense.data.repository.GameRepository
+import com.lovistics.hoopsense.domain.repository.GameDataRepository
+import com.lovistics.hoopsense.ui.screens.BaseDataViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class BetslipUiState(
     val picks: Picks? = null,
     val games: List<Game> = emptyList(),
+    val gameById: Map<String, Game> = emptyMap(),
     val metadata: Metadata? = null,
     val isPremiumUnlocked: Boolean = false,
     val isLoading: Boolean = true,
     val isRefreshing: Boolean = false,
-    val error: String? = null
+    val errorMessage: String? = null
 )
 
 @HiltViewModel
 class BetslipViewModel @Inject constructor(
-    private val repository: GameRepository
-) : ViewModel() {
+    repository: GameDataRepository
+) : BaseDataViewModel<BetslipUiState>(BetslipUiState(), repository) {
 
-    private val _uiState = MutableStateFlow(BetslipUiState())
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            repository.dailyDataStream.collect { data ->
-                if (data != null) {
-                    _uiState.update {
-                        it.copy(
-                            picks = data.picks,
-                            games = data.games,
-                            metadata = data.metadata,
-                            isLoading = false,
-                            isRefreshing = false,
-                            error = null
-                        )
-                    }
-                }
-            }
-        }
-        loadPicks()
+    override fun onDataLoaded(currentState: BetslipUiState, data: DailyData): BetslipUiState {
+        return currentState.copy(
+            picks = data.picks,
+            games = data.games,
+            gameById = data.games.associateBy { it.id },
+            metadata = data.metadata,
+            isLoading = false,
+            isRefreshing = false,
+            errorMessage = null
+        )
     }
 
-    private fun loadPicks() {
-        viewModelScope.launch {
-            repository.getDailyData().onFailure { e ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isRefreshing = false,
-                        error = e.message ?: "Failed to load picks"
-                    )
-                }
-            }
-        }
+    override fun onRefreshStarted(currentState: BetslipUiState): BetslipUiState {
+        return currentState.copy(isRefreshing = true)
     }
 
-    fun checkFreshness() {
-        viewModelScope.launch {
-            repository.getDailyData(forceRefresh = false)
-        }
+    override fun onRefreshSuccess(currentState: BetslipUiState, data: DailyData): BetslipUiState {
+        return currentState.copy(
+            picks = data.picks,
+            games = data.games,
+            gameById = data.games.associateBy { it.id },
+            metadata = data.metadata,
+            isRefreshing = false,
+            errorMessage = null
+        )
     }
 
-    fun refresh() {
-        _uiState.update { it.copy(isRefreshing = true) }
-        viewModelScope.launch {
-            repository.getDailyData(forceRefresh = true)
-                .onSuccess { data ->
-                    _uiState.update {
-                        it.copy(
-                            picks = data.picks,
-                            games = data.games,
-                            metadata = data.metadata,
-                            isRefreshing = false,
-                            error = null
-                        )
-                    }
-                }
-                .onFailure { e ->
-                    _uiState.update {
-                        it.copy(
-                            isRefreshing = false,
-                            error = e.message ?: "Refresh failed"
-                        )
-                    }
-                }
-        }
+    override fun onRefreshFailed(currentState: BetslipUiState, error: Throwable): BetslipUiState {
+        return currentState.copy(
+            isLoading = false,
+            isRefreshing = false,
+            errorMessage = error.message ?: "Something went wrong"
+        )
     }
 
     fun unlockPremium() {
@@ -102,6 +66,6 @@ class BetslipViewModel @Inject constructor(
     }
 
     fun clearError() {
-        _uiState.update { it.copy(error = null) }
+        _uiState.update { it.copy(errorMessage = null) }
     }
 }

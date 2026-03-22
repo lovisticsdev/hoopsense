@@ -20,7 +20,7 @@ import com.lovistics.hoopsense.ui.theme.*
 @Composable
 fun PremiumGate(
     premiumList: List<Pick>,
-    games: List<Game>,
+    gameById: Map<String, Game>,
     onUnlock: () -> Unit
 ) {
     Box(
@@ -29,7 +29,7 @@ fun PremiumGate(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             premiumList.forEach { pick ->
-                val game = games.find { it.id == pick.gameId }
+                val game = gameById[pick.gameId]
 
                 val obscuredPick = pick.copy(
                     selection = "HIDDEN",

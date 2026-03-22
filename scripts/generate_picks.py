@@ -11,45 +11,14 @@ from typing import Dict, List
 from fetch_ingredients import fetch_all_ingredients
 from prediction_engine import predict_game, find_best_picks
 from history_manager import update_and_get_history
+from validation import validate_daily_json
 from config import DATA_DIR, CURRENT_SEASON
 from utils import setup_logging, write_json_atomic
 
 logger = logging.getLogger(__name__)
 
 OUTPUT_FILE = DATA_DIR / "nba_daily.json"
-MODEL_VERSION = "4.0"
-
-
-# ═══════════════════════════════════════════════════════
-#  Schema validation
-# ═══════════════════════════════════════════════════════
-
-def _validate_daily_json(data: dict) -> bool:
-    """Basic structural validation of the output JSON."""
-    errors = []
-
-    if "metadata" not in data:
-        errors.append("missing 'metadata'")
-    if "games" not in data:
-        errors.append("missing 'games'")
-    elif not isinstance(data["games"], list):
-        errors.append("'games' is not a list")
-    else:
-        for game in data["games"]:
-            for key in ("id", "home", "away"):
-                if key not in game:
-                    errors.append(f"game missing '{key}'")
-
-    picks = data.get("picks")
-    if picks and picks.get("lock"):
-        for key in ("game_id", "selection", "win_prob"):
-            if key not in picks["lock"]:
-                errors.append(f"lock missing '{key}'")
-
-    if errors:
-        logger.error(f"Validation errors: {'; '.join(errors)}")
-        return False
-    return True
+MODEL_VERSION = "5.0"
 
 
 # ═══════════════════════════════════════════════════════
@@ -186,9 +155,14 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
         "history": history_data,
     }
 
-    # Step 8: Validate and write
-    if not _validate_daily_json(daily_data):
-        logger.error("JSON validation failed — writing anyway but check the output.")
+    # Step 8: Validate and write (fail fast on invalid output)
+    validation_errors = validate_daily_json(daily_data)
+    if validation_errors:
+        for err in validation_errors:
+            logger.error(f"Validation: {err}")
+        raise RuntimeError(
+            f"Generated JSON failed validation with {len(validation_errors)} error(s) — aborting write"
+        )
 
     write_json_atomic(daily_data, OUTPUT_FILE)
     logger.info(f"═══ COMPLETE: {len(games)} games, {len(best_picks)} picks ═══")
