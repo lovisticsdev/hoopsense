@@ -363,7 +363,8 @@
       "selection": "NYK",
       "win_prob": 0.9985,
       "confidence": "LOCK",
-      "start_time": "2026-03-22T23:30:00.000Z"
+      "start_time": "2026-03-22T23:30:00.000Z",
+      "status": "WIN"
     },
     "premium": [
       {
@@ -373,7 +374,8 @@
         "selection": "DEN",
         "win_prob": 0.9125,
         "confidence": "LOCK",
-        "start_time": "2026-03-22T21:00:00.000Z"
+        "start_time": "2026-03-22T21:00:00.000Z",
+        "status": "WIN"
       },
       {
         "game_id": "18447853",
@@ -382,7 +384,8 @@
         "selection": "BOS",
         "win_prob": 0.8248,
         "confidence": "HIGH",
-        "start_time": "2026-03-23T00:00:00.000Z"
+        "start_time": "2026-03-23T00:00:00.000Z",
+        "status": "LOSS"
       }
     ]
   },
