@@ -558,5 +558,65 @@
         "status": "WIN"
       }
     ]
+  },
+  "2026-03-24": {
+    "date": "2026-03-24",
+    "lock": {
+      "game_id": "18447865",
+      "away_abbr": "SAC",
+      "home_abbr": "CHA",
+      "selection": "CHA",
+      "win_prob": 0.9745,
+      "confidence": "LOCK",
+      "start_time": "2026-03-24T23:00:00.000Z",
+      "status": "WIN"
+    },
+    "premium": [
+      {
+        "game_id": "18447867",
+        "away_abbr": "ORL",
+        "home_abbr": "CLE",
+        "selection": "CLE",
+        "win_prob": 0.9647,
+        "confidence": "LOCK",
+        "start_time": "2026-03-25T00:00:00.000Z",
+        "status": "WIN"
+      },
+      {
+        "game_id": "18447866",
+        "away_abbr": "NOP",
+        "home_abbr": "NYK",
+        "selection": "NYK",
+        "win_prob": 0.9585,
+        "confidence": "LOCK",
+        "start_time": "2026-03-24T23:30:00.000Z",
+        "status": "WIN"
+      }
+    ]
+  },
+  "2026-03-26": {
+    "date": "2026-03-26",
+    "lock": {
+      "game_id": "18447883",
+      "away_abbr": "SAC",
+      "home_abbr": "ORL",
+      "selection": "ORL",
+      "win_prob": 0.9883,
+      "confidence": "LOCK",
+      "status": "WIN",
+      "start_time": "2026-03-26T23:00:00.000Z"
+    },
+    "premium": [
+      {
+        "game_id": "18447882",
+        "away_abbr": "NOP",
+        "home_abbr": "DET",
+        "selection": "DET",
+        "win_prob": 0.98,
+        "confidence": "LOCK",
+        "status": "WIN",
+        "start_time": "2026-03-26T23:00:00.000Z"
+      }
+    ]
   }
 }
