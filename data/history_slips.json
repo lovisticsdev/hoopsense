@@ -628,7 +628,8 @@
       "selection": "DEN",
       "win_prob": 0.9892,
       "confidence": "LOCK",
-      "start_time": "2026-03-28T01:00:00.000Z"
+      "start_time": "2026-03-28T01:00:00.000Z",
+      "status": "WIN"
     },
     "premium": [
       {
@@ -638,7 +639,8 @@
         "selection": "OKC",
         "win_prob": 0.9868,
         "confidence": "LOCK",
-        "start_time": "2026-03-28T00:00:00.000Z"
+        "start_time": "2026-03-28T00:00:00.000Z",
+        "status": "WIN"
       },
       {
         "game_id": "18447891",
@@ -647,7 +649,8 @@
         "selection": "GSW",
         "win_prob": 0.9816,
         "confidence": "LOCK",
-        "start_time": "2026-03-28T02:00:00.000Z"
+        "start_time": "2026-03-28T02:00:00.000Z",
+        "status": "WIN"
       },
       {
         "game_id": "18447893",
@@ -665,7 +668,8 @@
         "selection": "BOS",
         "win_prob": 0.9125,
         "confidence": "LOCK",
-        "start_time": "2026-03-27T23:30:00.000Z"
+        "start_time": "2026-03-27T23:30:00.000Z",
+        "status": "WIN"
       },
       {
         "game_id": "18447892",
@@ -674,7 +678,8 @@
         "selection": "POR",
         "win_prob": 0.9019,
         "confidence": "LOCK",
-        "start_time": "2026-03-28T02:00:00.000Z"
+        "start_time": "2026-03-28T02:00:00.000Z",
+        "status": "LOSS"
       }
     ]
   },
@@ -720,6 +725,38 @@
         "confidence": "LOCK",
         "status": "WIN",
         "start_time": "2026-03-26T02:30:00.000Z"
+      }
+    ]
+  },
+  "2026-03-28": {
+    "date": "2026-03-28",
+    "lock": {
+      "game_id": "18447899",
+      "away_abbr": "UTA",
+      "home_abbr": "PHX",
+      "selection": "PHX",
+      "win_prob": 0.9808,
+      "confidence": "LOCK",
+      "start_time": "2026-03-29T02:00:00.000Z"
+    },
+    "premium": [
+      {
+        "game_id": "18447896",
+        "away_abbr": "SAC",
+        "home_abbr": "ATL",
+        "selection": "ATL",
+        "win_prob": 0.9585,
+        "confidence": "LOCK",
+        "start_time": "2026-03-28T23:30:00.000Z"
+      },
+      {
+        "game_id": "18447895",
+        "away_abbr": "PHI",
+        "home_abbr": "CHA",
+        "selection": "CHA",
+        "win_prob": 0.922,
+        "confidence": "LOCK",
+        "start_time": "2026-03-28T22:00:00.000Z"
       }
     ]
   }
