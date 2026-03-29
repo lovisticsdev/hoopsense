@@ -659,7 +659,8 @@
         "selection": "LAL",
         "win_prob": 0.9617,
         "confidence": "LOCK",
-        "start_time": "2026-03-28T02:30:00.000Z"
+        "start_time": "2026-03-28T02:30:00.000Z",
+        "status": "WIN"
       },
       {
         "game_id": "18447885",
@@ -737,7 +738,8 @@
       "selection": "PHX",
       "win_prob": 0.9808,
       "confidence": "LOCK",
-      "start_time": "2026-03-29T02:00:00.000Z"
+      "start_time": "2026-03-29T02:00:00.000Z",
+      "status": "WIN"
     },
     "premium": [
       {
@@ -747,7 +749,8 @@
         "selection": "ATL",
         "win_prob": 0.9585,
         "confidence": "LOCK",
-        "start_time": "2026-03-28T23:30:00.000Z"
+        "start_time": "2026-03-28T23:30:00.000Z",
+        "status": "WIN"
       },
       {
         "game_id": "18447895",
@@ -756,7 +759,8 @@
         "selection": "CHA",
         "win_prob": 0.922,
         "confidence": "LOCK",
-        "start_time": "2026-03-28T22:00:00.000Z"
+        "start_time": "2026-03-28T22:00:00.000Z",
+        "status": "LOSS"
       }
     ]
   }
