@@ -763,5 +763,37 @@
         "status": "LOSS"
       }
     ]
+  },
+  "2026-03-29": {
+    "date": "2026-03-29",
+    "lock": {
+      "game_id": "18447905",
+      "away_abbr": "WAS",
+      "home_abbr": "POR",
+      "selection": "POR",
+      "win_prob": 0.9532,
+      "confidence": "LOCK",
+      "start_time": "2026-03-29T22:00:00.000Z"
+    },
+    "premium": [
+      {
+        "game_id": "18447907",
+        "away_abbr": "NYK",
+        "home_abbr": "OKC",
+        "selection": "OKC",
+        "win_prob": 0.9019,
+        "confidence": "LOCK",
+        "start_time": "2026-03-29T23:30:00.000Z"
+      },
+      {
+        "game_id": "18447902",
+        "away_abbr": "SAC",
+        "home_abbr": "BKN",
+        "selection": "BKN",
+        "win_prob": 0.8728,
+        "confidence": "HIGH",
+        "start_time": "2026-03-29T22:00:00.000Z"
+      }
+    ]
   }
 }
