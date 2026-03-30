@@ -279,7 +279,7 @@
       "selection": "POR",
       "win_prob": 0.9445,
       "confidence": "LOCK",
-      "status": "PENDING",
+      "status": "WIN",
       "start_time": "2026-03-29T22:00:00.000Z"
     },
     "premium": [
@@ -290,7 +290,7 @@
         "selection": "OKC",
         "win_prob": 0.9276,
         "confidence": "LOCK",
-        "status": "PENDING",
+        "status": "WIN",
         "start_time": "2026-03-29T23:30:00.000Z"
       },
       {
@@ -300,7 +300,7 @@
         "selection": "DEN",
         "win_prob": 0.8791,
         "confidence": "HIGH",
-        "status": "PENDING",
+        "status": "WIN",
         "start_time": "2026-03-30T02:00:00.000Z"
       }
     ]
@@ -374,6 +374,62 @@
         "confidence": "LOCK",
         "status": "WIN",
         "start_time": "2026-03-20T23:30:00.000Z"
+      }
+    ]
+  },
+  "2026-03-23": {
+    "date": "2026-03-23",
+    "backfilled": true,
+    "lock": {
+      "game_id": "18447864",
+      "away_abbr": "MIL",
+      "home_abbr": "LAC",
+      "selection": "LAC",
+      "win_prob": 0.9699,
+      "confidence": "LOCK",
+      "status": "WIN",
+      "start_time": "2026-03-24T02:30:00.000Z"
+    },
+    "premium": [
+      {
+        "game_id": "18447863",
+        "away_abbr": "BKN",
+        "home_abbr": "POR",
+        "selection": "POR",
+        "win_prob": 0.9445,
+        "confidence": "LOCK",
+        "status": "WIN",
+        "start_time": "2026-03-24T02:00:00.000Z"
+      },
+      {
+        "game_id": "18447855",
+        "away_abbr": "MEM",
+        "home_abbr": "ATL",
+        "selection": "ATL",
+        "win_prob": 0.9386,
+        "confidence": "LOCK",
+        "status": "WIN",
+        "start_time": "2026-03-23T23:30:00.000Z"
+      },
+      {
+        "game_id": "18447856",
+        "away_abbr": "LAL",
+        "home_abbr": "DET",
+        "selection": "DET",
+        "win_prob": 0.9322,
+        "confidence": "LOCK",
+        "status": "WIN",
+        "start_time": "2026-03-23T23:00:00.000Z"
+      },
+      {
+        "game_id": "18447857",
+        "away_abbr": "IND",
+        "home_abbr": "ORL",
+        "selection": "ORL",
+        "win_prob": 0.9227,
+        "confidence": "LOCK",
+        "status": "LOSS",
+        "start_time": "2026-03-23T23:00:00.000Z"
       }
     ]
   }
