@@ -12,6 +12,5 @@ from validation import validate_file
 SCRIPT_DIR = Path(__file__).resolve().parent
 DATA_FILE = SCRIPT_DIR.parent / "data" / "nba_daily.json"
 
-
 if __name__ == "__main__":
     sys.exit(0 if validate_file(DATA_FILE) else 1)

@@ -1,6 +1,4 @@
-"""
-Shared test fixtures for HoopSense tests.
-"""
+"""Shared test fixtures for HoopSense tests."""
 import pytest
 
 

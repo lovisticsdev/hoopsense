@@ -28,9 +28,7 @@ MODEL_VERSION = "5.0"
 def _build_game_object(
     game: Dict, home_team: Dict, away_team: Dict, h2h_matrix: Dict,
 ) -> Dict:
-    """Build a game object with embedded model prediction."""
     prediction = predict_game(home_team, away_team, h2h_matrix=h2h_matrix)
-
     return {
         "id": game["id"],
         "start_time": game.get("start_time", ""),
@@ -55,7 +53,6 @@ def _build_game_object(
 
 
 def _build_pick(pick: dict, game_info: dict) -> Dict:
-    """Build a single pick object."""
     home = game_info.get("home", {})
     away = game_info.get("away", {})
     return {
@@ -74,7 +71,7 @@ def _build_pick(pick: dict, game_info: dict) -> Dict:
 # ═══════════════════════════════════════════════════════
 
 def generate_daily_json(force_refresh: bool = False) -> Dict:
-    logger.info("═══ HOOPSENSE v4 DAILY GENERATION START ═══")
+    logger.info("═══ HOOPSENSE v5 DAILY GENERATION START ═══")
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     # Step 1: Fetch all team data
@@ -117,12 +114,11 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
         away_team = teams.get(str(game["away_team_id"]), {})
 
         try:
-            merged_game = _build_game_object(game, home_team, away_team, h2h_matrix)
-            games.append(merged_game)
+            games.append(_build_game_object(game, home_team, away_team, h2h_matrix))
         except ValueError as e:
             logger.warning(f"Skipping game {game_id}: {e}")
 
-    # Step 5: Find best picks from model predictions
+    # Step 5: Find best picks
     best_picks = find_best_picks(games)
     game_lookup = {g["id"]: g for g in games}
 
@@ -131,12 +127,9 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
     premium = []
 
     if best_picks:
-        lock_info = game_lookup.get(best_picks[0]["game_id"], {})
-        lock = _build_pick(best_picks[0], lock_info)
-
+        lock = _build_pick(best_picks[0], game_lookup.get(best_picks[0]["game_id"], {}))
         for pick in best_picks[1:]:
-            p_info = game_lookup.get(pick["game_id"], {})
-            premium.append(_build_pick(pick, p_info))
+            premium.append(_build_pick(pick, game_lookup.get(pick["game_id"], {})))
 
     picks = {"date": today, "lock": lock, "premium": premium}
 
@@ -155,13 +148,13 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
         "history": history_data,
     }
 
-    # Step 8: Validate and write (fail fast on invalid output)
+    # Step 8: Validate and write
     validation_errors = validate_daily_json(daily_data)
     if validation_errors:
         for err in validation_errors:
             logger.error(f"Validation: {err}")
         raise RuntimeError(
-            f"Generated JSON failed validation with {len(validation_errors)} error(s) — aborting write"
+            f"Generated JSON failed validation with {len(validation_errors)} error(s)"
         )
 
     write_json_atomic(daily_data, OUTPUT_FILE)
@@ -171,5 +164,4 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
 
 if __name__ == "__main__":
     setup_logging()
-    force_run = "--force" in sys.argv
-    generate_daily_json(force_refresh=force_run)
+    generate_daily_json(force_refresh="--force" in sys.argv)

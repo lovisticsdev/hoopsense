@@ -1,19 +1,13 @@
 """
-Prediction Engine v4.
+Prediction Engine v5.
 
 Power score = weighted blend of:
   - SRS (50%) — strength-of-schedule-adjusted net rating.
-  - Four Factors Net (20%) — offensive − defensive quality composite.
-  - Pythagorean Regression (15%) — luck adjustment from expected vs actual wins.
-  - Form Trajectory (15%) — weighted recent performance trend.
+  - Four Factors Net (10%) — offensive − defensive quality composite.
+  - Pythagorean Regression (20%) — fractional luck adjustment.
+  - Form Trajectory (20%) — weighted recent performance trend.
 
-Matchup adjustments:
-  - Home-court advantage (team-specific, 1.0–4.0 range).
-  - Back-to-back fatigue (-1.5 home, -2.0 road).
-  - Conference matchup (how team performs vs opponent's conference).
-  - Division matchup (how team performs vs opponent's division).
-  - Close-game regression (penalize/reward extreme close-game records).
-  - Head-to-head (season series between the two specific teams).
+Matchup adjustments: HCA, B2B, conference, division, close-game, head-to-head.
 
 All predictions are purely model-based. No market/odds data is used.
 """
@@ -21,31 +15,19 @@ import logging
 from typing import Dict, List, Optional
 
 from config import (
-    # Power score weights
     SRS_WEIGHT, FOUR_FACTORS_WEIGHT, PYTHAGOREAN_WEIGHT, FORM_WEIGHT,
-    # Four Factors internal weights
     OFF_FACTOR_WEIGHTS, DEF_FACTOR_WEIGHTS,
-    # Pythagorean
-    PYTH_SCALING,
-    # Form
+    PYTH_EXPONENT, PYTH_SCALING,
     FORM_MONTH_WEIGHTS, FORM_SCALING, POST_ASB_MIN_GAMES, LAST10_WEIGHT,
-    # Home court
     HOME_ADVANTAGE_BASE, HOME_ADVANTAGE_RANGE,
-    # B2B
     B2B_PENALTY_BASE, B2B_ROAD_EXTRA,
-    # Conference matchup
     CONF_MATCHUP_SCALING, CONF_MATCHUP_CAP,
-    # Division matchup
     DIV_MATCHUP_SCALING, DIV_MATCHUP_CAP, DIV_MIN_GAMES,
-    # Close-game regression
     CLOSE_GAME_SCALING, CLOSE_GAME_CAP, CLOSE_GAME_MIN_GAMES,
-    # Head-to-head
     H2H_SCALING, H2H_CAP, H2H_MIN_GAMES,
-    # Spread → probability
-    DEFAULT_WIN_PROB, LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MEDIUM_CONFIDENCE_PROB,
+    DEFAULT_WIN_PROB, LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB,
     MIN_PICKS,
-    spread_to_prob,
-    # Division/conference lookups
+    spread_to_prob, confidence_from_prob,
     TEAM_DIVISIONS, OPPONENT_DIV_TO_KEY, OPPONENT_CONF_TO_KEY,
 )
 from utils import parse_record, record_win_pct, record_total_games, clamp
@@ -58,7 +40,6 @@ logger = logging.getLogger(__name__)
 # ═══════════════════════════════════════════════════════
 
 def _offensive_four_factors(stats: dict) -> float:
-    """Offensive quality from Dean Oliver's Four Factors, scaled to ~points."""
     return round(25.0 * (
         stats.get("efg_pct", 0.500) * OFF_FACTOR_WEIGHTS["efg"]
         + stats.get("tov_pct", 0.140) * OFF_FACTOR_WEIGHTS["tov"]
@@ -68,7 +49,6 @@ def _offensive_four_factors(stats: dict) -> float:
 
 
 def _defensive_four_factors(stats: dict) -> float:
-    """Defensive quality from opponent-side Four Factors, centered around zero."""
     raw = (
         stats.get("opp_efg_pct", 0.500) * DEF_FACTOR_WEIGHTS["opp_efg"]
         + stats.get("opp_tov_pct", 0.140) * DEF_FACTOR_WEIGHTS["opp_tov"]
@@ -79,35 +59,41 @@ def _defensive_four_factors(stats: dict) -> float:
 
 
 def _four_factors_net(stats: dict) -> float:
-    """Combined offensive + defensive Four Factors score."""
     return _offensive_four_factors(stats) + _defensive_four_factors(stats)
+
+
+def _fractional_pyth_wins(stats: dict) -> float:
+    """
+    Compute fractional Pythagorean wins from off/def ratings.
+    Avoids the integer rounding in B-Ref's PW/PL that zeroes out
+    the luck signal for ~30% of teams.
+    """
+    off_rtg = stats.get("off_rating", 110.0)
+    def_rtg = stats.get("def_rating", 110.0)
+    total = stats.get("wins", 0) + stats.get("losses", 0)
+    if total == 0 or (off_rtg + def_rtg) == 0:
+        return 0.0
+    pyth_pct = off_rtg ** PYTH_EXPONENT / (off_rtg ** PYTH_EXPONENT + def_rtg ** PYTH_EXPONENT)
+    return pyth_pct * total
 
 
 def _pythagorean_regression(stats: dict) -> float:
     """
-    Luck adjustment: compare Pythagorean (expected) wins to actual wins.
-
-    Positive result = team has been UNLUCKY (boost them).
-    Negative result = team has been LUCKY (penalize them).
+    Luck adjustment: fractional Pythagorean wins vs actual wins.
+    Positive = unlucky (boost), negative = lucky (penalize).
     """
-    pyth_wins = stats.get("pyth_wins", 0)
     actual_wins = stats.get("wins", 0)
-
-    if pyth_wins == 0 and actual_wins == 0:
+    total = actual_wins + stats.get("losses", 0)
+    if total == 0:
         return 0.0
-
-    luck_delta = pyth_wins - actual_wins
+    luck_delta = _fractional_pyth_wins(stats) - actual_wins
     return round(luck_delta * PYTH_SCALING, 3)
 
 
 def _form_trajectory(form: dict, stats: dict) -> float:
     """
-    Compute form trajectory from multiple signals:
-      1. Last-10 rolling record (best signal, from BDL API)
-      2. Post-All-Star record (from Expanded Standings)
-      3. Weighted monthly records (fallback)
-
-    Returns a value on a points scale (positive = trending up, negative = trending down).
+    Blend last-10 rolling form, post-All-Star record, and monthly form
+    into a points-scale trajectory signal.
     """
     total_games = stats.get("wins", 0) + stats.get("losses", 0)
     if total_games == 0:
@@ -119,18 +105,14 @@ def _form_trajectory(form: dict, stats: dict) -> float:
     last10_games = form.get("last10_games", 0)
     if last10_games >= 5:
         last10_wpct = form.get("last10_wins", 0) / last10_games
-        last10_delta = last10_wpct - season_wpct
-        last10_form = last10_delta * FORM_SCALING
+        last10_form = (last10_wpct - season_wpct) * FORM_SCALING
 
     # Source B: Post-All-Star record
     post_form = None
-    post_rec = form.get("post_allstar", "0-0")
-    post_w, post_l = parse_record(post_rec)
+    post_w, post_l = parse_record(form.get("post_allstar", "0-0"))
     post_total = post_w + post_l
     if post_total >= POST_ASB_MIN_GAMES:
-        post_wpct = post_w / post_total
-        post_delta = post_wpct - season_wpct
-        post_form = post_delta * FORM_SCALING
+        post_form = (post_w / post_total - season_wpct) * FORM_SCALING
 
     # Source C: Weighted monthly form (fallback)
     monthly_form = _weighted_monthly_form(form.get("monthly", {}), season_wpct)
@@ -152,47 +134,31 @@ def _form_trajectory(form: dict, stats: dict) -> float:
 
 
 def _weighted_monthly_form(monthly: dict, season_wpct: float) -> Optional[float]:
-    """
-    Compute weighted form from the most recent 3 months with actual data.
-
-    Weights: [0.50, 0.30, 0.20] for most recent, 2nd most recent, 3rd most recent.
-    """
+    """Weighted form from the most recent 3 months with ≥2 games each."""
     month_order = ["apr", "mar", "feb", "jan", "dec", "nov", "oct"]
     active_months = []
 
     for mo in month_order:
-        rec = monthly.get(mo, "0-0")
-        w, l = parse_record(rec)
-        total = w + l
-        if total >= 2:  # need at least 2 games in a month to count
-            active_months.append(w / total)
+        w, l = parse_record(monthly.get(mo, "0-0"))
+        if w + l >= 2:
+            active_months.append(w / (w + l))
         if len(active_months) == 3:
             break
 
     if not active_months:
         return None
 
-    # Truncate weights to match available months
     weights = FORM_MONTH_WEIGHTS[:len(active_months)]
     weight_sum = sum(weights)
     normalized = [w / weight_sum for w in weights]
-
     weighted_wpct = sum(wp * nw for wp, nw in zip(active_months, normalized))
     return (weighted_wpct - season_wpct) * FORM_SCALING
 
 
 def calculate_power_score(stats: dict) -> float:
-    """
-    Base power score (excludes form trajectory).
-
-    0.50 × SRS + 0.20 × Four Factors Net + 0.15 × Pythagorean Regression.
-    League avg ≈ 0, elite ≈ +8 to +12.
-
-    See calculate_full_power_score() for the complete score including form.
-    """
+    """Base power score (excludes form trajectory)."""
     if not stats:
         return 0.0
-
     return round(
         SRS_WEIGHT * stats.get("srs", 0.0)
         + FOUR_FACTORS_WEIGHT * _four_factors_net(stats)
@@ -202,14 +168,9 @@ def calculate_power_score(stats: dict) -> float:
 
 
 def calculate_full_power_score(stats: dict, form: dict) -> float:
-    """
-    Full power score including form trajectory.
-
-    Separated from calculate_power_score so form can be passed independently.
-    """
+    """Full power score including form trajectory."""
     base = calculate_power_score(stats)
-    form_component = FORM_WEIGHT * _form_trajectory(form, stats)
-    return round(base + form_component, 3)
+    return round(base + FORM_WEIGHT * _form_trajectory(form, stats), 3)
 
 
 # ═══════════════════════════════════════════════════════
@@ -217,21 +178,17 @@ def calculate_full_power_score(stats: dict, form: dict) -> float:
 # ═══════════════════════════════════════════════════════
 
 def _team_specific_hca(record: dict) -> float:
-    """Derive team-specific home-court advantage from home/away record differential."""
+    """Team-specific home-court advantage from home/away record differential."""
     h_wins, h_losses = parse_record(record.get("home", "0-0"))
     a_wins, a_losses = parse_record(record.get("away", "0-0"))
 
-    h_total = h_wins + h_losses
-    a_total = a_wins + a_losses
-
-    if h_total < 5 or a_total < 5:
+    if h_wins + h_losses < 5 or a_wins + a_losses < 5:
         return HOME_ADVANTAGE_BASE
 
-    diff = (h_wins / h_total) - (a_wins / a_total)
+    diff = (h_wins / (h_wins + h_losses)) - (a_wins / (a_wins + a_losses))
     hca = HOME_ADVANTAGE_BASE + (diff * 5.0)
-
     floor, ceiling = HOME_ADVANTAGE_RANGE
-    return round(max(floor, min(ceiling, hca)), 2)
+    return round(clamp(hca, floor, ceiling), 2)
 
 
 def _record_vs_segment_adj(
@@ -242,13 +199,7 @@ def _record_vs_segment_adj(
     cap: float,
     min_games: int = 5,
 ) -> float:
-    """
-    Generic adjustment based on team's record vs an opponent segment.
-
-    Compares the team's win% in a specific segment (conference, division)
-    against their overall win%, then scales and clamps the delta.
-    Shared logic for both conference and division matchup adjustments.
-    """
+    """Adjustment based on team's record vs an opponent segment (conference/division)."""
     if not standings_key:
         return 0.0
 
@@ -268,7 +219,6 @@ def _record_vs_segment_adj(
 def _conference_matchup_adj(
     team_standings: dict, overall_record: dict, opponent_abbr: str,
 ) -> float:
-    """Adjust based on how the team performs against the opponent's conference."""
     opp_conf = TEAM_DIVISIONS.get(opponent_abbr, {}).get("conference")
     standings_key = OPPONENT_CONF_TO_KEY.get(opp_conf) if opp_conf else None
     return _record_vs_segment_adj(
@@ -280,7 +230,6 @@ def _conference_matchup_adj(
 def _division_matchup_adj(
     team_standings: dict, overall_record: dict, opponent_abbr: str,
 ) -> float:
-    """Adjust based on how the team performs against the opponent's division."""
     opp_div = TEAM_DIVISIONS.get(opponent_abbr, {}).get("division")
     standings_key = OPPONENT_DIV_TO_KEY.get(opp_div) if opp_div else None
     return _record_vs_segment_adj(
@@ -290,50 +239,27 @@ def _division_matchup_adj(
 
 
 def _close_game_regression(form: dict) -> float:
-    """
-    Adjust for luck in close games (decided by ≤3 points).
-
-    Expected close-game win% ≈ 50%. Teams far from 50% are experiencing luck.
-    PENALIZE teams that are winning too many close games (they'll regress).
-    REWARD teams that are losing too many close games (they'll improve).
-    """
-    close_rec = form.get("close_games", "0-0")
-    close_w, close_l = parse_record(close_rec)
+    """Penalize close-game luck (expected ~50%); negate to reduce inflated records."""
+    close_w, close_l = parse_record(form.get("close_games", "0-0"))
     close_total = close_w + close_l
-
     if close_total < CLOSE_GAME_MIN_GAMES:
         return 0.0
-
-    close_wpct = close_w / close_total
-    luck_amount = close_wpct - 0.50
-
-    # Negate: being lucky (positive luck_amount) should REDUCE power score
+    luck_amount = close_w / close_total - 0.50
     return clamp(-luck_amount * CLOSE_GAME_SCALING, -CLOSE_GAME_CAP, CLOSE_GAME_CAP)
 
 
 def _h2h_adjustment(
     team_abbr: str, opponent_abbr: str, h2h_matrix: dict,
 ) -> float:
-    """
-    Adjust based on the season series between the two specific teams.
-    """
     if not h2h_matrix:
         return 0.0
-
-    team_h2h = h2h_matrix.get(team_abbr, {})
-    h2h_rec = team_h2h.get(opponent_abbr, "")
+    h2h_rec = h2h_matrix.get(team_abbr, {}).get(opponent_abbr, "")
     if not h2h_rec:
         return 0.0
-
     h2h_w, h2h_l = parse_record(h2h_rec)
-    h2h_total = h2h_w + h2h_l
-
-    if h2h_total < H2H_MIN_GAMES:
+    if h2h_w + h2h_l < H2H_MIN_GAMES:
         return 0.0
-
-    h2h_wpct = h2h_w / h2h_total
-    delta = h2h_wpct - 0.50
-
+    delta = h2h_w / (h2h_w + h2h_l) - 0.50
     return clamp(delta * H2H_SCALING, -H2H_CAP, H2H_CAP)
 
 
@@ -352,56 +278,24 @@ def apply_adjustments(
     """Apply all contextual adjustments to a base power score."""
     adjusted = base_score
 
-    # 1. Home-court advantage
     if is_home:
         adjusted += _team_specific_hca(record)
 
-    # 2. Back-to-back fatigue
     if b2b or rest_days == 0:
         adjusted += B2B_PENALTY_BASE
         if not is_home:
             adjusted += B2B_ROAD_EXTRA
 
-    # 3. Conference matchup
     adjusted += _conference_matchup_adj(team_standings, record, opponent_abbr)
-
-    # 4. Division matchup
     adjusted += _division_matchup_adj(team_standings, record, opponent_abbr)
-
-    # 5. Close-game regression
     adjusted += _close_game_regression(form)
-
-    # 6. Head-to-head
     adjusted += _h2h_adjustment(team_abbr, opponent_abbr, h2h_matrix)
 
     return round(adjusted, 3)
 
 
 # ═══════════════════════════════════════════════════════
-#  Confidence label (single source — used by both engine and history)
-# ═══════════════════════════════════════════════════════
-
-def confidence_from_prob(max_prob: float) -> str:
-    """
-    Derive confidence label from the model's strongest win probability.
-
-    5-tier system calibrated to NBA spread ranges:
-      LOCK      ≥ 90%  (~11+ pt spread)   — near-certain
-      HIGH      ≥ 80%  (~7-11 pt spread)  — strong edge
-      MEDIUM    ≥ 65%  (~3.5-7 pt spread) — moderate edge
-      LOW       < 65%  (below ~3.5 pts)   — slight edge
-    """
-    if max_prob >= LOCK_CONFIDENCE_PROB:
-        return "LOCK"
-    if max_prob >= HIGH_CONFIDENCE_PROB:
-        return "HIGH"
-    if max_prob >= MEDIUM_CONFIDENCE_PROB:
-        return "MEDIUM"
-    return "LOW"
-
-
-# ═══════════════════════════════════════════════════════
-#  Game prediction (pure model — no market data)
+#  Game prediction
 # ═══════════════════════════════════════════════════════
 
 def predict_game(
@@ -409,12 +303,7 @@ def predict_game(
     away_team: Dict,
     h2h_matrix: Optional[Dict] = None,
 ) -> Dict:
-    """
-    Predict a single game using only the model (no market data).
-
-    Returns a dict with power scores, predicted spread, win probabilities,
-    and confidence.
-    """
+    """Predict a single game. Returns power scores, spread, probabilities, confidence."""
     home_stats = (home_team or {}).get("stats")
     away_stats = (away_team or {}).get("stats")
 
@@ -430,41 +319,30 @@ def predict_game(
     home_abbr = (home_team or {}).get("abbr", "")
     away_abbr = (away_team or {}).get("abbr", "")
 
-    # Phase 1: Base power scores (including form trajectory)
-    home_base = calculate_full_power_score(
-        home_stats, (home_team or {}).get("form", {})
-    )
-    away_base = calculate_full_power_score(
-        away_stats, (away_team or {}).get("form", {})
-    )
+    home_base = calculate_full_power_score(home_stats, (home_team or {}).get("form", {}))
+    away_base = calculate_full_power_score(away_stats, (away_team or {}).get("form", {}))
 
-    # Phase 2: Contextual adjustments
     home_power = apply_adjustments(
-        base_score=home_base,
-        is_home=True,
-        record=(home_team or {}).get("record", {}),
-        form=(home_team or {}).get("form", {}),
-        b2b=(home_team or {}).get("b2b", False),
-        rest_days=(home_team or {}).get("rest_days", 1),
-        team_abbr=home_abbr,
-        opponent_abbr=away_abbr,
-        team_standings=(home_team or {}).get("standings", {}),
-        h2h_matrix=h2h,
+        home_base, True,
+        (home_team or {}).get("record", {}),
+        (home_team or {}).get("form", {}),
+        (home_team or {}).get("b2b", False),
+        (home_team or {}).get("rest_days", 1),
+        home_abbr, away_abbr,
+        (home_team or {}).get("standings", {}),
+        h2h,
     )
     away_power = apply_adjustments(
-        base_score=away_base,
-        is_home=False,
-        record=(away_team or {}).get("record", {}),
-        form=(away_team or {}).get("form", {}),
-        b2b=(away_team or {}).get("b2b", False),
-        rest_days=(away_team or {}).get("rest_days", 1),
-        team_abbr=away_abbr,
-        opponent_abbr=home_abbr,
-        team_standings=(away_team or {}).get("standings", {}),
-        h2h_matrix=h2h,
+        away_base, False,
+        (away_team or {}).get("record", {}),
+        (away_team or {}).get("form", {}),
+        (away_team or {}).get("b2b", False),
+        (away_team or {}).get("rest_days", 1),
+        away_abbr, home_abbr,
+        (away_team or {}).get("standings", {}),
+        h2h,
     )
 
-    # Phase 3: Spread → Probability
     predicted_spread = round(home_power - away_power, 1)
     home_win_prob = spread_to_prob(predicted_spread)
     away_win_prob = 1.0 - home_win_prob
@@ -480,18 +358,16 @@ def predict_game(
 
 
 # ═══════════════════════════════════════════════════════
-#  Pick selection (ranked by model probability)
+#  Pick selection
 # ═══════════════════════════════════════════════════════
 
 def find_best_picks(games: List[Dict]) -> List[Dict]:
     """
-    Select picks using a confidence-tier approach:
-      1. Take ALL "STRONG" picks (prob >= LOCK_CONFIDENCE_PROB).
-      2. If fewer than MIN_PICKS, fill remaining slots with "SOLID" picks
-         (prob >= HIGH_CONFIDENCE_PROB), ordered by probability.
-      3. Never surface anything below HIGH_CONFIDENCE_PROB.
-
-    Returns picks ranked by win probability (highest first).
+    Select picks:
+      1. Take ALL LOCKs (prob >= 0.90).
+      2. If < MIN_PICKS, fill with HIGHs (prob >= 0.80).
+      3. Never surface below HIGH.
+    Returns picks ranked by probability (highest first).
     """
     candidates = []
 
@@ -499,11 +375,9 @@ def find_best_picks(games: List[Dict]) -> List[Dict]:
         pred = game.get("prediction", {})
         home_prob = pred.get("home_win_prob", DEFAULT_WIN_PROB)
         away_prob = pred.get("away_win_prob", DEFAULT_WIN_PROB)
-
         home_info = game.get("home", {})
         away_info = game.get("away", {})
 
-        # Only consider games where the best side clears SOLID (HIGH) threshold
         if home_prob > away_prob and home_prob >= HIGH_CONFIDENCE_PROB:
             candidates.append({
                 "game_id": game.get("id"),
@@ -525,14 +399,12 @@ def find_best_picks(games: List[Dict]) -> List[Dict]:
 
     candidates.sort(key=lambda x: x["win_prob"], reverse=True)
 
-    # All STRONGs (LOCK tier)
     strongs = [c for c in candidates if c["win_prob"] >= LOCK_CONFIDENCE_PROB]
-
-    # If STRONGs already meet minimum, return them all
     if len(strongs) >= MIN_PICKS:
         return strongs
 
-    # Fill remaining slots with SOLIDs (HIGH tier, below LOCK)
-    solids = [c for c in candidates if c not in strongs]
+    # Fill remaining slots with HIGHs, excluding already-selected LOCKs by game_id
+    strong_ids = {c["game_id"] for c in strongs}
+    solids = [c for c in candidates if c["game_id"] not in strong_ids]
     needed = MIN_PICKS - len(strongs)
     return strongs + solids[:needed]

@@ -2,7 +2,7 @@
 Configuration and constants for HoopSense v5.
 
 Single source of truth for: team registry, division/conference mappings,
-model weights, thresholds, and derived lookups.
+model weights, thresholds, confidence labels, and derived lookups.
 """
 import os
 import math
@@ -92,37 +92,31 @@ WESTERN_CONFERENCE = frozenset({
 # ── Division registry ──────────────────────────────────
 
 TEAM_DIVISIONS: Dict[str, Dict[str, str]] = {
-    # Atlantic (East)
     "BOS": {"conference": "EAST", "division": "ATL_DIV"},
     "BKN": {"conference": "EAST", "division": "ATL_DIV"},
     "NYK": {"conference": "EAST", "division": "ATL_DIV"},
     "PHI": {"conference": "EAST", "division": "ATL_DIV"},
     "TOR": {"conference": "EAST", "division": "ATL_DIV"},
-    # Central (East)
     "CHI": {"conference": "EAST", "division": "CEN_DIV"},
     "CLE": {"conference": "EAST", "division": "CEN_DIV"},
     "DET": {"conference": "EAST", "division": "CEN_DIV"},
     "IND": {"conference": "EAST", "division": "CEN_DIV"},
     "MIL": {"conference": "EAST", "division": "CEN_DIV"},
-    # Southeast (East)
     "ATL": {"conference": "EAST", "division": "SE_DIV"},
     "CHA": {"conference": "EAST", "division": "SE_DIV"},
     "MIA": {"conference": "EAST", "division": "SE_DIV"},
     "ORL": {"conference": "EAST", "division": "SE_DIV"},
     "WAS": {"conference": "EAST", "division": "SE_DIV"},
-    # Northwest (West)
     "DEN": {"conference": "WEST", "division": "NW_DIV"},
     "MIN": {"conference": "WEST", "division": "NW_DIV"},
     "OKC": {"conference": "WEST", "division": "NW_DIV"},
     "POR": {"conference": "WEST", "division": "NW_DIV"},
     "UTA": {"conference": "WEST", "division": "NW_DIV"},
-    # Pacific (West)
     "GSW": {"conference": "WEST", "division": "PAC_DIV"},
     "LAC": {"conference": "WEST", "division": "PAC_DIV"},
     "LAL": {"conference": "WEST", "division": "PAC_DIV"},
     "PHX": {"conference": "WEST", "division": "PAC_DIV"},
     "SAC": {"conference": "WEST", "division": "PAC_DIV"},
-    # Southwest (West)
     "DAL": {"conference": "WEST", "division": "SW_DIV"},
     "HOU": {"conference": "WEST", "division": "SW_DIV"},
     "MEM": {"conference": "WEST", "division": "SW_DIV"},
@@ -130,7 +124,6 @@ TEAM_DIVISIONS: Dict[str, Dict[str, str]] = {
     "SAS": {"conference": "WEST", "division": "SW_DIV"},
 }
 
-# Map opponent division key → standings data key
 OPPONENT_DIV_TO_KEY: Dict[str, str] = {
     "ATL_DIV": "vs_atlantic",
     "CEN_DIV": "vs_central",
@@ -140,91 +133,74 @@ OPPONENT_DIV_TO_KEY: Dict[str, str] = {
     "SW_DIV":  "vs_southwest",
 }
 
-# Map opponent conference → standings data key
 OPPONENT_CONF_TO_KEY: Dict[str, str] = {
     "EAST": "vs_east",
     "WEST": "vs_west",
 }
 
-# B-Ref uses different abbreviations for some teams
 BREF_ABBR_MAP: Dict[str, str] = {
-    "BRK": "BKN",
-    "CHO": "CHA",
-    "PHO": "PHX",
-    "NJN": "BKN",
-    "NOH": "NOP",
-    "NOK": "NOP",
-    "SEA": "OKC",
-    "VAN": "MEM",
-    "WSB": "WAS",
-    "KCK": "SAC",
-    "SDC": "LAC",
+    "BRK": "BKN", "CHO": "CHA", "PHO": "PHX",
+    "NJN": "BKN", "NOH": "NOP", "NOK": "NOP",
+    "SEA": "OKC", "VAN": "MEM", "WSB": "WAS",
+    "KCK": "SAC", "SDC": "LAC",
 }
 
 
-# ── Power-score composition weights (v4) ──────────────
+# ── Power-score composition weights (v5) ──────────────
+# SRS and Four Factors correlate at r=0.97, so FF is largely redundant.
+# Reduced FF from 0.20→0.10; redistributed to PYTH (now fractional) and FORM.
 
 SRS_WEIGHT = 0.50
-FOUR_FACTORS_WEIGHT = 0.20
-PYTHAGOREAN_WEIGHT = 0.15
-FORM_WEIGHT = 0.15
+FOUR_FACTORS_WEIGHT = 0.10
+PYTHAGOREAN_WEIGHT = 0.20
+FORM_WEIGHT = 0.20
 
 # Dean Oliver's Four Factors weights (within each component)
-OFF_FACTOR_WEIGHTS = {
-    "efg":  0.40,
-    "tov": -0.25,
-    "orb":  0.20,
-    "ftr":  0.15,
-}
-DEF_FACTOR_WEIGHTS = {
-    "opp_efg": -0.40,
-    "opp_tov":  0.25,
-    "drb":      0.20,
-    "opp_ftr": -0.15,
-}
+OFF_FACTOR_WEIGHTS = {"efg": 0.40, "tov": -0.25, "orb": 0.20, "ftr": 0.15}
+DEF_FACTOR_WEIGHTS = {"opp_efg": -0.40, "opp_tov": 0.25, "drb": 0.20, "opp_ftr": -0.15}
 
 # ── Pythagorean regression ─────────────────────────────
+# Fractional Pythagorean wins computed from off/def ratings (exponent 16.5)
+# instead of B-Ref's integer-rounded PW/PL.
 
-PYTH_SCALING = 0.30  # points per win of luck delta
+PYTH_EXPONENT = 16.5
+PYTH_SCALING = 0.30
 
 # ── Form trajectory ────────────────────────────────────
 
-FORM_MONTH_WEIGHTS = [0.50, 0.30, 0.20]  # current, previous, two months ago
-FORM_SCALING = 8.0  # converts win% delta to points scale
-POST_ASB_MIN_GAMES = 5  # minimum post-ASB games to use that signal
-LAST10_WEIGHT = 0.60  # blend: 60% last-10, 40% monthly/post-ASB
+FORM_MONTH_WEIGHTS = [0.50, 0.30, 0.20]
+FORM_SCALING = 8.0
+POST_ASB_MIN_GAMES = 5
+LAST10_WEIGHT = 0.60
 
 # ── Contextual adjustments ─────────────────────────────
 
-HOME_ADVANTAGE_BASE = 2.5
+HOME_ADVANTAGE_BASE = 2.0
 HOME_ADVANTAGE_RANGE = (1.0, 4.0)
 B2B_PENALTY_BASE = -1.5
 B2B_ROAD_EXTRA = -0.5
 
-# Conference matchup
 CONF_MATCHUP_SCALING = 3.0
 CONF_MATCHUP_CAP = 1.0
 
-# Division matchup
 DIV_MATCHUP_SCALING = 2.0
 DIV_MATCHUP_CAP = 0.75
 DIV_MIN_GAMES = 4
 
-# Close-game regression
 CLOSE_GAME_SCALING = 2.0
 CLOSE_GAME_CAP = 1.0
 CLOSE_GAME_MIN_GAMES = 5
 
-# Head-to-head
 H2H_SCALING = 1.5
 H2H_CAP = 0.75
 H2H_MIN_GAMES = 2
 
 
 # ── Spread → probability (logistic model) ──────────────
-# k ≈ 5.5 gives ~73% at +7 spread, calibrated to NBA history.
+# K=6.5 compresses probabilities toward 50% vs the former K=5.5,
+# producing more honest confidence labels and fewer false LOCKs.
 
-LOGISTIC_K = 5.5
+LOGISTIC_K = 6.5
 
 
 def spread_to_prob(spread: float) -> float:
@@ -233,28 +209,24 @@ def spread_to_prob(spread: float) -> float:
 
 
 # ── Pick selection thresholds ──────────────────────────
-#
-# Confidence bands are calibrated to the logistic model's output range.
-# With LOGISTIC_K = 5.5:
-#   +2.0 spread ≈ 58%   → LOW
-#   +3.5 spread ≈ 65%   → MEDIUM
-#   +5.5 spread ≈ 73%   → HIGH
-#   +8.0 spread ≈ 83%   → VERY HIGH
-#   +11  spread ≈ 91%   → LOCK
-#
-# This gives meaningful differentiation across the typical NBA spread range.
 
-DEFAULT_WIN_PROB = 0.50          # Prior for no-information / coin-flip games
-LOCK_CONFIDENCE_PROB = 0.90      # ~11+ point spread — near-certain
-HIGH_CONFIDENCE_PROB = 0.80      # ~7-11 point spread — strong edge
-MEDIUM_CONFIDENCE_PROB = 0.65    # ~3.5-7 point spread — moderate edge
+DEFAULT_WIN_PROB = 0.50
+LOCK_CONFIDENCE_PROB = 0.90
+HIGH_CONFIDENCE_PROB = 0.80
+MEDIUM_CONFIDENCE_PROB = 0.65
 MIN_GAMES_FOR_STATS = 10
-
-# ── Pick selection ───────────────────────────────────
-#
-# 1. Take ALL "STRONG" picks (prob >= LOCK_CONFIDENCE_PROB)
-# 2. If fewer than MIN_PICKS, fill remaining slots with "SOLID" picks
-#    (prob >= HIGH_CONFIDENCE_PROB), ordered by probability.
-# 3. Never surface anything below HIGH_CONFIDENCE_PROB.
-
 MIN_PICKS = 3
+
+
+# ── Confidence label (single source of truth) ─────────
+# Used by prediction_engine, history_manager, and validation.
+
+def confidence_from_prob(prob: float) -> str:
+    """Map win probability → confidence tier."""
+    if prob >= LOCK_CONFIDENCE_PROB:
+        return "LOCK"
+    if prob >= HIGH_CONFIDENCE_PROB:
+        return "HIGH"
+    if prob >= MEDIUM_CONFIDENCE_PROB:
+        return "MEDIUM"
+    return "LOW"

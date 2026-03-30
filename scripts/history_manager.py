@@ -1,7 +1,8 @@
 """
 History manager: grade past picks, maintain rolling history, backfill gaps.
 
-History window is configured via HISTORY_WINDOW_DAYS (currently 10 days).
+Backfilled slips are tagged with "backfilled": true so the client can
+distinguish real-time picks from retroactively generated ones.
 """
 import logging
 import random
@@ -10,8 +11,11 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 
 from fetch_ingredients import _api_get
-from prediction_engine import predict_game, confidence_from_prob
-from config import DATA_DIR, LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MIN_PICKS
+from prediction_engine import predict_game
+from config import (
+    DATA_DIR, LOCK_CONFIDENCE_PROB, HIGH_CONFIDENCE_PROB, MIN_PICKS,
+    confidence_from_prob,
+)
 from utils import write_json_atomic, read_json_safe
 
 logger = logging.getLogger(__name__)
@@ -28,7 +32,6 @@ HISTORY_WINDOW_DAYS = 10
 # ═══════════════════════════════════════════════════════
 
 def _get_all_picks(slip: dict) -> List[dict]:
-    """Extract all pick objects from a slip (lock + premium)."""
     picks = []
     if slip.get("lock"):
         picks.append(slip["lock"])
@@ -37,7 +40,6 @@ def _get_all_picks(slip: dict) -> List[dict]:
 
 
 def _last_n_dates(n: int) -> List[str]:
-    """Return the last N date strings (yesterday through N days ago)."""
     return [
         (datetime.now(timezone.utc) - timedelta(days=i)).strftime("%Y-%m-%d")
         for i in range(1, n + 1)
@@ -45,18 +47,15 @@ def _last_n_dates(n: int) -> List[str]:
 
 
 def _fetch_games_for_date(date_str: str) -> list:
-    """Fetch games from BDL with rate-limit-friendly delay + jitter."""
     time.sleep(HISTORY_API_DELAY + random.uniform(0.5, 2.0))
     result = _api_get("/nba/v1/games", {"dates[]": date_str})
     games = result.get("data", [])
     if not games:
-        logger.warning(f"BDL returned no games for {date_str} "
-                       "(may be off-day or rate-limited)")
+        logger.warning(f"BDL returned no games for {date_str}")
     return games
 
 
 def _build_abbr_lookup(teams: dict) -> Dict[str, dict]:
-    """Build abbr → team dict for O(1) lookups during backfill."""
     return {t.get("abbr", ""): t for t in teams.values() if t.get("abbr")}
 
 
@@ -65,7 +64,6 @@ def _build_abbr_lookup(teams: dict) -> Dict[str, dict]:
 # ═══════════════════════════════════════════════════════
 
 def _grade_pick(pick: dict, results_map: dict) -> None:
-    """Grade a single pick in-place against final game results."""
     if pick.get("status") in ("WIN", "LOSS"):
         return
 
@@ -76,7 +74,6 @@ def _grade_pick(pick: dict, results_map: dict) -> None:
     game = results_map[game_id]
     home_score = game.get("home_team_score", 0)
     away_score = game.get("visitor_team_score", 0)
-
     if home_score == 0 and away_score == 0:
         return
 
@@ -90,28 +87,23 @@ def _grade_pick(pick: dict, results_map: dict) -> None:
 
 
 def _grade_slip(slip: dict, date_str: str) -> None:
-    """Grade all picks in a slip for a given date."""
     all_picks = _get_all_picks(slip)
     if all(p.get("status") in ("WIN", "LOSS") for p in all_picks):
         return
 
     logger.info(f"Grading picks for {date_str}…")
     games_data = _fetch_games_for_date(date_str)
-
     if not games_data:
         logger.warning(f"No API data for {date_str} — keeping existing statuses")
         return
 
-    # Build lookup once, reuse for both backfill and grading
     games_by_id = {str(g["id"]): g for g in games_data}
     results_map = {gid: g for gid, g in games_by_id.items() if g.get("status") == "Final"}
-
     if not results_map:
         logger.info(f"Games for {date_str} not yet Final — keeping PENDING")
         return
 
     for pick in all_picks:
-        # Backfill start_time for picks that lack it
         if not pick.get("start_time"):
             game = games_by_id.get(str(pick.get("game_id")))
             if game:
@@ -130,7 +122,9 @@ def _generate_historical_picks(
 ) -> Optional[dict]:
     """
     Generate picks for a past date using the model.
-    Uses current team stats to retroactively pick winners.
+
+    WARNING: Uses current team stats retroactively. These slips are tagged
+    with "backfilled": true so accuracy metrics can exclude them.
     """
     games_data = _fetch_games_for_date(date_str)
     if not games_data:
@@ -142,7 +136,6 @@ def _generate_historical_picks(
         away_abbr = game.get("visitor_team", {}).get("abbreviation", "")
         home_team = abbr_lookup.get(home_abbr)
         away_team = abbr_lookup.get(away_abbr)
-
         if not home_team or not away_team:
             continue
 
@@ -158,7 +151,6 @@ def _generate_historical_picks(
         else:
             selection, prob = away_abbr, prediction["away_win_prob"]
 
-        # Only consider SOLID (HIGH) or better
         if prob < HIGH_CONFIDENCE_PROB:
             continue
 
@@ -175,7 +167,6 @@ def _generate_historical_picks(
 
     candidates.sort(key=lambda x: x["win_prob"], reverse=True)
 
-    # All STRONGs, then fill to MIN_PICKS with SOLIDs
     strongs = [c for c in candidates if c["win_prob"] >= LOCK_CONFIDENCE_PROB]
     if len(strongs) >= MIN_PICKS:
         candidates = strongs
@@ -188,6 +179,7 @@ def _generate_historical_picks(
 
     return {
         "date": date_str,
+        "backfilled": True,
         "lock": candidates[0],
         "premium": candidates[1:],
     }
@@ -200,14 +192,10 @@ def _generate_historical_picks(
 def update_and_get_history(teams: dict, h2h_matrix: dict = None) -> dict:
     """
     1. Load existing history.
-    2. Archive today's daily picks (if they exist).
-    3. Backfill any missing days in the history window.
+    2. Archive today's daily picks (tagged backfilled=false).
+    3. Backfill missing days (tagged backfilled=true).
     4. Grade all ungraded picks.
-    5. Return the history payload for the daily JSON.
-
-    Stats are computed client-side from the displayed slips.
-    Backfilled dates use current model state retroactively —
-    accuracy metrics for those dates may be inflated.
+    5. Return the history payload.
     """
     h2h = h2h_matrix or {}
     history_data: dict = read_json_safe(HISTORY_FILE, default={})
@@ -217,12 +205,11 @@ def update_and_get_history(teams: dict, h2h_matrix: dict = None) -> dict:
     if daily_data:
         picks = daily_data.get("picks")
         if picks and picks.get("date") and picks["date"] not in history_data:
+            picks.setdefault("backfilled", False)
             history_data[picks["date"]] = picks
 
     dates = _last_n_dates(HISTORY_WINDOW_DAYS)
     abbr_lookup = _build_abbr_lookup(teams)
-
-    # Track which dates existed before backfill (for disclosure)
     pre_existing_dates = set(history_data.keys())
 
     # Backfill missing dates

@@ -14,7 +14,7 @@ for arg in "$@"; do
 done
 
 echo "════════════════════════════════════════════════════"
-echo " HoopSense v4 — $(date '+%Y-%m-%d %H:%M %Z')"
+echo " HoopSense v5 — $(date '+%Y-%m-%d %H:%M %Z')"
 if [ -n "$FORCE_FLAG" ]; then echo " Mode: FORCE REFRESH"; fi
 if [ "$DRY_RUN" = true ];  then echo " Mode: DRY RUN (no push)"; fi
 echo "════════════════════════════════════════════════════"

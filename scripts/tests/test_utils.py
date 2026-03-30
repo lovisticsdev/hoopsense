@@ -24,11 +24,9 @@ class TestParseRecord:
         assert parse_record("nan") == (0, 0)
 
     def test_leading_trailing_whitespace(self):
-        """Leading/trailing whitespace on the full string is stripped."""
         assert parse_record("  32-18 ") == (32, 18)
 
     def test_three_parts(self):
-        """Only first two parts matter; extra dashes cause failure."""
         assert parse_record("1-2-3") == (1, 2)
 
 
@@ -43,7 +41,6 @@ class TestRecordWinPct:
         assert record_win_pct("25-25") == 0.5
 
     def test_zero_games(self):
-        """Zero games returns default 0.5."""
         assert record_win_pct("0-0") == 0.5
 
 
