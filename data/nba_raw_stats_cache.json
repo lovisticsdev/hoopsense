@@ -1,5 +1,5 @@
 {
-  "cache_date": "2026-03-29",
+  "cache_date": "2026-03-30",
   "teams": {
     "1610612737": {
       "id": 1610612737,
@@ -27,8 +27,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.206
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 42,
         "losses": 33,
@@ -51,9 +51,9 @@
         },
         "pre_allstar": "26-30",
         "post_allstar": "16-3",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 5,
+        "last10_losses": 5,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "23-22",
@@ -92,8 +92,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.192
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 49,
         "losses": 24,
@@ -157,8 +157,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.229
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 17,
         "losses": 57,
@@ -181,9 +181,9 @@
         },
         "pre_allstar": "15-38",
         "post_allstar": "2-19",
-        "last10_wins": 1,
-        "last10_losses": 9,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "12-32",
@@ -246,9 +246,9 @@
         },
         "pre_allstar": "26-29",
         "post_allstar": "13-6",
-        "last10_wins": 3,
-        "last10_losses": 7,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "23-23",
@@ -287,8 +287,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.19
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 29,
         "losses": 45,
@@ -311,9 +311,9 @@
         },
         "pre_allstar": "24-31",
         "post_allstar": "5-14",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 6,
+        "last10_losses": 4,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "17-29",
@@ -482,8 +482,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.198
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 47,
         "losses": 28,
@@ -506,9 +506,9 @@
         },
         "pre_allstar": "35-20",
         "post_allstar": "12-8",
-        "last10_wins": 8,
-        "last10_losses": 2,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "18-12",
@@ -547,8 +547,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.252
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 54,
         "losses": 20,
@@ -571,9 +571,9 @@
         },
         "pre_allstar": "40-13",
         "post_allstar": "14-7",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 8,
+        "last10_losses": 2,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "34-12",
@@ -612,8 +612,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.2
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 36,
         "losses": 38,
@@ -636,9 +636,9 @@
         },
         "pre_allstar": "29-26",
         "post_allstar": "7-12",
-        "last10_wins": 5,
-        "last10_losses": 5,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "13-16",
@@ -677,8 +677,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.189
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 44,
         "losses": 29,
@@ -742,8 +742,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.225
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 16,
         "losses": 58,
@@ -766,9 +766,9 @@
         },
         "pre_allstar": "15-40",
         "post_allstar": "1-18",
-        "last10_wins": 1,
-        "last10_losses": 9,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "12-33",
@@ -807,8 +807,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.195
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 38,
         "losses": 36,
@@ -831,9 +831,9 @@
         },
         "pre_allstar": "26-28",
         "post_allstar": "12-8",
-        "last10_wins": 3,
-        "last10_losses": 7,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "16-13",
@@ -896,9 +896,9 @@
         },
         "pre_allstar": "33-21",
         "post_allstar": "15-5",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 7,
+        "last10_losses": 3,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "18-10",
@@ -937,8 +937,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.205
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 25,
         "losses": 49,
@@ -961,9 +961,9 @@
         },
         "pre_allstar": "20-33",
         "post_allstar": "5-16",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 4,
+        "last10_losses": 6,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "6-20",
@@ -1002,8 +1002,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.197
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 39,
         "losses": 35,
@@ -1026,9 +1026,9 @@
         },
         "pre_allstar": "29-27",
         "post_allstar": "10-8",
-        "last10_wins": 6,
-        "last10_losses": 4,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "23-21",
@@ -1091,9 +1091,9 @@
         },
         "pre_allstar": "23-30",
         "post_allstar": "6-14",
-        "last10_wins": 6,
-        "last10_losses": 4,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "20-27",
@@ -1132,8 +1132,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.217
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 45,
         "losses": 29,
@@ -1156,9 +1156,9 @@
         },
         "pre_allstar": "34-22",
         "post_allstar": "11-7",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 6,
+        "last10_losses": 4,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "17-8",
@@ -1197,8 +1197,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.199
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 25,
         "losses": 50,
@@ -1262,8 +1262,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.206
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 48,
         "losses": 26,
@@ -1327,8 +1327,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.188
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 58,
         "losses": 16,
@@ -1392,8 +1392,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.222
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 39,
         "losses": 34,
@@ -1416,9 +1416,9 @@
         },
         "pre_allstar": "28-25",
         "post_allstar": "11-9",
-        "last10_wins": 4,
-        "last10_losses": 6,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "24-23",
@@ -1457,8 +1457,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.216
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 41,
         "losses": 33,
@@ -1481,9 +1481,9 @@
         },
         "pre_allstar": "30-24",
         "post_allstar": "11-9",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 6,
+        "last10_losses": 4,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "24-23",
@@ -1522,8 +1522,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.218
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 41,
         "losses": 33,
@@ -1546,9 +1546,9 @@
         },
         "pre_allstar": "32-23",
         "post_allstar": "9-10",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 5,
+        "last10_losses": 5,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "15-12",
@@ -1587,8 +1587,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.215
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 37,
         "losses": 38,
@@ -1676,9 +1676,9 @@
         },
         "pre_allstar": "12-44",
         "post_allstar": "7-12",
-        "last10_wins": 3,
-        "last10_losses": 7,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "7-21",
@@ -1717,8 +1717,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.182
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 56,
         "losses": 18,
@@ -1741,9 +1741,9 @@
         },
         "pre_allstar": "38-16",
         "post_allstar": "18-2",
-        "last10_wins": 0,
-        "last10_losses": 0,
-        "last10_games": 0
+        "last10_wins": 8,
+        "last10_losses": 2,
+        "last10_games": 10
       },
       "standings": {
         "vs_east": "24-4",
@@ -1782,8 +1782,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.221
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 41,
         "losses": 32,
@@ -1806,9 +1806,9 @@
         },
         "pre_allstar": "32-23",
         "post_allstar": "9-9",
-        "last10_wins": 5,
-        "last10_losses": 5,
-        "last10_games": 10
+        "last10_wins": 0,
+        "last10_losses": 0,
+        "last10_games": 0
       },
       "standings": {
         "vs_east": "29-16",
@@ -1847,8 +1847,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.23
       },
-      "b2b": true,
-      "rest_days": 0,
+      "b2b": false,
+      "rest_days": 1,
       "record": {
         "wins": 21,
         "losses": 54,
@@ -1912,8 +1912,8 @@
         "drb_pct": 0.75,
         "opp_ft_rate": 0.231
       },
-      "b2b": false,
-      "rest_days": 1,
+      "b2b": true,
+      "rest_days": 0,
       "record": {
         "wins": 17,
         "losses": 56,
@@ -1954,67 +1954,60 @@
   },
   "games": [
     {
-      "id": "18447900",
-      "start_time": "2026-03-29T19:30:00.000Z",
+      "id": "18447909",
+      "start_time": "2026-03-30T23:00:00.000Z",
       "status": "SCHEDULED",
-      "home_team_id": 1610612749,
-      "away_team_id": 1610612746
+      "home_team_id": 1610612748,
+      "away_team_id": 1610612755
     },
     {
-      "id": "18447901",
-      "start_time": "2026-03-29T21:00:00.000Z",
+      "id": "18447910",
+      "start_time": "2026-03-30T23:30:00.000Z",
       "status": "SCHEDULED",
-      "home_team_id": 1610612754,
-      "away_team_id": 1610612748
-    },
-    {
-      "id": "18447902",
-      "start_time": "2026-03-29T22:00:00.000Z",
-      "status": "SCHEDULED",
-      "home_team_id": 1610612751,
-      "away_team_id": 1610612758
-    },
-    {
-      "id": "18447903",
-      "start_time": "2026-03-29T22:00:00.000Z",
-      "status": "SCHEDULED",
-      "home_team_id": 1610612766,
+      "home_team_id": 1610612737,
       "away_team_id": 1610612738
     },
     {
-      "id": "18447904",
-      "start_time": "2026-03-29T22:00:00.000Z",
+      "id": "18447911",
+      "start_time": "2026-03-31T00:00:00.000Z",
       "status": "SCHEDULED",
-      "home_team_id": 1610612761,
-      "away_team_id": 1610612753
+      "home_team_id": 1610612763,
+      "away_team_id": 1610612756
     },
     {
-      "id": "18447905",
-      "start_time": "2026-03-29T22:00:00.000Z",
+      "id": "18447912",
+      "start_time": "2026-03-31T00:00:00.000Z",
       "status": "SCHEDULED",
-      "home_team_id": 1610612757,
-      "away_team_id": 1610612764
+      "home_team_id": 1610612759,
+      "away_team_id": 1610612741
     },
     {
-      "id": "18447906",
-      "start_time": "2026-03-29T23:00:00.000Z",
+      "id": "18447913",
+      "start_time": "2026-03-31T00:30:00.000Z",
       "status": "SCHEDULED",
-      "home_team_id": 1610612740,
-      "away_team_id": 1610612745
+      "home_team_id": 1610612742,
+      "away_team_id": 1610612750
     },
     {
-      "id": "18447907",
-      "start_time": "2026-03-29T23:30:00.000Z",
+      "id": "18447914",
+      "start_time": "2026-03-31T01:00:00.000Z",
+      "status": "SCHEDULED",
+      "home_team_id": 1610612762,
+      "away_team_id": 1610612739
+    },
+    {
+      "id": "18447915",
+      "start_time": "2026-03-31T01:30:00.000Z",
       "status": "SCHEDULED",
       "home_team_id": 1610612760,
-      "away_team_id": 1610612752
+      "away_team_id": 1610612765
     },
     {
-      "id": "18447908",
-      "start_time": "2026-03-30T02:00:00.000Z",
+      "id": "18447916",
+      "start_time": "2026-03-31T02:00:00.000Z",
       "status": "SCHEDULED",
-      "home_team_id": 1610612743,
-      "away_team_id": 1610612744
+      "home_team_id": 1610612747,
+      "away_team_id": 1610612764
     }
   ],
   "h2h_matrix": {

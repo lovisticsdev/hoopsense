@@ -1,84 +1,42 @@
 {
   "metadata": {
-    "generated_at": "2026-03-29T10:01:13.535755+00:00",
+    "generated_at": "2026-03-30T08:09:14.548704+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "5.0",
-    "games_count": 9,
+    "games_count": 8,
     "picks_found": 3
   },
   "games": [
     {
-      "id": "18447900",
-      "start_time": "2026-03-29T19:30:00.000Z",
+      "id": "18447909",
+      "start_time": "2026-03-30T23:00:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612749,
-        "abbr": "MIL",
-        "name": "Milwaukee Bucks"
-      },
-      "away": {
-        "team_id": 1610612746,
-        "abbr": "LAC",
-        "name": "Los Angeles Clippers"
-      },
-      "prediction": {
-        "home_win_prob": 0.2217,
-        "away_win_prob": 0.7783,
-        "predicted_spread": -3.0,
-        "confidence": "MEDIUM"
-      }
-    },
-    {
-      "id": "18447901",
-      "start_time": "2026-03-29T21:00:00.000Z",
-      "status": "SCHEDULED",
-      "home": {
-        "team_id": 1610612754,
-        "abbr": "IND",
-        "name": "Indiana Pacers"
-      },
-      "away": {
         "team_id": 1610612748,
         "abbr": "MIA",
         "name": "Miami Heat"
       },
-      "prediction": {
-        "home_win_prob": 0.2519,
-        "away_win_prob": 0.7481,
-        "predicted_spread": -2.6,
-        "confidence": "MEDIUM"
-      }
-    },
-    {
-      "id": "18447902",
-      "start_time": "2026-03-29T22:00:00.000Z",
-      "status": "SCHEDULED",
-      "home": {
-        "team_id": 1610612751,
-        "abbr": "BKN",
-        "name": "Brooklyn Nets"
-      },
       "away": {
-        "team_id": 1610612758,
-        "abbr": "SAC",
-        "name": "Sacramento Kings"
+        "team_id": 1610612755,
+        "abbr": "PHI",
+        "name": "Philadelphia 76ers"
       },
       "prediction": {
-        "home_win_prob": 0.8728,
-        "away_win_prob": 0.1272,
-        "predicted_spread": 4.6,
+        "home_win_prob": 0.8186,
+        "away_win_prob": 0.1814,
+        "predicted_spread": 3.6,
         "confidence": "HIGH"
       }
     },
     {
-      "id": "18447903",
-      "start_time": "2026-03-29T22:00:00.000Z",
+      "id": "18447910",
+      "start_time": "2026-03-30T23:30:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612766,
-        "abbr": "CHA",
-        "name": "Charlotte Hornets"
+        "team_id": 1610612737,
+        "abbr": "ATL",
+        "name": "Atlanta Hawks"
       },
       "away": {
         "team_id": 1610612738,
@@ -86,78 +44,99 @@
         "name": "Boston Celtics"
       },
       "prediction": {
-        "home_win_prob": 0.4273,
-        "away_win_prob": 0.5727,
-        "predicted_spread": -0.7,
+        "home_win_prob": 0.5931,
+        "away_win_prob": 0.4069,
+        "predicted_spread": 0.9,
         "confidence": "LOW"
       }
     },
     {
-      "id": "18447904",
-      "start_time": "2026-03-29T22:00:00.000Z",
+      "id": "18447911",
+      "start_time": "2026-03-31T00:00:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612761,
-        "abbr": "TOR",
-        "name": "Toronto Raptors"
+        "team_id": 1610612763,
+        "abbr": "MEM",
+        "name": "Memphis Grizzlies"
       },
       "away": {
-        "team_id": 1610612753,
-        "abbr": "ORL",
-        "name": "Orlando Magic"
+        "team_id": 1610612756,
+        "abbr": "PHX",
+        "name": "Phoenix Suns"
       },
       "prediction": {
-        "home_win_prob": 0.8123,
-        "away_win_prob": 0.1877,
-        "predicted_spread": 3.5,
-        "confidence": "HIGH"
+        "home_win_prob": 0.5521,
+        "away_win_prob": 0.4479,
+        "predicted_spread": 0.5,
+        "confidence": "LOW"
       }
     },
     {
-      "id": "18447905",
-      "start_time": "2026-03-29T22:00:00.000Z",
+      "id": "18447912",
+      "start_time": "2026-03-31T00:00:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612757,
-        "abbr": "POR",
-        "name": "Portland Trail Blazers"
+        "team_id": 1610612759,
+        "abbr": "SAS",
+        "name": "San Antonio Spurs"
       },
       "away": {
-        "team_id": 1610612764,
-        "abbr": "WAS",
-        "name": "Washington Wizards"
+        "team_id": 1610612741,
+        "abbr": "CHI",
+        "name": "Chicago Bulls"
       },
       "prediction": {
-        "home_win_prob": 0.9532,
-        "away_win_prob": 0.0468,
-        "predicted_spread": 7.2,
+        "home_win_prob": 0.98,
+        "away_win_prob": 0.02,
+        "predicted_spread": 9.3,
         "confidence": "LOCK"
       }
     },
     {
-      "id": "18447906",
-      "start_time": "2026-03-29T23:00:00.000Z",
+      "id": "18447913",
+      "start_time": "2026-03-31T00:30:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612740,
-        "abbr": "NOP",
-        "name": "New Orleans Pelicans"
+        "team_id": 1610612742,
+        "abbr": "DAL",
+        "name": "Dallas Mavericks"
       },
       "away": {
-        "team_id": 1610612745,
-        "abbr": "HOU",
-        "name": "Houston Rockets"
+        "team_id": 1610612750,
+        "abbr": "MIN",
+        "name": "Minnesota Timberwolves"
       },
       "prediction": {
-        "home_win_prob": 0.5105,
-        "away_win_prob": 0.4895,
-        "predicted_spread": 0.1,
-        "confidence": "LOW"
+        "home_win_prob": 0.268,
+        "away_win_prob": 0.732,
+        "predicted_spread": -2.4,
+        "confidence": "MEDIUM"
       }
     },
     {
-      "id": "18447907",
-      "start_time": "2026-03-29T23:30:00.000Z",
+      "id": "18447914",
+      "start_time": "2026-03-31T01:00:00.000Z",
+      "status": "SCHEDULED",
+      "home": {
+        "team_id": 1610612762,
+        "abbr": "UTA",
+        "name": "Utah Jazz"
+      },
+      "away": {
+        "team_id": 1610612739,
+        "abbr": "CLE",
+        "name": "Cleveland Cavaliers"
+      },
+      "prediction": {
+        "home_win_prob": 0.2934,
+        "away_win_prob": 0.7066,
+        "predicted_spread": -2.1,
+        "confidence": "MEDIUM"
+      }
+    },
+    {
+      "id": "18447915",
+      "start_time": "2026-03-31T01:30:00.000Z",
       "status": "SCHEDULED",
       "home": {
         "team_id": 1610612760,
@@ -165,73 +144,108 @@
         "name": "Oklahoma City Thunder"
       },
       "away": {
-        "team_id": 1610612752,
-        "abbr": "NYK",
-        "name": "New York Knicks"
+        "team_id": 1610612765,
+        "abbr": "DET",
+        "name": "Detroit Pistons"
       },
       "prediction": {
-        "home_win_prob": 0.9019,
-        "away_win_prob": 0.0981,
-        "predicted_spread": 5.3,
-        "confidence": "LOCK"
+        "home_win_prob": 0.771,
+        "away_win_prob": 0.229,
+        "predicted_spread": 2.9,
+        "confidence": "MEDIUM"
       }
     },
     {
-      "id": "18447908",
-      "start_time": "2026-03-30T02:00:00.000Z",
+      "id": "18447916",
+      "start_time": "2026-03-31T02:00:00.000Z",
       "status": "SCHEDULED",
       "home": {
-        "team_id": 1610612743,
-        "abbr": "DEN",
-        "name": "Denver Nuggets"
+        "team_id": 1610612747,
+        "abbr": "LAL",
+        "name": "Los Angeles Lakers"
       },
       "away": {
-        "team_id": 1610612744,
-        "abbr": "GSW",
-        "name": "Golden State Warriors"
+        "team_id": 1610612764,
+        "abbr": "WAS",
+        "name": "Washington Wizards"
       },
       "prediction": {
-        "home_win_prob": 0.8681,
-        "away_win_prob": 0.1319,
-        "predicted_spread": 4.5,
-        "confidence": "HIGH"
+        "home_win_prob": 0.9888,
+        "away_win_prob": 0.0112,
+        "predicted_spread": 10.7,
+        "confidence": "LOCK"
       }
     }
   ],
   "picks": {
-    "date": "2026-03-29",
+    "date": "2026-03-30",
     "lock": {
-      "game_id": "18447905",
+      "game_id": "18447916",
       "away_abbr": "WAS",
-      "home_abbr": "POR",
-      "selection": "POR",
-      "win_prob": 0.9532,
+      "home_abbr": "LAL",
+      "selection": "LAL",
+      "win_prob": 0.9888,
       "confidence": "LOCK",
-      "start_time": "2026-03-29T22:00:00.000Z"
+      "start_time": "2026-03-31T02:00:00.000Z"
     },
     "premium": [
       {
-        "game_id": "18447907",
-        "away_abbr": "NYK",
-        "home_abbr": "OKC",
-        "selection": "OKC",
-        "win_prob": 0.9019,
+        "game_id": "18447912",
+        "away_abbr": "CHI",
+        "home_abbr": "SAS",
+        "selection": "SAS",
+        "win_prob": 0.98,
         "confidence": "LOCK",
-        "start_time": "2026-03-29T23:30:00.000Z"
+        "start_time": "2026-03-31T00:00:00.000Z"
       },
       {
-        "game_id": "18447902",
-        "away_abbr": "SAC",
-        "home_abbr": "BKN",
-        "selection": "BKN",
-        "win_prob": 0.8728,
+        "game_id": "18447909",
+        "away_abbr": "PHI",
+        "home_abbr": "MIA",
+        "selection": "MIA",
+        "win_prob": 0.8186,
         "confidence": "HIGH",
-        "start_time": "2026-03-29T22:00:00.000Z"
+        "start_time": "2026-03-30T23:00:00.000Z"
       }
     ]
   },
   "history": {
     "past_slips": [
+      {
+        "date": "2026-03-29",
+        "lock": {
+          "game_id": "18447905",
+          "away_abbr": "WAS",
+          "home_abbr": "POR",
+          "selection": "POR",
+          "win_prob": 0.9532,
+          "confidence": "LOCK",
+          "start_time": "2026-03-29T22:00:00.000Z",
+          "status": "WIN"
+        },
+        "premium": [
+          {
+            "game_id": "18447907",
+            "away_abbr": "NYK",
+            "home_abbr": "OKC",
+            "selection": "OKC",
+            "win_prob": 0.9019,
+            "confidence": "LOCK",
+            "start_time": "2026-03-29T23:30:00.000Z",
+            "status": "WIN"
+          },
+          {
+            "game_id": "18447902",
+            "away_abbr": "SAC",
+            "home_abbr": "BKN",
+            "selection": "BKN",
+            "win_prob": 0.8728,
+            "confidence": "HIGH",
+            "start_time": "2026-03-29T22:00:00.000Z",
+            "status": "WIN"
+          }
+        ]
+      },
       {
         "date": "2026-03-28",
         "lock": {
@@ -654,41 +668,6 @@
             "confidence": "LOCK",
             "status": "WIN",
             "start_time": "2026-03-21T00:00:00.000Z"
-          }
-        ]
-      },
-      {
-        "date": "2026-03-19",
-        "lock": {
-          "game_id": "18447827",
-          "away_abbr": "DET",
-          "home_abbr": "WAS",
-          "selection": "DET",
-          "win_prob": 0.9601,
-          "confidence": "LOCK",
-          "status": "WIN",
-          "start_time": "2026-03-19T23:00:00.000Z"
-        },
-        "premium": [
-          {
-            "game_id": "18447826",
-            "away_abbr": "ORL",
-            "home_abbr": "CHA",
-            "selection": "CHA",
-            "win_prob": 0.9332,
-            "confidence": "LOCK",
-            "status": "WIN",
-            "start_time": "2026-03-19T23:00:00.000Z"
-          },
-          {
-            "game_id": "18447831",
-            "away_abbr": "PHX",
-            "home_abbr": "SAS",
-            "selection": "SAS",
-            "win_prob": 0.9278,
-            "confidence": "LOCK",
-            "status": "WIN",
-            "start_time": "2026-03-20T00:00:00.000Z"
           }
         ]
       }
