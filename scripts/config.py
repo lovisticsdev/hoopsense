@@ -147,21 +147,18 @@ BREF_ABBR_MAP: Dict[str, str] = {
 
 
 # ── Power-score composition weights (v5) ──────────────
-# SRS and Four Factors correlate at r=0.97, so FF is largely redundant.
-# Reduced FF from 0.20→0.10; redistributed to PYTH (now fractional) and FORM.
+# SRS (50%): backbone, schedule-adjusted.
+# NRtg (10%): pace-adjusted net rating — orthogonal to SRS (r≈0.85–0.90),
+#   replacing Four Factors which was r=0.97 with SRS (echo-weighting).
+# Pythagorean (20%): fractional luck adjustment from off/def ratings.
+# Form (20%): weighted recent performance trend.
 
 SRS_WEIGHT = 0.50
-FOUR_FACTORS_WEIGHT = 0.10
+NRTG_WEIGHT = 0.10
 PYTHAGOREAN_WEIGHT = 0.20
 FORM_WEIGHT = 0.20
 
-# Dean Oliver's Four Factors weights (within each component)
-OFF_FACTOR_WEIGHTS = {"efg": 0.40, "tov": -0.25, "orb": 0.20, "ftr": 0.15}
-DEF_FACTOR_WEIGHTS = {"opp_efg": -0.40, "opp_tov": 0.25, "drb": 0.20, "opp_ftr": -0.15}
-
 # ── Pythagorean regression ─────────────────────────────
-# Fractional Pythagorean wins computed from off/def ratings (exponent 16.5)
-# instead of B-Ref's integer-rounded PW/PL.
 
 PYTH_EXPONENT = 16.5
 PYTH_SCALING = 0.30
@@ -180,6 +177,16 @@ HOME_ADVANTAGE_RANGE = (1.0, 4.0)
 B2B_PENALTY_BASE = -1.5
 B2B_ROAD_EXTRA = -0.5
 
+# Road-warrior bonus (away-side counterpart to HCA).
+# Rewards teams with proven road records, decoupled from K calibration.
+# Gate: away win% > 55% AND 15+ road games played.
+# Bonus: (away_wpct - league_avg) * scaling, clamped to [0, cap].
+ROAD_WARRIOR_MIN_AWAY_GAMES = 15
+ROAD_WARRIOR_MIN_WPCT = 0.55
+ROAD_WARRIOR_LEAGUE_AVG = 0.42
+ROAD_WARRIOR_SCALING = 3.0
+ROAD_WARRIOR_CAP = 1.0
+
 CONF_MATCHUP_SCALING = 3.0
 CONF_MATCHUP_CAP = 1.0
 
@@ -197,8 +204,6 @@ H2H_MIN_GAMES = 2
 
 
 # ── Spread → probability (logistic model) ──────────────
-# K=6.5 compresses probabilities toward 50% vs the former K=5.5,
-# producing more honest confidence labels and fewer false LOCKs.
 
 LOGISTIC_K = 6.5
 
@@ -218,8 +223,7 @@ MIN_GAMES_FOR_STATS = 10
 MIN_PICKS = 3
 
 
-# ── Confidence label ─────────
-# Used by prediction_engine, history_manager, and validation.
+# ── Confidence label (single source of truth) ─────────
 
 def confidence_from_prob(prob: float) -> str:
     """Map win probability → confidence tier."""

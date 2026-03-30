@@ -3,11 +3,12 @@ Prediction Engine v5.
 
 Power score = weighted blend of:
   - SRS (50%) — strength-of-schedule-adjusted net rating.
-  - Four Factors Net (10%) — offensive − defensive quality composite.
+  - NRtg (10%) — pace-adjusted net rating (orthogonal to SRS, r≈0.85–0.90).
   - Pythagorean Regression (20%) — fractional luck adjustment.
   - Form Trajectory (20%) — weighted recent performance trend.
 
-Matchup adjustments: HCA, B2B, conference, division, close-game, head-to-head.
+Matchup adjustments: HCA, road-warrior bonus, B2B, conference, division,
+close-game regression, head-to-head.
 
 All predictions are purely model-based. No market/odds data is used.
 """
@@ -15,12 +16,13 @@ import logging
 from typing import Dict, List, Optional
 
 from config import (
-    SRS_WEIGHT, FOUR_FACTORS_WEIGHT, PYTHAGOREAN_WEIGHT, FORM_WEIGHT,
-    OFF_FACTOR_WEIGHTS, DEF_FACTOR_WEIGHTS,
+    SRS_WEIGHT, NRTG_WEIGHT, PYTHAGOREAN_WEIGHT, FORM_WEIGHT,
     PYTH_EXPONENT, PYTH_SCALING,
     FORM_MONTH_WEIGHTS, FORM_SCALING, POST_ASB_MIN_GAMES, LAST10_WEIGHT,
     HOME_ADVANTAGE_BASE, HOME_ADVANTAGE_RANGE,
     B2B_PENALTY_BASE, B2B_ROAD_EXTRA,
+    ROAD_WARRIOR_MIN_AWAY_GAMES, ROAD_WARRIOR_MIN_WPCT,
+    ROAD_WARRIOR_LEAGUE_AVG, ROAD_WARRIOR_SCALING, ROAD_WARRIOR_CAP,
     CONF_MATCHUP_SCALING, CONF_MATCHUP_CAP,
     DIV_MATCHUP_SCALING, DIV_MATCHUP_CAP, DIV_MIN_GAMES,
     CLOSE_GAME_SCALING, CLOSE_GAME_CAP, CLOSE_GAME_MIN_GAMES,
@@ -38,29 +40,6 @@ logger = logging.getLogger(__name__)
 # ═══════════════════════════════════════════════════════
 #  Power score components
 # ═══════════════════════════════════════════════════════
-
-def _offensive_four_factors(stats: dict) -> float:
-    return round(25.0 * (
-        stats.get("efg_pct", 0.500) * OFF_FACTOR_WEIGHTS["efg"]
-        + stats.get("tov_pct", 0.140) * OFF_FACTOR_WEIGHTS["tov"]
-        + stats.get("orb_pct", 0.250) * OFF_FACTOR_WEIGHTS["orb"]
-        + stats.get("ft_rate", 0.250) * OFF_FACTOR_WEIGHTS["ftr"]
-    ), 3)
-
-
-def _defensive_four_factors(stats: dict) -> float:
-    raw = (
-        stats.get("opp_efg_pct", 0.500) * DEF_FACTOR_WEIGHTS["opp_efg"]
-        + stats.get("opp_tov_pct", 0.140) * DEF_FACTOR_WEIGHTS["opp_tov"]
-        + stats.get("drb_pct", 0.750) * DEF_FACTOR_WEIGHTS["drb"]
-        + stats.get("opp_ft_rate", 0.250) * DEF_FACTOR_WEIGHTS["opp_ftr"]
-    )
-    return round((raw + 0.06) * 25.0, 3)
-
-
-def _four_factors_net(stats: dict) -> float:
-    return _offensive_four_factors(stats) + _defensive_four_factors(stats)
-
 
 def _fractional_pyth_wins(stats: dict) -> float:
     """
@@ -100,24 +79,20 @@ def _form_trajectory(form: dict, stats: dict) -> float:
         return 0.0
     season_wpct = stats.get("wins", 0) / total_games
 
-    # Source A: Last-10 rolling form
     last10_form = None
     last10_games = form.get("last10_games", 0)
     if last10_games >= 5:
         last10_wpct = form.get("last10_wins", 0) / last10_games
         last10_form = (last10_wpct - season_wpct) * FORM_SCALING
 
-    # Source B: Post-All-Star record
     post_form = None
     post_w, post_l = parse_record(form.get("post_allstar", "0-0"))
     post_total = post_w + post_l
     if post_total >= POST_ASB_MIN_GAMES:
         post_form = (post_w / post_total - season_wpct) * FORM_SCALING
 
-    # Source C: Weighted monthly form (fallback)
     monthly_form = _weighted_monthly_form(form.get("monthly", {}), season_wpct)
 
-    # Blending: prioritize last-10, blend with post-ASB or monthly
     if last10_form is not None and post_form is not None:
         form_score = LAST10_WEIGHT * last10_form + (1 - LAST10_WEIGHT) * post_form
     elif last10_form is not None:
@@ -156,12 +131,16 @@ def _weighted_monthly_form(monthly: dict, season_wpct: float) -> Optional[float]
 
 
 def calculate_power_score(stats: dict) -> float:
-    """Base power score (excludes form trajectory)."""
+    """
+    Base power score (excludes form trajectory).
+
+    0.50 × SRS + 0.10 × NRtg + 0.20 × Pythagorean Regression.
+    """
     if not stats:
         return 0.0
     return round(
         SRS_WEIGHT * stats.get("srs", 0.0)
-        + FOUR_FACTORS_WEIGHT * _four_factors_net(stats)
+        + NRTG_WEIGHT * stats.get("nrtg", 0.0)
         + PYTHAGOREAN_WEIGHT * _pythagorean_regression(stats),
         3,
     )
@@ -189,6 +168,28 @@ def _team_specific_hca(record: dict) -> float:
     hca = HOME_ADVANTAGE_BASE + (diff * 5.0)
     floor, ceiling = HOME_ADVANTAGE_RANGE
     return round(clamp(hca, floor, ceiling), 2)
+
+
+def _road_warrior_bonus(record: dict) -> float:
+    """
+    Bonus for teams with proven road records (away-side counterpart to HCA).
+
+    Gate: away win% > 55% AND 15+ road games.
+    Bonus: (away_wpct - league_avg_road) * scaling, clamped to [0, cap].
+    Elite road teams (OKC, CLE, BOS) get ~0.5–1.0 points; others get 0.
+    """
+    a_wins, a_losses = parse_record(record.get("away", "0-0"))
+    a_total = a_wins + a_losses
+
+    if a_total < ROAD_WARRIOR_MIN_AWAY_GAMES:
+        return 0.0
+
+    away_wpct = a_wins / a_total
+    if away_wpct < ROAD_WARRIOR_MIN_WPCT:
+        return 0.0
+
+    bonus = (away_wpct - ROAD_WARRIOR_LEAGUE_AVG) * ROAD_WARRIOR_SCALING
+    return clamp(bonus, 0.0, ROAD_WARRIOR_CAP)
 
 
 def _record_vs_segment_adj(
@@ -278,17 +279,28 @@ def apply_adjustments(
     """Apply all contextual adjustments to a base power score."""
     adjusted = base_score
 
+    # 1. Home-court advantage / Road-warrior bonus
     if is_home:
         adjusted += _team_specific_hca(record)
+    else:
+        adjusted += _road_warrior_bonus(record)
 
+    # 2. Back-to-back fatigue
     if b2b or rest_days == 0:
         adjusted += B2B_PENALTY_BASE
         if not is_home:
             adjusted += B2B_ROAD_EXTRA
 
+    # 3. Conference matchup
     adjusted += _conference_matchup_adj(team_standings, record, opponent_abbr)
+
+    # 4. Division matchup
     adjusted += _division_matchup_adj(team_standings, record, opponent_abbr)
+
+    # 5. Close-game regression
     adjusted += _close_game_regression(form)
+
+    # 6. Head-to-head
     adjusted += _h2h_adjustment(team_abbr, opponent_abbr, h2h_matrix)
 
     return round(adjusted, 3)
@@ -403,7 +415,6 @@ def find_best_picks(games: List[Dict]) -> List[Dict]:
     if len(strongs) >= MIN_PICKS:
         return strongs
 
-    # Fill remaining slots with HIGHs, excluding already-selected LOCKs by game_id
     strong_ids = {c["game_id"] for c in strongs}
     solids = [c for c in candidates if c["game_id"] not in strong_ids]
     needed = MIN_PICKS - len(strongs)
