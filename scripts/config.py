@@ -218,7 +218,7 @@ MIN_GAMES_FOR_STATS = 10
 MIN_PICKS = 3
 
 
-# ── Confidence label (single source of truth) ─────────
+# ── Confidence label ─────────
 # Used by prediction_engine, history_manager, and validation.
 
 def confidence_from_prob(prob: float) -> str:
