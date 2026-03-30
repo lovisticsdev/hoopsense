@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-03-30T16:32:03.172224+00:00",
+    "generated_at": "2026-03-30T16:34:13.118780+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "5.0",
@@ -431,7 +431,7 @@
           "selection": "CHA",
           "win_prob": 0.9908,
           "confidence": "LOCK",
-          "status": "PENDING",
+          "status": "WIN",
           "start_time": "2026-03-24T23:00:00.000Z"
         },
         "premium": [
@@ -442,7 +442,7 @@
             "selection": "NYK",
             "win_prob": 0.9763,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-24T23:30:00.000Z"
           },
           {
@@ -452,8 +452,64 @@
             "selection": "CLE",
             "win_prob": 0.9561,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-25T00:00:00.000Z"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-23",
+        "backfilled": true,
+        "lock": {
+          "game_id": "18447864",
+          "away_abbr": "MIL",
+          "home_abbr": "LAC",
+          "selection": "LAC",
+          "win_prob": 0.9771,
+          "confidence": "LOCK",
+          "status": "WIN",
+          "start_time": "2026-03-24T02:30:00.000Z"
+        },
+        "premium": [
+          {
+            "game_id": "18447863",
+            "away_abbr": "BKN",
+            "home_abbr": "POR",
+            "selection": "POR",
+            "win_prob": 0.9576,
+            "confidence": "LOCK",
+            "status": "WIN",
+            "start_time": "2026-03-24T02:00:00.000Z"
+          },
+          {
+            "game_id": "18447855",
+            "away_abbr": "MEM",
+            "home_abbr": "ATL",
+            "selection": "ATL",
+            "win_prob": 0.9498,
+            "confidence": "LOCK",
+            "status": "WIN",
+            "start_time": "2026-03-23T23:30:00.000Z"
+          },
+          {
+            "game_id": "18447857",
+            "away_abbr": "IND",
+            "home_abbr": "ORL",
+            "selection": "ORL",
+            "win_prob": 0.9406,
+            "confidence": "LOCK",
+            "status": "LOSS",
+            "start_time": "2026-03-23T23:00:00.000Z"
+          },
+          {
+            "game_id": "18447856",
+            "away_abbr": "LAL",
+            "home_abbr": "DET",
+            "selection": "DET",
+            "win_prob": 0.9322,
+            "confidence": "LOCK",
+            "status": "WIN",
+            "start_time": "2026-03-23T23:00:00.000Z"
           }
         ]
       },
@@ -597,9 +653,7 @@
       }
     ],
     "backfilled_dates": [
-      "2026-03-29",
-      "2026-03-26",
-      "2026-03-20"
+      "2026-03-23"
     ]
   }
 }
