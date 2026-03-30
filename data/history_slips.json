@@ -127,7 +127,7 @@
       "selection": "CHA",
       "win_prob": 0.9849,
       "confidence": "LOCK",
-      "status": "PENDING",
+      "status": "WIN",
       "start_time": "2026-03-24T23:00:00.000Z"
     },
     "premium": [
@@ -138,7 +138,7 @@
         "selection": "NYK",
         "win_prob": 0.9654,
         "confidence": "LOCK",
-        "status": "PENDING",
+        "status": "WIN",
         "start_time": "2026-03-24T23:30:00.000Z"
       },
       {
@@ -148,7 +148,7 @@
         "selection": "CLE",
         "win_prob": 0.9498,
         "confidence": "LOCK",
-        "status": "PENDING",
+        "status": "WIN",
         "start_time": "2026-03-25T00:00:00.000Z"
       }
     ]

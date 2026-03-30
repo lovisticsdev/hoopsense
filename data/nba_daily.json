@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-03-30T12:36:05.241180+00:00",
+    "generated_at": "2026-03-30T12:40:48.278637+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "5.0",
@@ -392,7 +392,7 @@
           "selection": "CHA",
           "win_prob": 0.9849,
           "confidence": "LOCK",
-          "status": "PENDING",
+          "status": "WIN",
           "start_time": "2026-03-24T23:00:00.000Z"
         },
         "premium": [
@@ -403,7 +403,7 @@
             "selection": "NYK",
             "win_prob": 0.9654,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-24T23:30:00.000Z"
           },
           {
@@ -413,7 +413,7 @@
             "selection": "CLE",
             "win_prob": 0.9498,
             "confidence": "LOCK",
-            "status": "PENDING",
+            "status": "WIN",
             "start_time": "2026-03-25T00:00:00.000Z"
           }
         ]
@@ -613,8 +613,6 @@
         ]
       }
     ],
-    "backfilled_dates": [
-      "2026-03-23"
-    ]
+    "backfilled_dates": []
   }
 }
