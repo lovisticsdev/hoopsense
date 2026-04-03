@@ -284,7 +284,8 @@
       "selection": "LAL",
       "win_prob": 0.9849,
       "confidence": "LOCK",
-      "start_time": "2026-03-31T02:00:00.000Z"
+      "start_time": "2026-03-31T02:00:00.000Z",
+      "status": "WIN"
     },
     "premium": [
       {
@@ -294,7 +295,8 @@
         "selection": "SAS",
         "win_prob": 0.9737,
         "confidence": "LOCK",
-        "start_time": "2026-03-31T00:00:00.000Z"
+        "start_time": "2026-03-31T00:00:00.000Z",
+        "status": "WIN"
       },
       {
         "game_id": "18447914",
@@ -303,7 +305,8 @@
         "selection": "CLE",
         "win_prob": 0.8262,
         "confidence": "HIGH",
-        "start_time": "2026-03-31T01:00:00.000Z"
+        "start_time": "2026-03-31T01:00:00.000Z",
+        "status": "WIN"
       }
     ],
     "backfilled": false
@@ -541,6 +544,93 @@
         "confidence": "HIGH",
         "status": "WIN",
         "start_time": "2026-04-01T00:00:00.000Z"
+      }
+    ]
+  },
+  "2026-04-03": {
+    "date": "2026-04-03",
+    "lock": {
+      "game_id": "18447942",
+      "away_abbr": "UTA",
+      "home_abbr": "HOU",
+      "selection": "HOU",
+      "win_prob": 0.9787,
+      "confidence": "LOCK",
+      "start_time": "2026-04-04T00:00:00.000Z"
+    },
+    "premium": [
+      {
+        "game_id": "18447941",
+        "away_abbr": "CHI",
+        "home_abbr": "NYK",
+        "selection": "NYK",
+        "win_prob": 0.9746,
+        "confidence": "LOCK",
+        "start_time": "2026-04-03T23:30:00.000Z"
+      },
+      {
+        "game_id": "18447938",
+        "away_abbr": "IND",
+        "home_abbr": "CHA",
+        "selection": "CHA",
+        "win_prob": 0.9322,
+        "confidence": "LOCK",
+        "start_time": "2026-04-03T23:00:00.000Z"
+      },
+      {
+        "game_id": "18447944",
+        "away_abbr": "BOS",
+        "home_abbr": "MIL",
+        "selection": "BOS",
+        "win_prob": 0.9252,
+        "confidence": "LOCK",
+        "start_time": "2026-04-04T00:00:00.000Z"
+      },
+      {
+        "game_id": "18447940",
+        "away_abbr": "ATL",
+        "home_abbr": "BKN",
+        "selection": "ATL",
+        "win_prob": 0.9148,
+        "confidence": "LOCK",
+        "start_time": "2026-04-03T23:30:00.000Z"
+      }
+    ],
+    "backfilled": false
+  },
+  "2026-04-02": {
+    "date": "2026-04-02",
+    "backfilled": true,
+    "lock": {
+      "game_id": "18447934",
+      "away_abbr": "LAL",
+      "home_abbr": "OKC",
+      "selection": "OKC",
+      "win_prob": 0.9771,
+      "confidence": "LOCK",
+      "status": "PENDING",
+      "start_time": "2026-04-03T01:30:00.000Z"
+    },
+    "premium": [
+      {
+        "game_id": "18447936",
+        "away_abbr": "NOP",
+        "home_abbr": "POR",
+        "selection": "POR",
+        "win_prob": 0.8502,
+        "confidence": "HIGH",
+        "status": "PENDING",
+        "start_time": "2026-04-03T02:00:00.000Z"
+      },
+      {
+        "game_id": "18447932",
+        "away_abbr": "PHX",
+        "home_abbr": "CHA",
+        "selection": "CHA",
+        "win_prob": 0.8409,
+        "confidence": "HIGH",
+        "status": "PENDING",
+        "start_time": "2026-04-02T23:00:00.000Z"
       }
     ]
   }

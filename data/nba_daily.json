@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-04-03T04:09:34.387538+00:00",
+    "generated_at": "2026-04-03T04:11:57.773844+00:00",
     "season": "2025-26",
     "status": "ACTIVE",
     "model_version": "5.0",
@@ -251,6 +251,42 @@
   "history": {
     "past_slips": [
       {
+        "date": "2026-04-02",
+        "backfilled": true,
+        "lock": {
+          "game_id": "18447934",
+          "away_abbr": "LAL",
+          "home_abbr": "OKC",
+          "selection": "OKC",
+          "win_prob": 0.9771,
+          "confidence": "LOCK",
+          "status": "PENDING",
+          "start_time": "2026-04-03T01:30:00.000Z"
+        },
+        "premium": [
+          {
+            "game_id": "18447936",
+            "away_abbr": "NOP",
+            "home_abbr": "POR",
+            "selection": "POR",
+            "win_prob": 0.8502,
+            "confidence": "HIGH",
+            "status": "PENDING",
+            "start_time": "2026-04-03T02:00:00.000Z"
+          },
+          {
+            "game_id": "18447932",
+            "away_abbr": "PHX",
+            "home_abbr": "CHA",
+            "selection": "CHA",
+            "win_prob": 0.8409,
+            "confidence": "HIGH",
+            "status": "PENDING",
+            "start_time": "2026-04-02T23:00:00.000Z"
+          }
+        ]
+      },
+      {
         "date": "2026-04-01",
         "backfilled": true,
         "lock": {
@@ -331,7 +367,8 @@
           "selection": "LAL",
           "win_prob": 0.9849,
           "confidence": "LOCK",
-          "start_time": "2026-03-31T02:00:00.000Z"
+          "start_time": "2026-03-31T02:00:00.000Z",
+          "status": "WIN"
         },
         "premium": [
           {
@@ -341,7 +378,8 @@
             "selection": "SAS",
             "win_prob": 0.9737,
             "confidence": "LOCK",
-            "start_time": "2026-03-31T00:00:00.000Z"
+            "start_time": "2026-03-31T00:00:00.000Z",
+            "status": "WIN"
           },
           {
             "game_id": "18447914",
@@ -350,7 +388,8 @@
             "selection": "CLE",
             "win_prob": 0.8262,
             "confidence": "HIGH",
-            "start_time": "2026-03-31T01:00:00.000Z"
+            "start_time": "2026-03-31T01:00:00.000Z",
+            "status": "WIN"
           }
         ],
         "backfilled": false
@@ -603,8 +642,7 @@
       }
     ],
     "backfilled_dates": [
-      "2026-04-01",
-      "2026-03-31"
+      "2026-04-02"
     ]
   }
 }
