@@ -471,5 +471,77 @@
         "start_time": "2026-03-23T23:00:00.000Z"
       }
     ]
+  },
+  "2026-04-01": {
+    "date": "2026-04-01",
+    "backfilled": true,
+    "lock": {
+      "game_id": "18447928",
+      "away_abbr": "MIL",
+      "home_abbr": "HOU",
+      "selection": "HOU",
+      "win_prob": 0.9882,
+      "confidence": "LOCK",
+      "status": "WIN",
+      "start_time": "2026-04-02T00:00:00.000Z"
+    },
+    "premium": [
+      {
+        "game_id": "18447926",
+        "away_abbr": "SAC",
+        "home_abbr": "TOR",
+        "selection": "TOR",
+        "win_prob": 0.9445,
+        "confidence": "LOCK",
+        "status": "LOSS",
+        "start_time": "2026-04-02T00:00:00.000Z"
+      },
+      {
+        "game_id": "18447930",
+        "away_abbr": "DEN",
+        "home_abbr": "UTA",
+        "selection": "DEN",
+        "win_prob": 0.9426,
+        "confidence": "LOCK",
+        "status": "WIN",
+        "start_time": "2026-04-02T01:00:00.000Z"
+      }
+    ]
+  },
+  "2026-03-31": {
+    "date": "2026-03-31",
+    "backfilled": true,
+    "lock": {
+      "game_id": "18447918",
+      "away_abbr": "CHA",
+      "home_abbr": "BKN",
+      "selection": "CHA",
+      "win_prob": 0.8753,
+      "confidence": "HIGH",
+      "status": "WIN",
+      "start_time": "2026-03-31T23:30:00.000Z"
+    },
+    "premium": [
+      {
+        "game_id": "18447922",
+        "away_abbr": "POR",
+        "home_abbr": "LAC",
+        "selection": "LAC",
+        "win_prob": 0.8312,
+        "confidence": "HIGH",
+        "status": "LOSS",
+        "start_time": "2026-04-01T03:00:00.000Z"
+      },
+      {
+        "game_id": "18447919",
+        "away_abbr": "TOR",
+        "home_abbr": "DET",
+        "selection": "DET",
+        "win_prob": 0.8049,
+        "confidence": "HIGH",
+        "status": "WIN",
+        "start_time": "2026-04-01T00:00:00.000Z"
+      }
+    ]
   }
 }
