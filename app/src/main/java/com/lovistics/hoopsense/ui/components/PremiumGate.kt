@@ -58,13 +58,13 @@ fun PremiumGate(
         ) {
             Icon(
                 Icons.Default.Lock,
-                contentDescription = "Locked",
+                contentDescription = "Additional forecasts hidden",
                 tint = PremiumGold,
                 modifier = Modifier.size(36.dp)
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Unlock ${premiumList.size} Premium Picks",
+                text = "Show ${premiumList.size} Additional Forecasts",
                 style = MaterialTheme.typography.titleMedium,
                 color = PremiumGold
             )
@@ -77,7 +77,7 @@ fun PremiumGate(
                 contentPadding = PaddingValues(vertical = 12.dp)
             ) {
                 Text(
-                    "UPGRADE TO FULL SLATE",
+                    "SHOW FULL SLATE",
                     color = DeepSpace,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.labelSmall

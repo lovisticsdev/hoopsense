@@ -107,9 +107,17 @@ def valid_daily_json(sample_games):
             "generated_at": "2026-03-22T12:00:00Z",
             "season": "2025-26",
             "status": "ACTIVE",
-            "model_version": "5.0",
+            "schema_version": "1.1",
+            "model_version": "5.1",
             "games_count": len(sample_games),
             "picks_found": 3,
+            "data_quality": {
+                "cache_used": False,
+                "bref_available": True,
+                "bdl_available": True,
+                "teams_with_missing_stats": [],
+            },
+            "pipeline_warnings": [],
         },
         "games": sample_games,
         "picks": {

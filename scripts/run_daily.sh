@@ -40,11 +40,11 @@ if [ "$DRY_RUN" = true ]; then
     echo "[3/3] Dry run — skipping git push."
 else
     cd "$PROJECT_ROOT"
-    git add .
+    git add data/nba_daily.json data/history_slips.json
     if git diff --staged --quiet; then
         echo "[3/3] No changes to commit."
     else
-        git commit -m "Daily update: $(date +'%Y-%m-%d %H:%M') [v4]"
+        git commit -m "Daily update: $(date +'%Y-%m-%d %H:%M') [v5.1]"
         git push origin main
         echo "[3/3] Pushed updates to GitHub."
     fi

@@ -16,3 +16,17 @@ zzz.py
 codebase.txt
 HoopSense_EDA.ipynb
 data1/
+# Python caches / virtualenvs
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Pipeline runtime cache
+data/cache/
+data/nba_raw_stats_cache.json
+
+# Android generated artifacts
+app/build/
+*.apk
+*.aab

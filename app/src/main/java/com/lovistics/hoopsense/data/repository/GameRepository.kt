@@ -1,6 +1,7 @@
 package com.lovistics.hoopsense.data.repository
 
 import android.util.Log
+import com.lovistics.hoopsense.BuildConfig
 import com.lovistics.hoopsense.data.cache.FileCache
 import com.lovistics.hoopsense.data.model.DailyData
 import com.lovistics.hoopsense.data.util.DateUtils
@@ -23,8 +24,7 @@ class GameRepository @Inject constructor(
 
     companion object {
         private const val TAG = "GameRepository"
-        const val DATA_URL =
-            "https://raw.githubusercontent.com/lovisticsdev/hoopsense/main/data/nba_daily.json"
+        val DATA_URL: String = BuildConfig.HOOPSENSE_DATA_URL
         private const val CACHE_FILE = "nba_daily.json"
         private const val CACHE_MAX_AGE_MS = 15 * 60 * 1000L   // 15 minutes
         private const val STALE_CACHE_NO_EXPIRY = Long.MAX_VALUE

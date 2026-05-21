@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lovisticsdev.github.io/hoopsense/schema/nba_daily.schema.json",
+  "title": "HoopSense Daily NBA Forecast Feed",
+  "type": "object",
+  "required": [
+    "metadata",
+    "games"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "generated_at",
+        "season",
+        "status",
+        "model_version"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string"
+        },
+        "generated_at": {
+          "type": "string"
+        },
+        "season": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "model_version": {
+          "type": "string"
+        },
+        "games_count": {
+          "type": "integer"
+        },
+        "picks_found": {
+          "type": "integer"
+        },
+        "data_quality": {
+          "type": "object"
+        },
+        "pipeline_warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "games": {
+      "type": "array"
+    },
+    "picks": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "history": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  }
+}

@@ -32,10 +32,10 @@ fun ResultBadge(status: String) {
 fun ConfidenceBadge(confidence: String) {
     // User-friendly labels instead of raw tier names
     val (bgColor, textColor, label) = when (confidence.uppercase()) {
-        "LOCK" -> Triple(ConfidenceLock.copy(alpha = 0.15f), ConfidenceLock, "STRONG")
-        "HIGH" -> Triple(ConfidenceHigh.copy(alpha = 0.15f), ConfidenceHigh, "SOLID")
-        "MEDIUM" -> Triple(ConfidenceMedium.copy(alpha = 0.15f), ConfidenceMedium, "LEAN")
-        else -> Triple(ConfidenceLow.copy(alpha = 0.15f), ConfidenceLow, "EDGE")
+        "LOCK" -> Triple(ConfidenceLock.copy(alpha = 0.15f), ConfidenceLock, "STRONG EDGE")
+        "HIGH" -> Triple(ConfidenceHigh.copy(alpha = 0.15f), ConfidenceHigh, "SOLID EDGE")
+        "MEDIUM" -> Triple(ConfidenceMedium.copy(alpha = 0.15f), ConfidenceMedium, "MODEL LEAN")
+        else -> Triple(ConfidenceLow.copy(alpha = 0.15f), ConfidenceLow, "LOW EDGE")
     }
 
     Text(

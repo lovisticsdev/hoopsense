@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HoopSense History Slips",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "required": [
+      "date"
+    ],
+    "properties": {
+      "date": {
+        "type": "string"
+      },
+      "backfilled": {
+        "type": "boolean"
+      },
+      "lock": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "premium": {
+        "type": "array"
+      }
+    }
+  }
+}

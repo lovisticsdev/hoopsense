@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.lovistics.hoopsense.ui.theme.*
 
 /**
- * Displays pre-computed aggregate stats (wins, losses, win rate, total bets).
+ * Displays real-time aggregate stats. Backfilled/simulated slips are excluded.
  * Receives a [HistoryStats] from the ViewModel — no computation in the composable.
  */
 @Composable
@@ -25,7 +25,7 @@ fun StatsGrid(stats: HistoryStats) {
     ) {
         StatTile(
             modifier = Modifier.weight(1f),
-            title = "RECORD",
+            title = "REAL-TIME",
             value = "${stats.wins}-${stats.losses}"
         )
         StatTile(
@@ -36,8 +36,8 @@ fun StatsGrid(stats: HistoryStats) {
         )
         StatTile(
             modifier = Modifier.weight(1f),
-            title = "BETS",
-            value = "${stats.totalBets}"
+            title = "FORECASTS",
+            value = "${stats.totalForecasts}"
         )
     }
 }

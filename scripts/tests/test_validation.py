@@ -85,3 +85,17 @@ class TestValidateDailyJson:
         data = copy.deepcopy(valid_daily_json)
         del data["picks"]["lock"]["selection"]
         assert any("lock missing 'selection'" in e for e in validate_daily_json(data))
+
+
+    def test_history_backfilled_must_be_boolean(self, valid_daily_json):
+        data = copy.deepcopy(valid_daily_json)
+        data["history"] = {
+            "past_slips": [{"date": "2026-03-20", "backfilled": "yes", "lock": None, "premium": []}],
+            "backfilled_dates": [],
+        }
+        assert any("backfilled is not boolean" in e for e in validate_daily_json(data))
+
+    def test_metadata_pipeline_warnings_must_be_list(self, valid_daily_json):
+        data = copy.deepcopy(valid_daily_json)
+        data["metadata"]["pipeline_warnings"] = "warning"
+        assert any("pipeline_warnings" in e for e in validate_daily_json(data))

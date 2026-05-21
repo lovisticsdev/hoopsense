@@ -77,7 +77,7 @@ private fun PickHeader(pick: Pick, isLock: Boolean, startTime: String?) {
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                text = if (isLock) "LOCK" else "PREMIUM",
+                text = if (isLock) "FEATURED FORECAST" else "MODEL FORECAST",
                 style = MaterialTheme.typography.labelSmall,
                 color = if (isLock) BrandOrange else TextMuted
             )
@@ -158,7 +158,7 @@ private fun PickSelection(pick: Pick) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                "PICK",
+                "MODEL FAVORITE",
                 style = MaterialTheme.typography.labelSmall,
                 color = ValueGreen,
                 fontWeight = FontWeight.Black

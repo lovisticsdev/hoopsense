@@ -51,12 +51,20 @@ fun HistoryScreen(
                 ) {
                     item {
                         StatsGrid(stats = uiState.stats)
+                        if (uiState.stats.simulatedSlipCount > 0) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                "Backfilled simulations are shown below but excluded from the primary accuracy record.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = TextMuted
+                            )
+                        }
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 
                     item {
                         Text(
-                            "LAST 10 DAYS",
+                            "RECENT FORECAST HISTORY",
                             modifier = Modifier.padding(bottom = 8.dp),
                             style = MaterialTheme.typography.labelSmall,
                             color = TextSecondary
@@ -72,7 +80,7 @@ fun HistoryScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    "No history data available yet.\nPicks will appear after the first daily run.",
+                                    "No history data available yet.\nForecasts will appear after the first daily run.",
                                     color = TextMuted,
                                     style = MaterialTheme.typography.bodySmall,
                                     modifier = Modifier.padding(horizontal = 16.dp)

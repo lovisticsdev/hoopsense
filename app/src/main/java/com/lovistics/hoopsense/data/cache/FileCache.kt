@@ -15,7 +15,12 @@ class FileCache @Inject constructor(private val context: Context) {
     fun write(fileName: String, data: String) {
         try {
             val file = File(context.filesDir, fileName)
-            file.writeText(data)
+            val tempFile = File(context.filesDir, "$fileName.tmp")
+            tempFile.writeText(data)
+            if (!tempFile.renameTo(file)) {
+                file.writeText(data)
+                tempFile.delete()
+            }
         } catch (e: IOException) {
             Log.w(TAG, "Failed to write cache file: $fileName", e)
         }

@@ -46,11 +46,20 @@ fun ExpandableDayCard(slip: Picks) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    FormatUtils.formatDateHeader(slip.date),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = TextPrimary
-                )
+                Column {
+                    Text(
+                        FormatUtils.formatDateHeader(slip.date),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = TextPrimary
+                    )
+                    if (slip.backfilled) {
+                        Text(
+                            "SIMULATED BACKFILL",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = TextMuted
+                        )
+                    }
+                }
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

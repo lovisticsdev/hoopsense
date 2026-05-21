@@ -105,7 +105,7 @@ private fun LoadingState(modifier: Modifier = Modifier) {
             CircularProgressIndicator(color = BrandOrange)
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                "Loading today's slate…",
+                "Loading today's forecasts…",
                 color = TextSecondary,
                 style = MaterialTheme.typography.bodySmall
             )
@@ -161,7 +161,7 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
                     ?: ""
                 Text(
                     text = if (dateStr.isNotEmpty()) FormatUtils.formatDateHeader(dateStr).uppercase()
-                           else "GAMES",
+                           else "TODAY'S SLATE",
                     modifier = Modifier.padding(start = 12.dp, top = 4.dp, bottom = 6.dp),
                     style = MaterialTheme.typography.labelSmall,
                     color = TextSecondary
@@ -185,7 +185,7 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
         uiState.picks?.lock?.let { lock ->
             item {
                 Text(
-                    "FREE PLAY",
+                    "FEATURED FORECAST",
                     modifier = Modifier.padding(start = 12.dp, top = 20.dp, bottom = 4.dp),
                     style = MaterialTheme.typography.labelSmall,
                     color = BrandOrange
@@ -203,7 +203,7 @@ private fun BetslipContent(uiState: BetslipUiState, onUnlockPremium: () -> Unit)
 
         item {
             Text(
-                "PREMIUM PICKS",
+                "ADDITIONAL FORECASTS",
                 modifier = Modifier.padding(start = 12.dp, top = 24.dp, bottom = 4.dp),
                 style = MaterialTheme.typography.labelSmall,
                 color = TextSecondary

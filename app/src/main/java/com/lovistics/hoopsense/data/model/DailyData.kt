@@ -18,7 +18,18 @@ data class Metadata(
     val status: String = "ACTIVE",
     @SerialName("model_version") val modelVersion: String = "",
     @SerialName("games_count") val gamesCount: Int = 0,
-    @SerialName("picks_found") val picksFound: Int = 0
+    @SerialName("picks_found") val picksFound: Int = 0,
+    @SerialName("schema_version") val schemaVersion: String = "1.0",
+    @SerialName("data_quality") val dataQuality: DataQuality = DataQuality(),
+    @SerialName("pipeline_warnings") val pipelineWarnings: List<String> = emptyList()
+)
+
+@Serializable
+data class DataQuality(
+    @SerialName("cache_used") val cacheUsed: Boolean = false,
+    @SerialName("bref_available") val brefAvailable: Boolean = true,
+    @SerialName("bdl_available") val bdlAvailable: Boolean = true,
+    @SerialName("teams_with_missing_stats") val teamsWithMissingStats: List<String> = emptyList()
 )
 
 @Serializable
@@ -59,7 +70,8 @@ data class GamePrediction(
 data class Picks(
     val date: String,
     val lock: Pick? = null,
-    val premium: List<Pick> = emptyList()
+    val premium: List<Pick> = emptyList(),
+    val backfilled: Boolean = false
 )
 
 @Serializable
@@ -76,5 +88,6 @@ data class Pick(
 
 @Serializable
 data class History(
-    @SerialName("past_slips") val pastSlips: List<Picks> = emptyList()
+    @SerialName("past_slips") val pastSlips: List<Picks> = emptyList(),
+    @SerialName("backfilled_dates") val backfilledDates: List<String> = emptyList()
 )

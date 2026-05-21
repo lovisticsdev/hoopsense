@@ -18,7 +18,55 @@ from utils import setup_logging, write_json_atomic
 logger = logging.getLogger(__name__)
 
 OUTPUT_FILE = DATA_DIR / "nba_daily.json"
-MODEL_VERSION = "5.0"
+MODEL_VERSION = "5.1"
+SCHEMA_VERSION = "1.1"
+
+
+
+
+def _build_data_quality(teams: Dict, source_status: Dict | None = None) -> Dict:
+    """Return public metadata describing data completeness/freshness.
+
+    The current fetcher does not expose detailed source health yet, so this helper keeps
+    the JSON schema ready for degraded-mode reporting without changing existing fetchers.
+    """
+    missing_stats = []
+    for team in teams.values():
+        abbr = team.get("abbr", "")
+        if not abbr:
+            continue
+        required = ("srs", "nrtg", "wins", "losses")
+        if any(team.get(key) in (None, "") for key in required):
+            missing_stats.append(abbr)
+
+    source_status = source_status or {}
+    return {
+        "cache_used": bool(source_status.get("cache_used", False)),
+        "bref_available": bool(source_status.get("bref_available", True)),
+        "bdl_available": bool(source_status.get("bdl_available", True)),
+        "teams_with_missing_stats": sorted(set(missing_stats)),
+    }
+
+
+def _build_metadata(status: str, teams: Dict, *, games_count: int = 0, picks_found: int = 0) -> Dict:
+    data_quality = _build_data_quality(teams)
+    warnings = []
+    if data_quality["teams_with_missing_stats"]:
+        warnings.append("Some teams have incomplete model input stats.")
+    if status == "NO_GAMES":
+        warnings.append("No NBA games were found for the current UTC date.")
+
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "season": CURRENT_SEASON,
+        "status": status,
+        "model_version": MODEL_VERSION,
+        "games_count": games_count,
+        "picks_found": picks_found,
+        "data_quality": data_quality,
+        "pipeline_warnings": warnings,
+    }
 
 
 # ═══════════════════════════════════════════════════════
@@ -86,12 +134,7 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
     # Step 3: Handle no-games days
     if not games_schedule:
         daily_data = {
-            "metadata": {
-                "generated_at": datetime.now(timezone.utc).isoformat(),
-                "season": CURRENT_SEASON,
-                "status": "NO_GAMES",
-                "model_version": MODEL_VERSION,
-            },
+            "metadata": _build_metadata("NO_GAMES", teams),
             "games": [],
             "picks": None,
             "history": history_data,
@@ -135,14 +178,12 @@ def generate_daily_json(force_refresh: bool = False) -> Dict:
 
     # Step 7: Assemble final output
     daily_data = {
-        "metadata": {
-            "generated_at": datetime.now(timezone.utc).isoformat(),
-            "season": CURRENT_SEASON,
-            "status": "ACTIVE",
-            "model_version": MODEL_VERSION,
-            "games_count": len(games),
-            "picks_found": len(best_picks),
-        },
+        "metadata": _build_metadata(
+            "ACTIVE",
+            teams,
+            games_count=len(games),
+            picks_found=len(best_picks),
+        ),
         "games": games,
         "picks": picks,
         "history": history_data,

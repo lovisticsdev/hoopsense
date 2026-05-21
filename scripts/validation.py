@@ -29,6 +29,18 @@ def validate_daily_json(data: dict) -> List[str]:
         errors.append("'games' is not a list")
 
     meta = data.get("metadata", {})
+    if meta:
+        for key in ("generated_at", "season", "status", "model_version"):
+            if key not in meta:
+                errors.append(f"metadata missing '{key}'")
+
+        data_quality = meta.get("data_quality")
+        if data_quality is not None and not isinstance(data_quality, dict):
+            errors.append("metadata.data_quality is not an object")
+
+        pipeline_warnings = meta.get("pipeline_warnings")
+        if pipeline_warnings is not None and not isinstance(pipeline_warnings, list):
+            errors.append("metadata.pipeline_warnings is not a list")
 
     game_ids = set()
     games_list = data.get("games", [])
@@ -67,6 +79,22 @@ def validate_daily_json(data: dict) -> List[str]:
         _validate_pick_object(picks.get("lock"), "lock", game_ids, errors)
         for i, premium_pick in enumerate(picks.get("premium", [])):
             _validate_pick_object(premium_pick, f"premium[{i}]", game_ids, errors)
+
+    history = data.get("history")
+    if history is not None:
+        if not isinstance(history, dict):
+            errors.append("history is not an object")
+        else:
+            past_slips = history.get("past_slips", [])
+            if past_slips is not None and not isinstance(past_slips, list):
+                errors.append("history.past_slips is not a list")
+            elif isinstance(past_slips, list):
+                for i, slip in enumerate(past_slips):
+                    if not isinstance(slip, dict):
+                        errors.append(f"history.past_slips[{i}] is not an object")
+                        continue
+                    if "backfilled" in slip and not isinstance(slip["backfilled"], bool):
+                        errors.append(f"history.past_slips[{i}].backfilled is not boolean")
 
     return errors
 
@@ -120,6 +148,18 @@ def validate_file(filepath: Path) -> bool:
         return False
 
     meta = data.get("metadata", {})
+    if meta:
+        for key in ("generated_at", "season", "status", "model_version"):
+            if key not in meta:
+                errors.append(f"metadata missing '{key}'")
+
+        data_quality = meta.get("data_quality")
+        if data_quality is not None and not isinstance(data_quality, dict):
+            errors.append("metadata.data_quality is not an object")
+
+        pipeline_warnings = meta.get("pipeline_warnings")
+        if pipeline_warnings is not None and not isinstance(pipeline_warnings, list):
+            errors.append("metadata.pipeline_warnings is not a list")
     print(f"OK: {len(data.get('games', []))} games, {meta.get('picks_found', 0)} picks, "
           f"status={meta.get('status', 'UNKNOWN')}, model=v{meta.get('model_version', '?')}")
     return True
